@@ -12,7 +12,7 @@ public class LoginService {
         this.loginDAS = loginDAS;
     }
 
-    public boolean login(String username, String password){
+    public boolean login(String username, String password) {
         return loginDAS.login(username, password);
     }
 }

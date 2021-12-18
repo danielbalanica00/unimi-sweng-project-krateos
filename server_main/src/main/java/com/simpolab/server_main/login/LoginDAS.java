@@ -20,9 +20,9 @@ public class LoginDAS implements LoginDAO {
         String query = "select username from elector where username = ? and password = ?";
         String res;
 
-        try{
+        try {
             res = jdbcTemplate.queryForObject(query, String.class, username, stringToMD5(password));
-        } catch (Exception e){
+        } catch (Exception e) {
             res = "";
             System.out.println(e);
         }
@@ -30,19 +30,19 @@ public class LoginDAS implements LoginDAO {
         return res != "";
     }
 
-    private static String stringToMD5(String str){
-        try{
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] messageDigest = md.digest(str.getBytes());
+    private static String stringToMD5(String str) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(str.getBytes());
 
-        BigInteger no = new BigInteger(1, messageDigest);
+            BigInteger no = new BigInteger(1, messageDigest);
 
-        String hashtext = no.toString(16);
-        while (hashtext.length() < 32) {
-            hashtext = "0" + hashtext;
-        }
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
 
-        return hashtext;
+            return hashtext;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
