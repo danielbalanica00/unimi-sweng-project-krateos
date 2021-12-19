@@ -24,10 +24,10 @@ public class TestApi {
         //setup url params (x-www-form-params)
         List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
         urlParams.add(new BasicNameValuePair("username", username));
-        urlParams.add(new BasicNameValuePair("password", password));
+        urlParams.add(new BasicNameValuePair("password", stringToMD5(password)));
 
         System.out.println("username: " + username);
-        System.out.println("password: " + password);
+        System.out.println("password: " + stringToMD5(password));
 
         //add the url params to the req
         try {

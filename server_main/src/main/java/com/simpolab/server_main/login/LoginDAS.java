@@ -21,30 +21,12 @@ public class LoginDAS implements LoginDAO {
         String res;
 
         try {
-            res = jdbcTemplate.queryForObject(query, String.class, username, stringToMD5(password));
+            res = jdbcTemplate.queryForObject(query, String.class, username, password);
         } catch (Exception e) {
             res = "";
             System.out.println(e);
         }
 
         return res != "";
-    }
-
-    private static String stringToMD5(String str) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(str.getBytes());
-
-            BigInteger no = new BigInteger(1, messageDigest);
-
-            String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
-            }
-
-            return hashtext;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
