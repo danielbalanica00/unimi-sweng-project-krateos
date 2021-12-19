@@ -13,7 +13,7 @@ public class App extends Application {
         System.setProperty("prism.lcdtext", "false");
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login/login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 300);
         scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Roboto");
         scene.getStylesheets().add(getClass().getResource("login/font.css").toExternalForm());
 
