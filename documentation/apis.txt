@@ -1,0 +1,31 @@
+Root: "/api/v1"
+        
+[POST]       /auth/login
+
+[GET]        /session
+[GET]        /session/{session_id}
+[POST]       /session 
+
+[GET]        /session/active
+[GET]        /session/closed
+[PUT]        /session/end/{session_id}
+[PUT]        /session/abort/{session_id}
+[PUT]        /session/vote/{session_id}
+
+[GET]        /group
+[PUT]        /group/addElector
+[PUT]        /group/addElector/{elector_id}
+[DELETE]     /group/deleteElector
+[DELETE]     /group/deleteElector/{elector_id}
+
+[GET]        /elector
+[GET]        /elector/{elector_id}
+[POST]       /elector
+[DELETE]     /elector/{elector_id}  
+
+[POST]       /group
+[GET]        /group/{group_id}
+[DELETE]     /group/{group_id}           
+    
+            
+
