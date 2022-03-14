@@ -1,8 +1,7 @@
-package com.simpolab.server_main.security;
+package com.simpolab.server_main.users;
 
-import com.simpolab.server_main.security.dao.UserLoginDAO;
-import com.simpolab.server_main.security.filter.JwtAuthenticationFilter;
-import com.simpolab.server_main.security.filter.JwtAuthorizationFilter;
+import com.simpolab.server_main.users.filters.JwtAuthenticationFilter;
+import com.simpolab.server_main.users.filters.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -15,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;

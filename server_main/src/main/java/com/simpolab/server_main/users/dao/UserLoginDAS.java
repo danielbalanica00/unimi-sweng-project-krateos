@@ -1,6 +1,6 @@
-package com.simpolab.server_main.security.dao;
+package com.simpolab.server_main.users.dao;
 
-import com.simpolab.server_main.security.domain.AppUser;
+import com.simpolab.server_main.users.domain.AppUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;

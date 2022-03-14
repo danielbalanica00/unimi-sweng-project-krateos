@@ -1,4 +1,4 @@
-package com.simpolab.server_main.security;
+package com.simpolab.server_main.users;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.simpolab.server_main.security.filter;
+package com.simpolab.server_main.users.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

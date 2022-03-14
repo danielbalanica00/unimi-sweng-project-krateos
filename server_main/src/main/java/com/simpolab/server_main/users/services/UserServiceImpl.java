@@ -1,7 +1,7 @@
-package com.simpolab.server_main.security.service;
+package com.simpolab.server_main.users.services;
 
-import com.simpolab.server_main.security.dao.UserLoginDAO;
-import com.simpolab.server_main.security.domain.AppUser;
+import com.simpolab.server_main.users.dao.UserLoginDAO;
+import com.simpolab.server_main.users.domain.AppUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
