@@ -1,7 +1,7 @@
 package com.simpolab.server_main.security.dao;
 
-import com.simpolab.server_main.security.domain.User;
+import com.simpolab.server_main.security.domain.AppUser;
 
 public interface UserLoginDAO {
-    User findByUsername(String username);
+    AppUser findByUsername(String username);
 }

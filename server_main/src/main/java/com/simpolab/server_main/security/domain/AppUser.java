@@ -1,14 +1,13 @@
 package com.simpolab.server_main.security.domain;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class User {
+@AllArgsConstructor
+public class AppUser {
     private Long id;
-    private String firstName;
-    private String lastName;
     private String username;
     private String password;
-    private String email;
+    private String role;
 }

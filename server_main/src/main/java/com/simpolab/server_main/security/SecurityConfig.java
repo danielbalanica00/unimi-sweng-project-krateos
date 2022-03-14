@@ -1,10 +1,11 @@
 package com.simpolab.server_main.security;
 
 import com.simpolab.server_main.security.dao.UserLoginDAO;
-import com.simpolab.server_main.security.domain.User;
 import com.simpolab.server_main.security.filter.JwtAuthenticationFilter;
+import com.simpolab.server_main.security.filter.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,40 +14,35 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserLoginDAO userLoginDAO;
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(username -> {
-            User user = userLoginDAO.findByUsername(username);
-            if (user == null) {
-                log.error("User {} not found", username);
-                throw new UsernameNotFoundException("User not found in the database");
-            } else {
-                log.info("User {} was found in the database", username);
-            }
-
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
-        });
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    /**
+     * Authorization Configuration
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //Replace default authentication URL
-        JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(authenticationManagerBean());
-        authenticationFilter.setFilterProcessesUrl("/api/v1/login");
+        val authFilter = new JwtAuthenticationFilter(authenticationManagerBean());
+        authFilter.setFilterProcessesUrl("/api/v1/login");
 
         //Disable Cross Site Request Forgery
         http.csrf().disable();
@@ -66,16 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //Private APIs
                 .anyRequest().authenticated();
 
-        //Add filter to the chain
-        http.addFilter(authenticationFilter);
-    }
-
-    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        //Add filters to the chain
+        http.addFilter(authFilter);
+        http.addFilterBefore(new JwtAuthorizationFilter(), JwtAuthenticationFilter.class);
     }
 
     @Bean
