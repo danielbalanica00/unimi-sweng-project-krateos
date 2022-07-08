@@ -2,6 +2,7 @@ package com.simpolab.server_main.user_authentication;
 
 import com.simpolab.server_main.user_authentication.filters.JwtAuthenticationFilter;
 import com.simpolab.server_main.user_authentication.filters.JwtAuthorizationFilter;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -16,13 +17,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.servlet.http.HttpServletResponse;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
   private final UserDetailsService userDetailsService;
   private final PasswordEncoder bCryptPasswordEncoder;
 
@@ -50,16 +50,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     //Set unauthorized requests handler
-    http.exceptionHandling().authenticationEntryPoint(((request, response, exception) -> {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
-    }));
+    http
+      .exceptionHandling()
+      .authenticationEntryPoint(
+        (
+          (request, response, exception) -> {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
+          }
+        )
+      );
 
     //Set permissions on endpoints
-    http.authorizeRequests()
-        //Public APIs
-        .antMatchers("/api/v1/login", "/api/v1/token/refresh").permitAll()
-        //Private APIs
-        .anyRequest().authenticated();
+    http
+      .authorizeRequests()
+      //Public APIs
+      .antMatchers("/api/v1/login", "/api/v1/token/refresh")
+      .permitAll()
+      //Private APIs
+      .anyRequest()
+      .authenticated();
 
     //Add filters to the chain
     http.addFilter(authFilter);
@@ -72,5 +81,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return authenticationManager();
   }
 }
-
-

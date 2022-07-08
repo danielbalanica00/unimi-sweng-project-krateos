@@ -4,6 +4,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpolab.server_main.user_authentication.utils.JWTUtils;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -16,18 +24,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
   /**
    * This class replaces spring's UserPasswordAuthenticationFilter in the filter chain
    */
@@ -35,7 +35,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   private final AuthenticationManager authenticationManager;
 
   @Override
-  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+  public Authentication attemptAuthentication(
+    HttpServletRequest request,
+    HttpServletResponse response
+  ) throws AuthenticationException {
     String username = request.getParameter("username");
     String password = request.getParameter("password");
     log.info("Username is: {}", username);
@@ -48,19 +51,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   }
 
   @Override
-  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+  protected void successfulAuthentication(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    FilterChain chain,
+    Authentication authResult
+  ) throws IOException {
     User user = (User) authResult.getPrincipal();
 
-    JWTUtils.JWTTokens tokens =
-        JWTUtils.instance.createTokens(user.getUsername(),
-            request.getRequestURL().toString(),
-            user.getAuthorities());
-
-    Map<String, String> tokensMap =
-        Map.of("access_token", tokens.getAccessToken(),
-            "refresh_token", tokens.getRefreshToken());
+    JWTUtils.JWTTokens tokens = JWTUtils.instance.createTokens(
+      user.getUsername(),
+      request.getRequestURL().toString(),
+      user.getAuthorities()
+    );
 
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    new ObjectMapper().writeValue(response.getOutputStream(), tokensMap);
+    new ObjectMapper().writeValue(response.getOutputStream(), tokens);
   }
 }

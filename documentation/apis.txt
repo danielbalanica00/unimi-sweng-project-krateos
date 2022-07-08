@@ -1,31 +1,25 @@
 Root: "/api/v1"
         
-[POST]       /auth/login
+[X] [POST]       /auth/login
+
+[GET]        /elector -> get all electors
+[X] [POST]       /elector -> create new elector
+[GET]        /elector/{elector_id} -> get a specified elector
+[DELETE]     /elector/{elector_id} -> delete the given elector
+
+[GET]        /group -> get all groups
+[POST]       /group -> create a new group
+[GET]        /group/{group_id} -> get the specified group
+[DELETE]     /group/{group_id} -> delete the specified group
+[PUT]        /group/{group_id}/elector/{elector_id} -> insert the given elector into the group
+[DELETE]     /group/{group_id}/elector/{elector_id} -> remove the given elector from the group
 
 [GET]        /session
 [GET]        /session/{session_id}
-[POST]       /session 
+[POST]       /session
 
 [GET]        /session/active
 [GET]        /session/closed
 [PUT]        /session/end/{session_id}
 [PUT]        /session/abort/{session_id}
 [PUT]        /session/vote/{session_id}
-
-[GET]        /group
-[PUT]        /group/addElector
-[PUT]        /group/addElector/{elector_id}
-[DELETE]     /group/deleteElector
-[DELETE]     /group/deleteElector/{elector_id}
-
-[GET]        /elector
-[GET]        /elector/{elector_id}
-[POST]       /elector
-[DELETE]     /elector/{elector_id}  
-
-[POST]       /group
-[GET]        /group/{group_id}
-[DELETE]     /group/{group_id}           
-    
-            
-

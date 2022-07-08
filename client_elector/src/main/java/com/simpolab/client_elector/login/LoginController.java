@@ -9,34 +9,34 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class LoginController {
-    @FXML
-    private PasswordField txtPassword;
 
-    @FXML
-    private TextField txtUsername;
+  @FXML
+  private PasswordField txtPassword;
 
-    @FXML
-    private Button btnLogin;
+  @FXML
+  private TextField txtUsername;
 
-    @FXML
-    void onLoginClick(ActionEvent e) {
-        String username = txtUsername.getText();
-        String password = txtPassword.getText();
-        String url = "http://127.0.0.1:8080/api/v1/login";
+  @FXML
+  private Button btnLogin;
 
-        boolean res = TestApi.sendPost(url, username, password);
+  @FXML
+  void onLoginClick(ActionEvent e) {
+    String username = txtUsername.getText();
+    String password = txtPassword.getText();
+    String url = "http://127.0.0.1:8080/api/v1/login";
 
-        Alert alert;
-        if (res) {
-            alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText("Login Successful!");
-        } else {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Login Failed!");
-        }
-        alert.setTitle(null);
-        alert.setHeaderText(null);
-        alert.showAndWait();
+    boolean res = TestApi.sendPost(url, username, password);
+
+    Alert alert;
+    if (res) {
+      alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setContentText("Login Successful!");
+    } else {
+      alert = new Alert(Alert.AlertType.ERROR);
+      alert.setContentText("Login Failed!");
     }
+    alert.setTitle(null);
+    alert.setHeaderText(null);
+    alert.showAndWait();
+  }
 }
-

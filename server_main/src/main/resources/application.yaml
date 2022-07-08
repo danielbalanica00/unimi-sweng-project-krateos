@@ -3,6 +3,8 @@ spring:
     url: jdbc:mysql://127.0.0.1:8889/voting_system
     username: root
     password:
+  jackson:
+    default-property-inclusion: non_null
 ---
 auth:
   secret: "This is a secret"
