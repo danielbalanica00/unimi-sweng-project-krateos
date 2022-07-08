@@ -25,6 +25,7 @@
         <junit.version>5.7.1</junit.version>
         <spring.version>2.6.1</spring.version>
         <javafx.version>17.0.0.1</javafx.version>
+        <plugin.prettier.goal>write</plugin.prettier.goal>
     </properties>
 
     <dependencyManagement>
@@ -98,6 +99,31 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.hubspot.maven.plugins</groupId>
+                    <artifactId>prettier-maven-plugin</artifactId>
+                    <version>0.16</version>
+                    <configuration>
+                        <prettierJavaVersion>1.5.0</prettierJavaVersion>
+                        <printWidth>100</printWidth>
+                        <tabWidth>2</tabWidth>
+                        <useTabs>false</useTabs>
+                        <ignoreConfigFile>true</ignoreConfigFile>
+                        <ignoreEditorConfig>true</ignoreEditorConfig>
+                        <inputGlobs>
+                            <inputGlob>src/main/java/**/*.java</inputGlob>
+                            <inputGlob>src/test/java/**/*.java</inputGlob>
+                        </inputGlobs>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>${plugin.prettier.goal}</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
