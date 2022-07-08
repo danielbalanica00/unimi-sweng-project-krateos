@@ -1,7 +1,7 @@
-package com.simpolab.server_main.users.services;
+package com.simpolab.server_main.user_authentication.services;
 
-import com.simpolab.server_main.users.dao.UserLoginDAO;
-import com.simpolab.server_main.users.domain.AppUser;
+import com.simpolab.server_main.user_authentication.dao.UserLoginDAO;
+import com.simpolab.server_main.user_authentication.domain.AppUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

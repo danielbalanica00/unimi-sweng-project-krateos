@@ -1,4 +1,4 @@
-package com.simpolab.server_main.users.domain;
+package com.simpolab.server_main.user_authentication.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
