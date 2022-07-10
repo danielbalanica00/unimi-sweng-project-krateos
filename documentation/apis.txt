@@ -1,5 +1,5 @@
 Root: "/api/v1"
-        
+
 [X] [POST]       /auth/login
 
 [X] [GET]        /elector -> get all electors
@@ -11,6 +11,7 @@ Root: "/api/v1"
 [POST]       /group -> create a new group
 [GET]        /group/{group_id} -> get the specified group
 [DELETE]     /group/{group_id} -> delete the specified group
+[GET]        /group/{group_id}/elector -> return all the electors in the group
 [PUT]        /group/{group_id}/elector/{elector_id} -> insert the given elector into the group
 [DELETE]     /group/{group_id}/elector/{elector_id} -> remove the given elector from the group
 

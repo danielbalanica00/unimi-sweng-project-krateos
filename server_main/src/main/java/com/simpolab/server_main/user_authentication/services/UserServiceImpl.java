@@ -1,6 +1,6 @@
 package com.simpolab.server_main.user_authentication.services;
 
-import com.simpolab.server_main.dao.UserDAO;
+import com.simpolab.server_main.db.UserDAO;
 import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.util.Collection;
 import java.util.List;

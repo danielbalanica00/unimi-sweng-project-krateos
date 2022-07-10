@@ -1,4 +1,4 @@
-package com.simpolab.server_main.dao;
+package com.simpolab.server_main.db;
 
 import com.simpolab.server_main.elector.domain.Elector;
 import java.sql.SQLException;
@@ -12,4 +12,6 @@ public interface ElectorDAO {
   Elector get(Long id);
 
   List<Elector> getAll();
+
+  List<Elector> getAllInGroup(Long groupId);
 }

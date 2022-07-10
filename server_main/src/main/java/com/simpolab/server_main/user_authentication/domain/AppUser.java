@@ -33,7 +33,6 @@ public class AppUser {
   }
 
   public void sanitize() {
-    this.id = null;
     this.password = null;
     this.role = null;
   }

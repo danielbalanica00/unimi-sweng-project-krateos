@@ -1,5 +1,7 @@
-package com.simpolab.server_main.dao;
+package com.simpolab.server_main.db.das;
 
+import com.simpolab.server_main.db.ElectorDAO;
+import com.simpolab.server_main.db.UserDAO;
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.sql.SQLException;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +19,22 @@ import org.springframework.stereotype.Component;
 public class ElectorDAS implements ElectorDAO {
 
   private final JdbcTemplate jdbcTemplate;
+
+  private final RowMapper<Elector> electorRowMapper = (rs, rowNum) -> {
+    var appUser = new AppUser(
+      rs.getLong("id"),
+      rs.getString("username"),
+      rs.getString("password"),
+      rs.getString("role")
+    );
+
+    return new Elector(
+      appUser,
+      rs.getString("first_name"),
+      rs.getString("last_name"),
+      rs.getString("email")
+    );
+  };
 
   @Autowired
   private UserDAO userRepo;
@@ -62,25 +81,7 @@ public class ElectorDAS implements ElectorDAO {
   public Elector get(Long id) {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id AND elector.id = ?";
     try {
-      return jdbcTemplate.queryForObject(
-        query,
-        (rs, rowNum) -> {
-          var appUser = new AppUser(
-            rs.getLong("id"),
-            rs.getString("username"),
-            rs.getString("password"),
-            rs.getString("role")
-          );
-
-          return new Elector(
-            appUser,
-            rs.getString("first_name"),
-            rs.getString("last_name"),
-            rs.getString("email")
-          );
-        },
-        id
-      );
+      return jdbcTemplate.queryForObject(query, electorRowMapper, id);
     } catch (Exception e) {
       log.warn(e.getMessage());
       return null;
@@ -91,24 +92,19 @@ public class ElectorDAS implements ElectorDAO {
   public List<Elector> getAll() {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id";
     try {
-      return jdbcTemplate.query(
-        query,
-        (rs, rowNum) -> {
-          var appUser = new AppUser(
-            rs.getLong("id"),
-            rs.getString("username"),
-            rs.getString("password"),
-            rs.getString("role")
-          );
+      return jdbcTemplate.query(query, electorRowMapper);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return null;
+    }
+  }
 
-          return new Elector(
-            appUser,
-            rs.getString("first_name"),
-            rs.getString("last_name"),
-            rs.getString("email")
-          );
-        }
-      );
+  @Override
+  public List<Elector> getAllInGroup(Long groupId) {
+    String query =
+      "SELECT * FROM elector_group, elector, user WHERE elector.id = user.id AND elector_group.voting_group_id = ?";
+    try {
+      return jdbcTemplate.query(query, electorRowMapper, groupId);
     } catch (Exception e) {
       log.warn(e.getMessage());
       return null;

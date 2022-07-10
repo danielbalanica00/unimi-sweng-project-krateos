@@ -1,5 +1,6 @@
-package com.simpolab.server_main.dao;
+package com.simpolab.server_main.db.das;
 
+import com.simpolab.server_main.db.UserDAO;
 import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;

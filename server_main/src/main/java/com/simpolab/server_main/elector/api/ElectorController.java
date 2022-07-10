@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/v1/elector")
-@RequiredArgsConstructor
 @Slf4j
 public class ElectorController {
 

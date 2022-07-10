@@ -12,4 +12,4 @@ repos:
     rev: v0.3.3
     hooks:
       - id: maven
-        args: [ 'prettier:print-args' ]
+        args: [ 'prettier:write' ]
