@@ -4,7 +4,6 @@ import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.sql.SQLException;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,22 +92,22 @@ public class ElectorDAS implements ElectorDAO {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id";
     try {
       return jdbcTemplate.query(
-          query,
-          (rs, rowNum) -> {
-            var appUser = new AppUser(
-                rs.getLong("id"),
-                rs.getString("username"),
-                rs.getString("password"),
-                rs.getString("role")
-            );
+        query,
+        (rs, rowNum) -> {
+          var appUser = new AppUser(
+            rs.getLong("id"),
+            rs.getString("username"),
+            rs.getString("password"),
+            rs.getString("role")
+          );
 
-            return new Elector(
-                appUser,
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("email")
-            );
-          }
+          return new Elector(
+            appUser,
+            rs.getString("first_name"),
+            rs.getString("last_name"),
+            rs.getString("email")
+          );
+        }
       );
     } catch (Exception e) {
       log.warn(e.getMessage());

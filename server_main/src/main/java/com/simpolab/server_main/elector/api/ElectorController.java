@@ -2,6 +2,9 @@ package com.simpolab.server_main.elector.api;
 
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
+import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +15,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/v1/elector")
 @RequiredArgsConstructor
 @Slf4j
 public class ElectorController {
+
   @Autowired
   private ElectorService electorService;
 
   @GetMapping(path = "{elector_id}")
   public ResponseEntity<Map<String, String>> getElector(
-      @PathVariable("elector_id") Long electorId
+    @PathVariable("elector_id") Long electorId
   ) {
     var elector = electorService.getElector(electorId);
 
@@ -56,13 +56,13 @@ public class ElectorController {
 
   // https://reflectoring.io/bean-validation-with-spring-boot/
   @PostMapping(
-      path = "",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE
+    path = "",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Void> newElector(
-      @Valid @RequestBody Elector elector,
-      BindingResult bindingResult
+    @Valid @RequestBody Elector elector,
+    BindingResult bindingResult
   ) {
     if (bindingResult.hasErrors()) {
       log.warn("Error: {}", bindingResult.getAllErrors());

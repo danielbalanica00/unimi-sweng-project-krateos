@@ -2,16 +2,16 @@ package com.simpolab.server_main.elector.services;
 
 import com.simpolab.server_main.dao.ElectorDAO;
 import com.simpolab.server_main.elector.domain.Elector;
+import java.sql.SQLException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-import java.util.List;
-
 @Slf4j
 @Service
 public class ElectorServiceImpl implements ElectorService {
+
   @Autowired
   private ElectorDAO electorDAO;
 

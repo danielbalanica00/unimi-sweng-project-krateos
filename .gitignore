@@ -2,3 +2,5 @@
 /out/
 .DS_Store
 *.iml
+
+server_main/precommit_files/

@@ -48,5 +48,32 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.oms.maven</groupId>
+            <artifactId>pre-commit-maven-plugin</artifactId>
+            <version>0.2.3</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>no.oms.maven</groupId>
+                <artifactId>pre-commit-maven-plugin</artifactId>
+                <version>0.2.3</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <precommitVersion>v2.19.0</precommitVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>download-binary</goal>
+                            <goal>generate-hooks</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -1,7 +1,6 @@
 package com.simpolab.server_main.elector.services;
 
 import com.simpolab.server_main.elector.domain.Elector;
-
 import java.util.List;
 
 public interface ElectorService {

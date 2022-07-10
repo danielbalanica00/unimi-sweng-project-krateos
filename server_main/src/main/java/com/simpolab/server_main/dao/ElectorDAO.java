@@ -1,7 +1,6 @@
 package com.simpolab.server_main.dao;
 
 import com.simpolab.server_main.elector.domain.Elector;
-
 import java.sql.SQLException;
 import java.util.List;
 
