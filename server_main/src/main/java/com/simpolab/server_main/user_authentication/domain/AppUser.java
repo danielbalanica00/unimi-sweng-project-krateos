@@ -31,4 +31,10 @@ public class AppUser {
   public AppUser() {
     this.role = "elector";
   }
+
+  public void sanitize() {
+    this.id = null;
+    this.password = null;
+    this.role = null;
+  }
 }

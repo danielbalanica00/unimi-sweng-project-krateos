@@ -2,8 +2,14 @@ package com.simpolab.server_main.elector.services;
 
 import com.simpolab.server_main.elector.domain.Elector;
 
-public interface ElectorService {
-  void createNewElector(Elector newElector);
+import java.util.List;
 
-  Elector getElectorById(Long id);
+public interface ElectorService {
+  void newElector(Elector newElector);
+
+  Elector getElector(Long id);
+
+  List<Elector> getElectors();
+
+  void deleteElector(Long id);
 }

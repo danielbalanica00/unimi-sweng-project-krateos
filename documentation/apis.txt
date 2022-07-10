@@ -2,10 +2,10 @@ Root: "/api/v1"
         
 [X] [POST]       /auth/login
 
-[GET]        /elector -> get all electors
+[X] [GET]        /elector -> get all electors
 [X] [POST]       /elector -> create new elector
-[GET]        /elector/{elector_id} -> get a specified elector
-[DELETE]     /elector/{elector_id} -> delete the given elector
+[X] [GET]        /elector/{elector_id} -> get a specified elector
+[X] [DELETE]     /elector/{elector_id} -> delete the given elector
 
 [GET]        /group -> get all groups
 [POST]       /group -> create a new group

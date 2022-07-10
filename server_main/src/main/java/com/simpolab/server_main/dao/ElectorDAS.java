@@ -3,6 +3,8 @@ package com.simpolab.server_main.dao;
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.sql.SQLException;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class ElectorDAS implements ElectorDAO {
   private UserDAO userRepo;
 
   @Override
-  public void newElector(Elector newElector) throws SQLException {
+  public void create(Elector newElector) throws SQLException {
     Long id = null;
     var appUser = newElector.getUser();
     appUser.setRole("elector");
@@ -47,7 +49,18 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
-  public Elector getElectorById(Long id) {
+  public void delete(Long id) throws SQLException {
+    var query = "DELETE FROM elector WHERE id = ?";
+    try {
+      jdbcTemplate.update(query, id);
+      log.info("Elector {} removed successfully", id);
+    } catch (Exception e) {
+      log.error("Failed to remove user", e);
+    }
+  }
+
+  @Override
+  public Elector get(Long id) {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id AND elector.id = ?";
     try {
       return jdbcTemplate.queryForObject(
@@ -68,6 +81,34 @@ public class ElectorDAS implements ElectorDAO {
           );
         },
         id
+      );
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return null;
+    }
+  }
+
+  @Override
+  public List<Elector> getAll() {
+    String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id";
+    try {
+      return jdbcTemplate.query(
+          query,
+          (rs, rowNum) -> {
+            var appUser = new AppUser(
+                rs.getLong("id"),
+                rs.getString("username"),
+                rs.getString("password"),
+                rs.getString("role")
+            );
+
+            return new Elector(
+                appUser,
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getString("email")
+            );
+          }
       );
     } catch (Exception e) {
       log.warn(e.getMessage());
