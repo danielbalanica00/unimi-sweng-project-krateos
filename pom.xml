@@ -19,12 +19,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.source>18   </maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
+        <maven.compiler.release>18</maven.compiler.release>
         <junit.version>5.7.1</junit.version>
         <spring.version>2.6.1</spring.version>
-        <javafx.version>17.0.0.1</javafx.version>
+        <javafx.version>18.0.2</javafx.version>
         <plugin.prettier.goal>write</plugin.prettier.goal>
     </properties>
 
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.0</version>
+            <version>2.13.2.1</version>
         </dependency>
     </dependencies>
 
