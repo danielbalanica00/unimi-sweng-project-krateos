@@ -32,6 +32,7 @@ public class Elector {
 
   public Map<String, String> toFlatMap() {
     Map<String, String> map = new TreeMap<>();
+    map.put("id", user.getId().toString());
     map.put("username", user.getUsername());
     map.put("firstName", firstName);
     map.put("lastName", lastName);

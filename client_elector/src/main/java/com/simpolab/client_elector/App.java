@@ -10,12 +10,8 @@ public class App extends Application {
 
   @Override
   public void start(Stage stage) throws IOException {
-    //    System.setProperty("prism.lcdtext", "false");
-
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login/login-view.fxml"));
     Scene scene = new Scene(fxmlLoader.load(), 600, 300);
-    //    scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Roboto");
-    //    scene.getStylesheets().add(getClass().getResource("login/font.css").toExternalForm());
 
     stage.setScene(scene);
     stage.show();
