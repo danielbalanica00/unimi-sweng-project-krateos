@@ -4,7 +4,7 @@ import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 
 public interface SessionService {
-  VotingSession newSession(VotingSession newSession);
+  void newSession(VotingSession newSession);
   void deleteSession(long sessionId);
 
   /*

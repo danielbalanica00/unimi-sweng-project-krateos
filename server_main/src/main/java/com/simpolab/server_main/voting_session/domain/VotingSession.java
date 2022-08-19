@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Validated
 public class VotingSession {
 
@@ -33,4 +32,11 @@ public class VotingSession {
   private boolean needAbsoluteMajority;
   private boolean hasQuorum;
   private Type type;
+
+  public VotingSession() {
+    this.isActive = false;
+    this.isCancelled = false;
+    this.needAbsoluteMajority = false;
+    this.hasQuorum = false;
+  }
 }
