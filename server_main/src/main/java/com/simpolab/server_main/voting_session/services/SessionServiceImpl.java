@@ -1,7 +1,6 @@
 package com.simpolab.server_main.voting_session.services;
 
 import com.simpolab.server_main.db.SessionDAO;
-import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.SQLException;
 import lombok.extern.slf4j.Slf4j;
@@ -48,20 +47,56 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public void newOption(VotingOption newOption) {}
+  public void newOption(long votingSessionId, String optionValue) {
+    try {
+      sessionDAO.createOption(votingSessionId, optionValue);
+    } catch (SQLException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 
   @Override
-  public void newOption(VotingOption newOption, long parentOptionId) {}
+  public void newOption(long votingSessionId, String optionValue, long parentOptionId) {
+    try {
+      sessionDAO.createOption(votingSessionId, optionValue, parentOptionId);
+    } catch (SQLException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 
   @Override
-  public void removeOption(long optionId) {}
+  public void removeOption(long optionId) {
+    try {
+      sessionDAO.deleteOption(optionId);
+    } catch (Exception e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 
   @Override
-  public void startSession(long sessionId) {}
+  public void startSession(long sessionId) {
+    try {
+      sessionDAO.setActive(sessionId);
+    } catch (Exception e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 
   @Override
-  public void endSession(long sessionId) {}
+  public void endSession(long sessionId) {
+    try {
+      sessionDAO.setEnded(sessionId);
+    } catch (Exception e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 
   @Override
-  public void cancelSession(long sessionId) {}
+  public void cancelSession(long sessionId) {
+    try {
+      sessionDAO.setCancelled(sessionId);
+    } catch (Exception e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 }

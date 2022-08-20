@@ -1,5 +1,6 @@
 package com.simpolab.server_main.voting_session.api;
 
+import com.simpolab.server_main.voting_session.domain.VotingOptionRequest;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.services.SessionService;
 import javax.validation.Valid;
@@ -55,23 +56,69 @@ public class SessionController {
 
   @PutMapping(path = "{sessionId}/group/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> insertElectorInGroup(
-      @PathVariable Long sessionId,
-      @PathVariable Long groupId
+    @PathVariable Long sessionId,
+    @PathVariable Long groupId
   ) {
     sessionService.addGroup(sessionId, groupId);
     return null;
   }
 
-  @DeleteMapping(
-      path = "{sessionId}/group/{groupId}",
-      produces = MediaType.APPLICATION_JSON_VALUE
-  )
+  @DeleteMapping(path = "{sessionId}/group/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> removeElectorFromGroup(
-      @PathVariable Long sessionId,
-      @PathVariable Long groupId
+    @PathVariable Long sessionId,
+    @PathVariable Long groupId
   ) {
     sessionService.removeGroup(sessionId, groupId);
     return null;
   }
 
+  @PutMapping(path = "{sessionId}/option", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> insertOptionInVotingSession(
+    @PathVariable Long sessionId,
+    @RequestBody VotingOptionRequest vor
+  ) {
+    log.info("Session ID: {}, Value: {}", sessionId, vor.getValue());
+
+    sessionService.newOption(sessionId, vor.getValue());
+    return null;
+  }
+
+  @PutMapping(
+    path = "{sessionId}/option/{optionId}/suboption",
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Void> insertSubOptionInVotingSession(
+    @PathVariable Long sessionId,
+    @PathVariable Long optionId,
+    @RequestBody VotingOptionRequest vor
+  ) {
+    log.info("Session ID: {}, Parent Option: {}, Value: {}", sessionId, optionId, vor.getValue());
+
+    sessionService.newOption(sessionId, vor.getValue(), optionId);
+    return null;
+  }
+
+  @PatchMapping(path = "{sessionId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> startSession(@PathVariable Long sessionId) {
+    log.info("Starting session with id: {}", sessionId);
+
+    sessionService.startSession(sessionId);
+    return null;
+  }
+
+  @PatchMapping(path = "{sessionId}/end", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> endSession(@PathVariable Long sessionId) {
+    log.info("Ending session with id: {}", sessionId);
+
+    sessionService.endSession(sessionId);
+    return null;
+  }
+
+  @PatchMapping(path = "{sessionId}/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> cancelSession(@PathVariable Long sessionId) {
+    log.info("Canceling session with id: {}", sessionId);
+
+    sessionService.cancelSession(sessionId);
+    return null;
+  }
 }

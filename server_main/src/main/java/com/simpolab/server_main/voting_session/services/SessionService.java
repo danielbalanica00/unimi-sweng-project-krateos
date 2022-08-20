@@ -16,8 +16,10 @@ public interface SessionService {
   /*
     Handle Voting Options
    */
-  void newOption(VotingOption newOption);
-  void newOption(VotingOption newOption, long parentOptionId);
+  void newOption(long votingSessionId, String optionValue);
+
+  void newOption(long votingSessionId, String optionValue, long parentOptionId);
+
   void removeOption(long optionId);
 
   /*

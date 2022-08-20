@@ -10,11 +10,15 @@ public interface SessionDAO {
   void addGroup(long sessionId, long groupId) throws SQLException;
   void removeGroup(long sessionId, long groupId);
 
-  void createOption() throws SQLException;
-  void createOption(long parentOptionId) throws SQLException;
+  void createOption(long votingSessionId, String optionValue) throws SQLException;
+
+  void createOption(long votingSessionId, String optionValue, long parentOptionId)
+    throws SQLException;
+
   void deleteOption(long optionId);
 
-  void setIsActive(long sessionId, boolean newValue) throws SQLException;
+  void setActive(long sessionId) throws SQLException;
 
   void setCancelled(long sessionId) throws SQLException;
+  void setEnded(long sessionId) throws SQLException;
 }
