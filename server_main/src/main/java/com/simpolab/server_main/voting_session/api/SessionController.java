@@ -52,4 +52,26 @@ public class SessionController {
     }
     return null;
   }
+
+  @PutMapping(path = "{sessionId}/group/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> insertElectorInGroup(
+      @PathVariable Long sessionId,
+      @PathVariable Long groupId
+  ) {
+    sessionService.addGroup(sessionId, groupId);
+    return null;
+  }
+
+  @DeleteMapping(
+      path = "{sessionId}/group/{groupId}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Void> removeElectorFromGroup(
+      @PathVariable Long sessionId,
+      @PathVariable Long groupId
+  ) {
+    sessionService.removeGroup(sessionId, groupId);
+    return null;
+  }
+
 }

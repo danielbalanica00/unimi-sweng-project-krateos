@@ -34,10 +34,18 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public void addGroup(long sessionId, long groupId) {}
+  public void addGroup(long sessionId, long groupId) {
+    try {
+      sessionDAO.addGroup(sessionId, groupId);
+    } catch (SQLException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 
   @Override
-  public void removeGroup(long sessionId, long groupId) {}
+  public void removeGroup(long sessionId, long groupId) {
+    sessionDAO.removeGroup(sessionId, groupId);
+  }
 
   @Override
   public void newOption(VotingOption newOption) {}

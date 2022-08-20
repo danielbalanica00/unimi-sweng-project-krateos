@@ -41,7 +41,7 @@ public class SessionDAS implements SessionDAO {
 
   @Override
   public void delete(long id) {
-    var query = "DELETE FROM voting_session WHERE id = ? AND is_active != 0 AND is_cancelled != 0";
+    var query = "DELETE FROM voting_session WHERE id = ? AND is_active = 0 AND is_cancelled = 0";
     try {
       jdbcTemplate.update(query, id);
       log.info("Voting session {} removed successfully", id);
@@ -51,10 +51,27 @@ public class SessionDAS implements SessionDAO {
   }
 
   @Override
-  public void addGroup(long sessionId, long groupId) throws SQLException {}
+  public void addGroup(long sessionId, long groupId) throws SQLException {
+    try {
+      var query = "INSERT INTO session_group (voting_session_id, voting_group_id) VALUES (?, ?)";
+      jdbcTemplate.update(query, sessionId, groupId);
+      log.info("Group {} added to the session {} successfully", groupId, sessionId);
+    } catch (Exception e) {
+      log.error("Failed to add group {} to the session {}", groupId, sessionId);
+      throw new SQLException("Failed to add elector to group", e);
+    }
+  }
 
   @Override
-  public void removeGroup(long sessionId, long groupId) {}
+  public void removeGroup(long sessionId, long groupId) {
+    try {
+      var query = "DELETE FROM session_group WHERE voting_session_id = ? AND voting_group_id = ?";
+      jdbcTemplate.update(query, sessionId, groupId);
+      log.info("Group {} removed from session {} successfully", groupId, sessionId);
+    } catch (Exception e) {
+      log.error("Failed to remove group {} from session {}", groupId, sessionId, e);
+    }
+  }
 
   @Override
   public void createOption() throws SQLException {}
