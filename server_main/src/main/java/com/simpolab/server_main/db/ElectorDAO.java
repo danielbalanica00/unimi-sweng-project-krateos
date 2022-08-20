@@ -11,6 +11,8 @@ public interface ElectorDAO {
 
   Elector get(Long id);
 
+  Elector getByUsername(String username);
+
   List<Elector> getAll();
 
   List<Elector> getAllInGroup(Long groupId);

@@ -89,6 +89,18 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
+  public Elector getByUsername(String username) {
+    String query =
+      "SELECT * FROM elector JOIN user WHERE elector.id = user.id AND user.username = ?";
+    try {
+      return jdbcTemplate.queryForObject(query, electorRowMapper, username);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return null;
+    }
+  }
+
+  @Override
   public List<Elector> getAll() {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id";
     try {

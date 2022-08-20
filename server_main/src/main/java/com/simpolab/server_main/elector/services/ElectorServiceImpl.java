@@ -4,6 +4,7 @@ import com.simpolab.server_main.db.ElectorDAO;
 import com.simpolab.server_main.elector.domain.Elector;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,10 @@ public class ElectorServiceImpl implements ElectorService {
     } catch (SQLException e) {
       throw new IllegalArgumentException(e);
     }
+  }
+
+  @Override
+  public Optional<Elector> getElectorByUsername(String username) {
+    return Optional.ofNullable(electorDAO.getByUsername(username));
   }
 }

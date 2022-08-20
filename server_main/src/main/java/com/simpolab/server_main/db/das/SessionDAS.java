@@ -1,11 +1,20 @@
 package com.simpolab.server_main.db.das;
 
 import com.simpolab.server_main.db.SessionDAO;
+import com.simpolab.server_main.elector.domain.Elector;
+import com.simpolab.server_main.user_authentication.domain.AppUser;
+import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,6 +23,37 @@ import org.springframework.stereotype.Component;
 public class SessionDAS implements SessionDAO {
 
   private final JdbcTemplate jdbcTemplate;
+
+  private final RowMapper<Long> electorIdMapper = (rs, _ignore) -> rs.getLong("elector_id");
+
+  private final RowMapper<VotingSession> votingSessionRowMapper = (rs, _ignore) ->
+    new VotingSession(
+      rs.getLong("id"),
+      rs.getString("name"),
+      rs.getDate("ends_on"),
+      rs.getBoolean("is_active"),
+      rs.getBoolean("is_cancelled"),
+      rs.getBoolean("has_ended"),
+      rs.getBoolean("need_absolute_majority"),
+      rs.getBoolean("has_quorum"),
+      VotingSession.Type.valueOf(rs.getString("type"))
+    );
+
+  private final RowMapper<Elector> electorRowMapper = (rs, rowNum) -> {
+    var appUser = new AppUser(
+      rs.getLong("id"),
+      rs.getString("username"),
+      rs.getString("password"),
+      rs.getString("role")
+    );
+
+    return new Elector(
+      appUser,
+      rs.getString("first_name"),
+      rs.getString("last_name"),
+      rs.getString("email")
+    );
+  };
 
   @Override
   public void create(VotingSession newSession) throws SQLException {
@@ -142,5 +182,119 @@ public class SessionDAS implements SessionDAO {
       throw new SQLException("Failed to end session", e);
     }
     log.info("Session {} is now ended", sessionId);
+  }
+
+  private List<Long> getElectorsOfSessionGroups(long sessionId) {
+    try {
+      var query =
+        "SELECT elector_id FROM session_group AS sg, elector_group as eg WHERE sg.voting_group_id = eg.voting_group_id AND sg.voting_session_id = ?";
+      return jdbcTemplate.query(query, electorIdMapper, sessionId);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return new ArrayList<>();
+    }
+  }
+
+  private void insertElectorsInSessionParticipation(List<Long> electors, long sessionId)
+    throws SQLException {
+    try {
+      String sql =
+        "INSERT INTO session_participation (elector_id, voting_session_id, has_voted) VALUES (?, ?, ?)";
+      jdbcTemplate.batchUpdate(
+        sql,
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            ps.setLong(1, electors.get(i));
+            ps.setLong(2, sessionId);
+            ps.setBoolean(3, false);
+          }
+
+          @Override
+          public int getBatchSize() {
+            return electors.size();
+          }
+        }
+      );
+    } catch (Exception e) {
+      log.error("Failed to add electors to session participation", e);
+      throw new SQLException("Failed to add electors to session participation", e);
+    }
+  }
+
+  @Override
+  public void populateSessionParticipants(long sessionId) throws SQLException {
+    var electors = getElectorsOfSessionGroups(sessionId);
+    if (electors.isEmpty()) throw new IllegalStateException(
+      "No electors where selected for the session " + sessionId
+    );
+
+    insertElectorsInSessionParticipation(electors, sessionId);
+  }
+
+  @Override
+  public VotingSession get(long id) {
+    try {
+      var query = "SELECT * FROM voting_session WHERE id = ?";
+      return jdbcTemplate.queryForObject(query, votingSessionRowMapper, id);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return null;
+    }
+  }
+
+  public Optional<Boolean> getParticipationStatus(long sessionId, long electorId) {
+    try {
+      var query =
+        "SELECT has_voted FROM session_participation WHERE elector_id = ? AND voting_session_id = ?";
+      return Optional.ofNullable(
+        jdbcTemplate.queryForObject(query, Boolean.class, electorId, sessionId)
+      );
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return null;
+    }
+  }
+
+  public synchronized void addVotes(long sessionId, List<Vote> votes) throws SQLException {
+    try {
+      Long maxId = jdbcTemplate.queryForObject("SELECT MAX(id) FROM vote", Long.class);
+      long newId = maxId == null ? 1L : maxId + 1;
+
+      String sql = "INSERT INTO vote (id, voting_option_id, order_idx) VALUES (?, ?, ?)";
+      jdbcTemplate.batchUpdate(
+        sql,
+        new BatchPreparedStatementSetter() {
+          @Override
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            var vote = votes.get(i);
+
+            ps.setLong(1, newId);
+            ps.setLong(2, vote.getOptionId());
+            ps.setLong(3, vote.getOrderIndex());
+          }
+
+          @Override
+          public int getBatchSize() {
+            return votes.size();
+          }
+        }
+      );
+    } catch (Exception e) {
+      log.error("Failed to add votes to session", e);
+      throw new SQLException("Failed to add votes to session", e);
+    }
+  }
+
+  public void setHasVoted(long sessionId, long electorId) throws SQLException {
+    try {
+      String query =
+        "UPDATE session_participation SET has_voted = 1 WHERE voting_session_id = ? AND elector_id = ?";
+      jdbcTemplate.update(query, sessionId, electorId);
+    } catch (Exception e) {
+      log.error("Failed set has voted for elector {} in session {}", electorId, sessionId);
+      throw new SQLException("Failed set has voted for elector in session", e);
+    }
+    log.info("Elector {} has voted successfully in session {}", electorId, sessionId);
   }
 }

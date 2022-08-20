@@ -29,6 +29,7 @@ public class VotingSession {
   private Date endsOn;
   private boolean isActive;
   private boolean isCancelled;
+  private boolean hasEnded;
   private boolean needAbsoluteMajority;
   private boolean hasQuorum;
   private Type type;
@@ -36,6 +37,7 @@ public class VotingSession {
   public VotingSession() {
     this.isActive = false;
     this.isCancelled = false;
+    this.hasEnded = false;
     this.needAbsoluteMajority = false;
     this.hasQuorum = false;
   }

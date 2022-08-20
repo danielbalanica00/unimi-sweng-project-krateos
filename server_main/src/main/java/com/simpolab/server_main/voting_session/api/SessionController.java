@@ -1,14 +1,17 @@
 package com.simpolab.server_main.voting_session.api;
 
+import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOptionRequest;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.services.SessionService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -119,6 +122,27 @@ public class SessionController {
     log.info("Canceling session with id: {}", sessionId);
 
     sessionService.cancelSession(sessionId);
+    return null;
+  }
+
+  @PostMapping(
+    path = "{sessionId}/vote",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Void> newVote(
+    Authentication authentication,
+    @PathVariable Long sessionId,
+    @RequestBody List<Vote> votes
+  ) {
+    try {
+      var username = (String) authentication.getPrincipal();
+
+      sessionService.expressVote(username, sessionId, votes);
+    } catch (Exception e) {
+      log.error("Error ---> ", e);
+      throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+    }
     return null;
   }
 }
