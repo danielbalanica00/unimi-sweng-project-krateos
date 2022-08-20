@@ -4,6 +4,7 @@ import com.simpolab.server_main.db.SessionDAO;
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.user_authentication.domain.AppUser;
 import com.simpolab.server_main.voting_session.domain.Vote;
+import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -39,21 +40,10 @@ public class SessionDAS implements SessionDAO {
       VotingSession.Type.valueOf(rs.getString("type"))
     );
 
-  private final RowMapper<Elector> electorRowMapper = (rs, rowNum) -> {
-    var appUser = new AppUser(
-      rs.getLong("id"),
-      rs.getString("username"),
-      rs.getString("password"),
-      rs.getString("role")
-    );
+  public record Touple(long id, Long parentId) {}
 
-    return new Elector(
-      appUser,
-      rs.getString("first_name"),
-      rs.getString("last_name"),
-      rs.getString("email")
-    );
-  };
+  private final RowMapper<Touple> votingOptionMapper = (rs, _ignore) ->
+    new Touple(rs.getLong("id"), rs.getLong("parent_option_id"));
 
   @Override
   public void create(VotingSession newSession) throws SQLException {
@@ -247,12 +237,13 @@ public class SessionDAS implements SessionDAO {
     try {
       var query =
         "SELECT has_voted FROM session_participation WHERE elector_id = ? AND voting_session_id = ?";
+
       return Optional.ofNullable(
         jdbcTemplate.queryForObject(query, Boolean.class, electorId, sessionId)
       );
     } catch (Exception e) {
       log.warn(e.getMessage());
-      return null;
+      return Optional.empty();
     }
   }
 
@@ -296,5 +287,17 @@ public class SessionDAS implements SessionDAO {
       throw new SQLException("Failed set has voted for elector in session", e);
     }
     log.info("Elector {} has voted successfully in session {}", electorId, sessionId);
+  }
+
+  @Override
+  public List<Touple> getOptionsForSession(long sessionId) {
+    try {
+      var query =
+        "SELECT id, parent_option_id FROM voting_option AS vo  WHERE vo.voting_session_id = ?";
+      return jdbcTemplate.query(query, votingOptionMapper, sessionId);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return new ArrayList<>();
+    }
   }
 }

@@ -3,12 +3,12 @@ package com.simpolab.server_main.voting_session.services;
 import com.simpolab.server_main.db.SessionDAO;
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
+import com.simpolab.server_main.voting_session.VoteValidator;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,15 +128,19 @@ public class SessionServiceImpl implements SessionService {
       if (!session.isActive()) throw new IllegalStateException("Session is not active");
 
       // check elector can vote in the session
-      Optional<Boolean> optCanVote = sessionDAO.getParticipationStatus(sessionId, electorId);
-      if (optCanVote.isEmpty() || !optCanVote.get()) throw new IllegalArgumentException(
+      Optional<Boolean> optHasVoted = sessionDAO.getParticipationStatus(sessionId, electorId);
+      log.info("Has voted: {}", optHasVoted);
+      if (optHasVoted.isEmpty() || optHasVoted.get()) throw new IllegalArgumentException(
         "This user cannot vote in the session"
       );
 
       // check if vote is valid for the voting type
-      /*
-       * HELLO
-       */
+      var sessionType = session.getType();
+      var options = sessionDAO.getOptionsForSession(sessionId);
+      var voteIsValid = VoteValidator.validateVotes(sessionType, votes, options);
+      if (!voteIsValid) throw new IllegalArgumentException(
+        "The given votes are not valid for the session"
+      );
 
       // add vote to votes
       sessionDAO.addVotes(sessionId, votes);
