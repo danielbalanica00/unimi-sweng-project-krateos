@@ -6,7 +6,6 @@ import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.validation.annotation.Validated;
 
 public class VoteValidator {
 

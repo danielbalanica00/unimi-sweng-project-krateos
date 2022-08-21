@@ -92,6 +92,7 @@ CREATE TABLE `session_group` (
 
 LOCK TABLES `session_group` WRITE;
 /*!40000 ALTER TABLE `session_group` DISABLE KEYS */;
+INSERT INTO `session_group` (`voting_session_id`, `voting_group_id`) VALUES (1,1),(1,5);
 /*!40000 ALTER TABLE `session_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,6 +120,7 @@ CREATE TABLE `session_participation` (
 
 LOCK TABLES `session_participation` WRITE;
 /*!40000 ALTER TABLE `session_participation` DISABLE KEYS */;
+INSERT INTO `session_participation` (`elector_id`, `voting_session_id`, `has_voted`) VALUES (9,1,1);
 /*!40000 ALTER TABLE `session_participation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,6 +175,7 @@ CREATE TABLE `vote` (
 
 LOCK TABLES `vote` WRITE;
 /*!40000 ALTER TABLE `vote` DISABLE KEYS */;
+INSERT INTO `vote` (`voting_option_id`, `order_idx`, `id`) VALUES (2,1,1),(3,2,1);
 /*!40000 ALTER TABLE `vote` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -211,14 +214,14 @@ DROP TABLE IF EXISTS `voting_option`;
 CREATE TABLE `voting_option` (
   `id` int NOT NULL AUTO_INCREMENT,
   `voting_session_id` int NOT NULL,
-  `option_value` int NOT NULL,
+  `option_value` varchar(255) NOT NULL,
   `parent_option_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `voting_session_id` (`voting_session_id`),
   KEY `voting_option_voting_option_id_fk` (`parent_option_id`),
   CONSTRAINT `voting_option_ibfk_1` FOREIGN KEY (`voting_session_id`) REFERENCES `voting_session` (`id`),
-  CONSTRAINT `voting_option_voting_option_id_fk` FOREIGN KEY (`parent_option_id`) REFERENCES `voting_option` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `voting_option_voting_option_id_fk` FOREIGN KEY (`parent_option_id`) REFERENCES `voting_option` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,6 +230,7 @@ CREATE TABLE `voting_option` (
 
 LOCK TABLES `voting_option` WRITE;
 /*!40000 ALTER TABLE `voting_option` DISABLE KEYS */;
+INSERT INTO `voting_option` (`id`, `voting_session_id`, `option_value`, `parent_option_id`) VALUES (2,1,'Ciao come va?',NULL),(3,1,'Ciao come va?',NULL),(4,1,'Bene',2),(6,1,'Male',2);
 /*!40000 ALTER TABLE `voting_option` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,14 +245,15 @@ CREATE TABLE `voting_session` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `ends_on` datetime NOT NULL,
-  `is_active` tinyint(1) NOT NULL,
-  `is_cancelled` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `is_cancelled` tinyint(1) NOT NULL DEFAULT '0',
   `need_absolute_majority` tinyint(1) NOT NULL,
   `has_quorum` tinyint(1) NOT NULL,
   `type` varchar(64) NOT NULL,
+  `has_ended` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   CONSTRAINT `check_name` CHECK ((`type` in (_utf8mb4'CATEGORIC_WITH_PREFERENCES',_utf8mb4'CATEGORIC',_utf8mb4'ORDINAL',_utf8mb4'REFERENDUM')))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -257,7 +262,7 @@ CREATE TABLE `voting_session` (
 
 LOCK TABLES `voting_session` WRITE;
 /*!40000 ALTER TABLE `voting_session` DISABLE KEYS */;
-INSERT INTO `voting_session` (`id`, `name`, `ends_on`, `is_active`, `is_cancelled`, `need_absolute_majority`, `has_quorum`, `type`) VALUES (1,'ciao','2022-08-19 17:12:35',1,1,1,1,'ORDINAL');
+INSERT INTO `voting_session` (`id`, `name`, `ends_on`, `is_active`, `is_cancelled`, `need_absolute_majority`, `has_quorum`, `type`, `has_ended`) VALUES (1,'ciao','2022-08-19 17:12:35',1,1,1,1,'ORDINAL',1),(4,'elezione XXX','1970-01-01 01:00:10',0,0,1,1,'CATEGORIC_WITH_PREFERENCES',0),(5,'elezione XXX','1970-01-01 01:00:10',0,1,1,1,'CATEGORIC_WITH_PREFERENCES',0);
 /*!40000 ALTER TABLE `voting_session` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -270,4 +275,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-19 18:11:21
+-- Dump completed on 2022-08-21 15:20:41
