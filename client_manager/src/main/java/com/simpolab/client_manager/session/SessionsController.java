@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -22,7 +22,9 @@ public class SessionsController {
     @FXML
     private Button btnCreateSession;
     @FXML
-    private TableView tableSessions;
+    private ListView lvSessions;
+    @FXML
+    private Button btnOpenSession;
 
     @FXML
     private void onBtnSearchSessionClicked(ActionEvent event) throws Exception{

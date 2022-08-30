@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.session.AddCategoricController">
+   <children>
+      <AnchorPane prefHeight="35.0" prefWidth="560.0">
+         <children>
+            <Text layoutX="197.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add electors">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="23.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnBack" layoutX="1.0" layoutY="4.0" mnemonicParsing="false" onAction="#onBtnBackClicked" prefHeight="27.0" prefWidth="50.0" text="Back">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <TextField fx:id="txtOption" promptText="new option" />
+      <Button fx:id="btnAddOption" mnemonicParsing="false" onAction="#onBtnAddOptionClicked" text="Add option" />
+      <ListView fx:id="lvOptions" prefHeight="200.0" prefWidth="200.0" />
+      <VBox alignment="TOP_CENTER" prefHeight="38.0" prefWidth="560.0">
+         <children>
+            <Button fx:id="btnCreate" mnemonicParsing="false" onAction="#onBtnCreateClicked" prefHeight="35.0" prefWidth="72.0" text="Create" />
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

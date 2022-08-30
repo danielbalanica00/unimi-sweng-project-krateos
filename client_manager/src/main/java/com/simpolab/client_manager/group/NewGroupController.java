@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -18,9 +18,15 @@ public class NewGroupController {
     @FXML
     private TextField txtGroupName;
     @FXML
-    private TableView tableElectorSelection;
-    @FXML
     private Button btnCreateGroup;
+    @FXML
+    private ListView lvAvailableElectors;
+    @FXML
+    private ListView lvAddedElectors;
+    @FXML
+    private Button btnAddElectors;
+    @FXML
+    private Button btnRemoveElectors;
 
     @FXML
     private void onBtnBackClicked(ActionEvent event) throws Exception{

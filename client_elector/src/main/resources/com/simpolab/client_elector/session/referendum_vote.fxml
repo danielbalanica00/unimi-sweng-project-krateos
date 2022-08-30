@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_elector.session.ReferendumVoteController">
+   <children>
+      <AnchorPane prefHeight="49.0" prefWidth="600.0">
+         <children>
+            <Text fx:id="lblSessionName" layoutX="211.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Session A" textAlignment="CENTER" wrappingWidth="137.13671875">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="18.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnBack" mnemonicParsing="false" onAction="#onBtnBackClicked" prefHeight="27.0" prefWidth="50.0" text="Back">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <Text fx:id="lblPrompt" strokeType="OUTSIDE" strokeWidth="0.0" text="Referendum prompt" wrappingWidth="500.7421875">
+         <font>
+            <Font name="Lucida Sans Typewriter Regular" size="12.0" />
+         </font>
+      </Text>
+      <HBox alignment="CENTER" prefHeight="66.0" prefWidth="560.0" spacing="50.0">
+         <children>
+            <CheckBox fx:id="cbAgree" mnemonicParsing="false" text="I agree">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="12.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="cbNotAgree" mnemonicParsing="false" text="I do NOT agree">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="12.0" />
+               </font>
+            </CheckBox>
+         </children>
+      </HBox>
+      <Button fx:id="btnVote" mnemonicParsing="false" onAction="#onBtnVoteClicked" text="Vote" />
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

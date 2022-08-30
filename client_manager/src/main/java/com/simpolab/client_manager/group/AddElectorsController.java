@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
@@ -15,13 +16,15 @@ public class AddElectorsController {
     private Scene scene;
 
     @FXML
-    private TableView tableElectors;
-
+    private Button btnSave;
     @FXML
-    private Button btnAddSelected;
-
+    private ListView lvAvailableElectors;
     @FXML
-    private void onBtnAddSelectedClicked(ActionEvent event) throws Exception{ }
+    private ListView lvAddedElectors;
+    @FXML
+    private Button btnAddElectors;
+    @FXML
+    private Button btnRemoveElectors;
 
     @FXML
     private void onBtnBackClicked(ActionEvent event) throws Exception{

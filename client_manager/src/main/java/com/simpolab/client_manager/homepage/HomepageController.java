@@ -1,6 +1,5 @@
 package com.simpolab.client_manager.homepage;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,19 +7,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class HomepageController {
     private Scene scene;
     private Stage stage;
 
     @FXML
-    private TableView tableActiveSessions;
+    private ListView lvSessions;
     @FXML
     private TableColumn columnName;
     @FXML
@@ -33,6 +29,8 @@ public class HomepageController {
     private Button btnNewGroup;
     @FXML
     private Button btnManageGroup;
+    @FXML
+    private Button btnOpenSession;
 
     /**
      * Switches to create_session.fxml view
