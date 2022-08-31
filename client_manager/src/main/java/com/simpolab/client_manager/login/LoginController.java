@@ -49,6 +49,8 @@ public class LoginController {
         if (!map.get("accessToken").isBlank()) {
             Api.token = map.get("accessToken"); // ONLY FOR TEST PURPOSES
 
+            Api.verifyToken(map.get("accessToken"));
+
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText("Login Successful!");
 
