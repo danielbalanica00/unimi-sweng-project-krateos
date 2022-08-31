@@ -1,8 +1,10 @@
 package com.simpolab.client_manager.group;
 
+import com.simpolab.client_manager.utils.Api;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,7 +13,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class GroupsController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class GroupsController implements Initializable {
     private Stage stage;
     private Scene scene;
 
@@ -44,5 +49,10 @@ public class GroupsController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+//        String res = Api.sendGet("")
     }
 }

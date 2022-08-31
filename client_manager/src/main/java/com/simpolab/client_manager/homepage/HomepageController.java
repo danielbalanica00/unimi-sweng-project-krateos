@@ -83,33 +83,5 @@ public class HomepageController {
         stage.setScene(new Scene(root));
         stage.show();
     }
-
-
-//    private static class RowButton{
-//        private final SimpleStringProperty name;
-//        private final Button button;
-//
-//        public RowButton(SimpleStringProperty name) {
-//            this.name = name;
-//            button = new Button("Do something");
-//        }
-//
-//        public String getName() {
-//            return name.get();
-//        }
-//
-//        public SimpleStringProperty nameProperty() {
-//            return name;
-//        }
-//
-//        public void setName(String name) {
-//            this.name.set(name);
-//        }
-//
-//        public Button getBtn() {
-//            return button;
-//        }
-//    }
-
 }
 

@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import java.util.*;
+
 
 public class NewElectorController {
     private Stage stage;
@@ -17,6 +19,8 @@ public class NewElectorController {
 
     @FXML
     private TextField txtFirstName;
+    @FXML
+    private TextField txtUsername;
     @FXML
     private TextField txtLastName;
     @FXML
@@ -29,7 +33,22 @@ public class NewElectorController {
     private Button btnCreate;
 
     @FXML
-    private void onBtnCreateClicked(ActionEvent event) throws Exception{}
+    private void onBtnCreateClicked(ActionEvent event) throws Exception{
+        String username = txtUsername.getText();
+        String firstName = txtFirstName.getText();
+        String lastName = txtLastName.getText();
+        String email = txtEmail.getText();
+        String password = txtPassword.getText();
+        String passwordReEntered = txtPasswordReEntered.getText();
+
+        Map<String, String> params = new TreeMap<>();
+        params.put("username", txtUsername.getText());
+        params.put("firstName", txtUsername.getText());
+        params.put("username", txtUsername.getText());
+        params.put("username", txtUsername.getText());
+        params.put("username", txtUsername.getText());
+        params.put("username", txtUsername.getText());
+    }
 
     @FXML
     private void onBtnBackClicked(ActionEvent event) throws Exception{

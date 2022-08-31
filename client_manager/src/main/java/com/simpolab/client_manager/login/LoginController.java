@@ -1,18 +1,20 @@
 package com.simpolab.client_manager.login;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import com.simpolab.client_manager.utils.Api;
+import com.simpolab.client_manager.utils.SceneSwitch;
 
+import java.util.Map;
+import java.util.TreeMap;
 
 public class LoginController {
 
@@ -31,13 +33,37 @@ public class LoginController {
 
     @FXML
     private void onLoginClicked(ActionEvent event) throws Exception{
-        System.out.println(getClass().getName());
-        Parent root = FXMLLoader.load(getClass().getResource("../homepage/homepage.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();    // prende l'oggetto che ha chiamato l'evento, da questo ricaviamo la scena
-                                                                            // e dalla scena ricaviamo lo stage
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        String username = txtUsername.getText();
+        String password = txtPassword.getText();
+        String url = "http://127.0.0.1:8080/api/v1/login";
+
+        Map<String, String> credentials = new TreeMap();
+        credentials.put("username", username);
+        credentials.put("password", password);
+
+        String res = Api.sendPost(url, credentials);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> map = mapper.readValue(res, Map.class);
+
+        Alert alert;
+        if (!map.get("accessToken").isBlank()) {
+            Api.token = map.get("accessToken"); // ONLY FOR TEST PURPOSES
+
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("Login Successful!");
+
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            SceneSwitch.switchTo("../electors/electors.fxml", stage);
+        } else {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Login Failed!");
+        }
+
+        alert.setTitle(null);
+        alert.setHeaderText(null);
+        alert.showAndWait();
+
+
     }
 
     @FXML
