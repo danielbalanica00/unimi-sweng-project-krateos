@@ -14,23 +14,19 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 public class ElectorsController implements Initializable {
-
   private Stage stage;
   private Scene scene;
 
   @FXML
-  private ListView lvElectors;
-
+  private ListView<Elector> lvElectors;
   @FXML
   private Button btnRevokeSelected;
 
@@ -59,5 +55,7 @@ public class ElectorsController implements Initializable {
 //    }
 
     lvElectors.getItems().addAll(electors);
+    Elector e = lvElectors.getItems().get(0);
+    System.out.println(e.getId()); // fuck yes
   }
 }

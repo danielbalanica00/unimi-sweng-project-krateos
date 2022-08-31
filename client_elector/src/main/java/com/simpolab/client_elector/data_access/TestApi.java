@@ -5,6 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.NonNull;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -17,7 +22,7 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 public class TestApi {
 
   public static boolean sendPost(String url, String username, String password) {
-    //        String url = "http://127.0.0.1:8080/api/v1/elector/auth";
+    // String url = "http://127.0.0.1:8080/api/v1/elector/auth";
     // setup req
     HttpPost req = new HttpPost(url);
 
@@ -68,5 +73,17 @@ public class TestApi {
     } catch (NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public String verifyToken(@NonNull String token) {
+    Algorithm algorithm = Algorithm.HMAC256("This is a secret");
+    //decode JWT token
+    DecodedJWT decodedJWT = JWT.require(algorithm).build().verify(token);
+
+    //get claims from the payload
+    String username = decodedJWT.getSubject();
+    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+
+    return roles[0];
   }
 }
