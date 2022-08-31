@@ -2,6 +2,7 @@ package com.simpolab.client_manager.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.Gson;
 import lombok.NonNull;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -9,9 +10,12 @@ import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -23,90 +27,97 @@ import java.util.Map;
 
 public class Api {
 
-    public static String token = "";
+  public static String token = "";
+  private static final String baseUrl = "http://127.0.0.1:8080";
 
-    public static String sendPost(String url, Map<String, String> params) {
-        HttpPost req = new HttpPost(url);
 
-        //setup url params (x-www-form-params)
-        List<NameValuePair> urlParams = new ArrayList<NameValuePair>();
+  public static String postUrlParams(String path, Map<String, String> params) {
+    return postUrlParams(path, null, params);
+  }
 
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            urlParams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
+  public static String postUrlParams(String path, @Nullable Map<String, String> headers, Map<String, String> params) {
+    var request = new HttpPost(baseUrl + path);
 
-        //add the url params to the req
-        try {
-            req.setEntity(new UrlEncodedFormEntity(urlParams));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    request.setHeader("Content-type", "application/x-www-form-urlencoded");
+    if (headers != null) headers.forEach(request::setHeader);
 
-        //make the req and parse the result
-        String result = "";
-        try (
-                CloseableHttpClient httpClient = HttpClients.createDefault();
-                CloseableHttpResponse res = httpClient.execute(req)
-        ) {
-            result = EntityUtils.toString(res.getEntity());
-        } catch (Exception e) {
-            System.out.println("******** ERRORE *********");
-            e.printStackTrace();
-        }
 
-        System.out.println("RES: " + result);
-        return result;
+    request.setEntity(new UrlEncodedFormEntity(formatUrlParams(params)));
+    return makeRequest(request);
+  }
+
+  public static <T> String postJson(String path, T body) {
+    return postJson(path, null, body);
+  }
+
+  public static <T> String postJson(String path, @Nullable Map<String, String> headers, T body) {
+    var request = new HttpPost(baseUrl + path);
+
+    request.setHeader("Content-type", "application/json");
+    if (headers != null) headers.forEach(request::setHeader);
+
+    request.setEntity(new StringEntity(new Gson().toJson(body)));
+    return makeRequest(request);
+  }
+
+  private static String makeRequest(ClassicHttpRequest request) {
+    try (CloseableHttpClient httpClient = HttpClients.createDefault(); CloseableHttpResponse res = httpClient.execute(request)) {
+      var result = EntityUtils.toString(res.getEntity());
+      System.out.println("RES: " + result);
+      return result;
+    } catch (Exception e) {
+      System.out.println("******** ERRORE *********");
+      e.printStackTrace();
+    }
+    throw new IllegalStateException("Shouldn't be here");
+  }
+
+  private static List<NameValuePair> formatUrlParams(Map<String, String> params) {
+    List<NameValuePair> urlParams = new ArrayList<>();
+
+    params.forEach((k, v) -> urlParams.add(new BasicNameValuePair(k, v)));
+
+    return urlParams;
+  }
+
+
+  public static String sendGet(String url, String token) {
+    HttpGet req = new HttpGet(url);
+    System.out.println(req.toString());
+
+    req.addHeader("Authorization", "Bearer " + token);
+    System.out.println(Arrays.toString(req.getHeaders()));
+
+    String result = "";
+    try (CloseableHttpClient httpClient = HttpClients.createDefault(); CloseableHttpResponse res = httpClient.execute(req)) {
+      result = EntityUtils.toString(res.getEntity());
+    } catch (Exception e) {
+      System.out.println("******** ERRORE *********");
+      e.printStackTrace();
     }
 
-    public static String sendGet(String url, String token) {
-        HttpGet req = new HttpGet(url);
+    System.out.println("RES: " + result);
+    return result;
+  }
 
-        req.addHeader("Authorization", "Bearer " + token);
+  public static String get(String path, @Nullable Map<String, String> headers) {
+    var request = new HttpGet(baseUrl + path);
 
-        String result = "";
-        try (
-                CloseableHttpClient httpClient = HttpClients.createDefault();
-                CloseableHttpResponse res = httpClient.execute(req)
-        ) {
-            result = EntityUtils.toString(res.getEntity());
-        } catch (Exception e) {
-            System.out.println("******** ERRORE *********");
-            e.printStackTrace();
-        }
+    if (headers != null) headers.forEach(request::setHeader);
 
-        System.out.println("RES: " + result);
-        return result;
-    }
+    return makeRequest(request);
+  }
 
-    private static String stringToMD5(String str) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(str.getBytes());
+  public static void verifyToken(@NonNull String token) {
+    //decode JWT token
+    System.out.println("Token: " + token);
+    DecodedJWT decodedJWT = JWT.decode(token);
 
-            BigInteger no = new BigInteger(1, messageDigest);
-
-            String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
-            }
-
-            return hashtext;
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void verifyToken(@NonNull String token) {
-        //decode JWT token
-        System.out.println("Token: " + token);
-        DecodedJWT decodedJWT = JWT.decode(token);
-
-        //get claims from the payload
-        String username = decodedJWT.getSubject();
-        String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+    //get claims from the payload
+    String username = decodedJWT.getSubject();
+    String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 
 
-        System.out.println("Username: " + username + " roles: " + Arrays.toString(roles));
-    }
+    System.out.println("Username: " + username + " roles: " + Arrays.toString(roles));
+  }
 }

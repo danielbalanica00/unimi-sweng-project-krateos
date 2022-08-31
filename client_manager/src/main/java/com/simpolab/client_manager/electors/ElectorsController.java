@@ -3,11 +3,14 @@ package com.simpolab.client_manager.electors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.simpolab.client_manager.utils.Api;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,15 +45,18 @@ public class ElectorsController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    String res = Api.sendGet("http://127.0.0.1:8080/api/v1/elector", Api.token);
+    String res = Api.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + Api.token));
 
-    ObjectMapper mapper = new ObjectMapper();
-    List<Elector> electors = new ArrayList<>();
-    try {
-      electors = mapper.readValue(res, new TypeReference<List<Elector>>() {});
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
+//    List<Elector> electors = new ArrayList<>();
+
+    List<Elector> electors = new Gson().fromJson(res,  new TypeToken<List<Elector>>(){}.getType());
+//
+//    ObjectMapper mapper = new ObjectMapper();
+//    try {
+//      electors = mapper.readValue(res, new TypeReference<List<Elector>>() {});
+//    } catch (JsonProcessingException e) {
+//      throw new RuntimeException(e);
+//    }
 
     lvElectors.getItems().addAll(electors);
   }

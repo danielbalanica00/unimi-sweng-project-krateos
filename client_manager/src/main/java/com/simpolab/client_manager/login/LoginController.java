@@ -1,6 +1,7 @@
 package com.simpolab.client_manager.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.simpolab.client_manager.utils.Api;
 
 import java.util.Map;
@@ -40,14 +41,18 @@ public class LoginController {
     String username = txtUsername.getText();
     String password = txtPassword.getText();
     String url = "http://127.0.0.1:8080/api/v1/login";
+    String path = "/api/v1/login";
 
     Map<String, String> credentials = new TreeMap();
     credentials.put("username", username);
     credentials.put("password", password);
 
-    String res = Api.sendPost(url, credentials);
-    ObjectMapper mapper = new ObjectMapper();
-    Map<String, String> map = mapper.readValue(res, Map.class);
+//    String res = Api.sendPost(url, credentials);
+    String res = Api.postUrlParams(path, credentials);
+
+    //    ObjectMapper mapper = new ObjectMapper();
+//    Map<String, String> map = mapper.readValue(res, Map.class);
+    Map<String, String> map = new Gson().fromJson(res, Map.class);
 
     Alert alert;
     if (!map.get("accessToken").isBlank()) {
