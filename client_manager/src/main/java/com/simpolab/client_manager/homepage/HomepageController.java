@@ -1,8 +1,13 @@
 package com.simpolab.client_manager.homepage;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simpolab.client_manager.session.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,34 +16,45 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
 
-public class HomepageController {
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
-  private Scene scene;
+public class HomepageController implements Initializable {
   private Stage stage;
 
   @FXML
-  private ListView lvSessions;
-
+  private ListView<Session> lvSessions;
   @FXML
   private TableColumn columnName;
-
   @FXML
   private TableColumn columnAction;
-
   @FXML
   private Button btnNewSession;
-
   @FXML
   private Button btnManageSession;
-
   @FXML
   private Button btnNewGroup;
-
   @FXML
   private Button btnManageGroup;
-
   @FXML
   private Button btnOpenSession;
+
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    String res = "";
+
+    List<Session> activeSessions = new ArrayList<>();
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      activeSessions = mapper.readValue(res, new TypeReference<List<Session>>() {});
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+
+    lvSessions.getItems().addAll(activeSessions);
+  }
 
   /**
    * Switches to create_session.fxml view
@@ -91,4 +107,6 @@ public class HomepageController {
     stage.setScene(new Scene(root));
     stage.show();
   }
+
+
 }
