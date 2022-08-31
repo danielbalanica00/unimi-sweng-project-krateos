@@ -12,76 +12,83 @@ import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
 
 public class HomepageController {
-    private Scene scene;
-    private Stage stage;
 
-    @FXML
-    private ListView lvSessions;
-    @FXML
-    private TableColumn columnName;
-    @FXML
-    private TableColumn columnAction;
-    @FXML
-    private Button btnNewSession;
-    @FXML
-    private Button btnManageSession;
-    @FXML
-    private Button btnNewGroup;
-    @FXML
-    private Button btnManageGroup;
-    @FXML
-    private Button btnOpenSession;
+  private Scene scene;
+  private Stage stage;
 
-    /**
-     * Switches to create_session.fxml view
-     * @param event
-     * @throws Exception
-     */
-    @FXML
-    private void onNewSessionClicked(ActionEvent event) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../session/new_session.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+  @FXML
+  private ListView lvSessions;
 
-    /**
-     * Switches to sessions.fxml view
-     * @param event
-     * @throws Exception
-     */
-    @FXML
-    private void onManageSessionClicked(ActionEvent event) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../session/sessions.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+  @FXML
+  private TableColumn columnName;
 
-    /**
-     * Switches to create_group.fxml view
-     * @param event
-     * @throws Exception
-     */
-    @FXML
-    private void onNewGroupClicked(ActionEvent event) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../group/create.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+  @FXML
+  private TableColumn columnAction;
 
-    /**
-     * Switches to groups.fxml view
-     * @param event
-     * @throws Exception
-     */
-    @FXML
-    private void onManageGroupClicked(ActionEvent event) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../group/groups.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+  @FXML
+  private Button btnNewSession;
+
+  @FXML
+  private Button btnManageSession;
+
+  @FXML
+  private Button btnNewGroup;
+
+  @FXML
+  private Button btnManageGroup;
+
+  @FXML
+  private Button btnOpenSession;
+
+  /**
+   * Switches to create_session.fxml view
+   * @param event
+   * @throws Exception
+   */
+  @FXML
+  private void onNewSessionClicked(ActionEvent event) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getResource("../session/new_session.fxml"));
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    stage.setScene(new Scene(root));
+    stage.show();
+  }
+
+  /**
+   * Switches to sessions.fxml view
+   * @param event
+   * @throws Exception
+   */
+  @FXML
+  private void onManageSessionClicked(ActionEvent event) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getResource("../session/sessions.fxml"));
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    stage.setScene(new Scene(root));
+    stage.show();
+  }
+
+  /**
+   * Switches to create_group.fxml view
+   * @param event
+   * @throws Exception
+   */
+  @FXML
+  private void onNewGroupClicked(ActionEvent event) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getResource("../group/create.fxml"));
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    stage.setScene(new Scene(root));
+    stage.show();
+  }
+
+  /**
+   * Switches to groups.fxml view
+   * @param event
+   * @throws Exception
+   */
+  @FXML
+  private void onManageGroupClicked(ActionEvent event) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getResource("../group/groups.fxml"));
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    stage.setScene(new Scene(root));
+    stage.show();
+  }
 }
-

@@ -6,14 +6,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 public class AddCategoricController {
-    @FXML
-    private Button btnBack;
-    @FXML
-    private TextField txtOption;
-    @FXML
-    private Button btnAddOption;
-    @FXML
-    private ListView lvOptions;
-    @FXML
-    private Button btnCreate;
+
+  @FXML
+  private Button btnBack;
+
+  @FXML
+  private TextField txtOption;
+
+  @FXML
+  private Button btnAddOption;
+
+  @FXML
+  private ListView lvOptions;
+
+  @FXML
+  private Button btnCreate;
 }

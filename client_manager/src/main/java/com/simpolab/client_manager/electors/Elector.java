@@ -4,67 +4,70 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Elector {
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String email;
-    private String id;
 
-    @JsonCreator
-    public Elector(@JsonProperty("firstName") String firstName,
-                   @JsonProperty("lastName") String lastName,
-                   @JsonProperty("username") String username,
-                   @JsonProperty("email") String email,
-                   @JsonProperty("id") String id) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.email = email;
-        this.id = id;
-    }
+  private String firstName;
+  private String lastName;
+  private String username;
+  private String email;
+  private String id;
 
-    @Override
-    public String toString() {
-        return firstName + " " + lastName +" ("+username+")";
-    }
+  @JsonCreator
+  public Elector(
+    @JsonProperty("firstName") String firstName,
+    @JsonProperty("lastName") String lastName,
+    @JsonProperty("username") String username,
+    @JsonProperty("email") String email,
+    @JsonProperty("id") String id
+  ) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.email = email;
+    this.id = id;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  @Override
+  public String toString() {
+    return firstName + " " + lastName + " (" + username + ")";
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
 }

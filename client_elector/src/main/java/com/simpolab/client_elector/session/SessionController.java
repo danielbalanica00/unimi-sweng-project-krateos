@@ -11,28 +11,32 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class SessionController {
-    private Stage stage;
-    private Scene scene;
 
-    @FXML
-    private Text lblSessionName;
-    @FXML
-    private Text lblRemainingTime;
-    @FXML
-    private Text lblDescription;
-    @FXML
-    private Button btnVote;
+  private Stage stage;
+  private Scene scene;
 
-    @FXML
-    private void onBtnVoteClicked(ActionEvent event) throws Exception{}
+  @FXML
+  private Text lblSessionName;
 
-    @FXML
-    private void onBtnBackClicked(ActionEvent event) throws Exception{
-        System.out.println(getClass().getName());
-        Parent root = FXMLLoader.load(getClass().getResource("../homepage/homepage.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+  @FXML
+  private Text lblRemainingTime;
+
+  @FXML
+  private Text lblDescription;
+
+  @FXML
+  private Button btnVote;
+
+  @FXML
+  private void onBtnVoteClicked(ActionEvent event) throws Exception {}
+
+  @FXML
+  private void onBtnBackClicked(ActionEvent event) throws Exception {
+    System.out.println(getClass().getName());
+    Parent root = FXMLLoader.load(getClass().getResource("../homepage/homepage.fxml"));
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    scene = new Scene(root);
+    stage.setScene(scene);
+    stage.show();
+  }
 }

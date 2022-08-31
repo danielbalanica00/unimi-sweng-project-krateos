@@ -12,21 +12,22 @@ import javafx.stage.Stage;
 
 public class GroupController {
 
-    private Stage stage;
-    private Scene scene;
+  private Stage stage;
+  private Scene scene;
 
-    @FXML
-    private ListView lvElectors;
-    @FXML
-    private Button btnEditGroup;
+  @FXML
+  private ListView lvElectors;
 
-    @FXML
-    private void onBtnBackClicked(ActionEvent event) throws Exception{
-        System.out.println(getClass().getName());
-        Parent root = FXMLLoader.load(getClass().getResource("groups.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+  @FXML
+  private Button btnEditGroup;
+
+  @FXML
+  private void onBtnBackClicked(ActionEvent event) throws Exception {
+    System.out.println(getClass().getName());
+    Parent root = FXMLLoader.load(getClass().getResource("groups.fxml"));
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    scene = new Scene(root);
+    stage.setScene(scene);
+    stage.show();
+  }
 }

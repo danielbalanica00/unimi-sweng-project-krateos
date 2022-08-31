@@ -1,6 +1,12 @@
 package com.simpolab.client_manager.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simpolab.client_manager.utils.Api;
+
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,65 +16,62 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import com.simpolab.client_manager.utils.Api;
-import com.simpolab.client_manager.utils.SceneSwitch;
-
-import java.util.Map;
-import java.util.TreeMap;
 
 public class LoginController {
 
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+  private Stage stage;
+  private Scene scene;
+  private Parent root;
 
-    @FXML
-    private PasswordField txtPassword;
-    @FXML
-    private TextField txtUsername;
-    @FXML
-    private Button btnLogin;
-    @FXML
-    private Text lblSignUp;
+  @FXML
+  private PasswordField txtPassword;
 
-    @FXML
-    private void onLoginClicked(ActionEvent event) throws Exception{
-        String username = txtUsername.getText();
-        String password = txtPassword.getText();
-        String url = "http://127.0.0.1:8080/api/v1/login";
+  @FXML
+  private TextField txtUsername;
 
-        Map<String, String> credentials = new TreeMap();
-        credentials.put("username", username);
-        credentials.put("password", password);
+  @FXML
+  private Button btnLogin;
 
-        String res = Api.sendPost(url, credentials);
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> map = mapper.readValue(res, Map.class);
+  @FXML
+  private Text lblSignUp;
 
-        Alert alert;
-        if (!map.get("accessToken").isBlank()) {
-            Api.token = map.get("accessToken"); // ONLY FOR TEST PURPOSES
+  @FXML
+  private void onLoginClicked(ActionEvent event) throws Exception{
+    String username = txtUsername.getText();
+    String password = txtPassword.getText();
+    String url = "http://127.0.0.1:8080/api/v1/login";
 
-            Api.verifyToken(map.get("accessToken"));
+    Map<String, String> credentials = new TreeMap();
+    credentials.put("username", username);
+    credentials.put("password", password);
 
-            alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setContentText("Login Successful!");
+    String res = Api.sendPost(url, credentials);
+    ObjectMapper mapper = new ObjectMapper();
+    Map<String, String> map = mapper.readValue(res, Map.class);
 
-            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            SceneSwitch.switchTo("../electors/electors.fxml", stage);
-        } else {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Login Failed!");
-        }
+    Alert alert;
+    if (!map.get("accessToken").isBlank()) {
+      Api.token = map.get("accessToken"); // ONLY FOR TEST PURPOSES
 
-        alert.setTitle(null);
-        alert.setHeaderText(null);
-        alert.showAndWait();
+      Api.verifyToken(map.get("accessToken"));
 
+      alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setContentText("Login Successful!");
 
+      stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+      SceneSwitch.switchTo("../electors/electors.fxml", stage);
+    } else {
+      alert = new Alert(Alert.AlertType.ERROR);
+      alert.setContentText("Login Failed!");
     }
 
-    @FXML
-    private void onSignUpClicked(){}
+    alert.setTitle(null);
+    alert.setHeaderText(null);
+    alert.showAndWait();
 
+
+  }
+
+  @FXML
+  private void onSignUpClicked() {}
 }

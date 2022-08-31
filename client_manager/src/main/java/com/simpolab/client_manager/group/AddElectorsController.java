@@ -12,27 +12,32 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 public class AddElectorsController {
-    private Stage stage;
-    private Scene scene;
 
-    @FXML
-    private Button btnSave;
-    @FXML
-    private ListView lvAvailableElectors;
-    @FXML
-    private ListView lvAddedElectors;
-    @FXML
-    private Button btnAddElectors;
-    @FXML
-    private Button btnRemoveElectors;
+  private Stage stage;
+  private Scene scene;
 
-    @FXML
-    private void onBtnBackClicked(ActionEvent event) throws Exception{
-        System.out.println(getClass().getName());
-        Parent root = FXMLLoader.load(getClass().getResource("../homepage/homepage.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+  @FXML
+  private Button btnSave;
+
+  @FXML
+  private ListView lvAvailableElectors;
+
+  @FXML
+  private ListView lvAddedElectors;
+
+  @FXML
+  private Button btnAddElectors;
+
+  @FXML
+  private Button btnRemoveElectors;
+
+  @FXML
+  private void onBtnBackClicked(ActionEvent event) throws Exception {
+    System.out.println(getClass().getName());
+    Parent root = FXMLLoader.load(getClass().getResource("../homepage/homepage.fxml"));
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    scene = new Scene(root);
+    stage.setScene(scene);
+    stage.show();
+  }
 }

@@ -1,7 +1,6 @@
 package com.simpolab.client_manager.utils;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.NonNull;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -18,6 +17,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -97,14 +97,16 @@ public class Api {
         }
     }
 
-    public static String verifyToken(@NonNull String token) {
+    public static void verifyToken(@NonNull String token) {
         //decode JWT token
+        System.out.println("Token: " + token);
         DecodedJWT decodedJWT = JWT.decode(token);
 
         //get claims from the payload
         String username = decodedJWT.getSubject();
         String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 
-        return roles[0];
+
+        System.out.println("Username: " + username + " roles: " + Arrays.toString(roles));
     }
 }
