@@ -1,8 +1,8 @@
 package com.simpolab.client_manager.group;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.simpolab.client_manager.electors.Elector;
-import com.simpolab.client_manager.utils.Api;
+import com.simpolab.client_manager.utils.HttpUtils;
+import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -53,7 +53,7 @@ public class NewGroupController implements Initializable {
 
   @FXML
   private void onBtnCreateGroupClicked(ActionEvent event) throws Exception{
-    Api.postJson("/api/v1/group", Map.of("Authorization", "Bearer " + Api.token), new Group(txtGroupName.getText()));
+    HttpUtils.postJson("/api/v1/group", Map.of("Authorization", "Bearer " + HttpUtils.token), new Group(txtGroupName.getText()));
 
     // put requests
 
@@ -91,9 +91,9 @@ public class NewGroupController implements Initializable {
   private void refreshLists(){
     deleteListEntries();
 
-    String electorsJson = Api.get("/api/v1/elector", Map.of("Authorization", "Bearer " + Api.token));
+    String electorsJson = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer " + HttpUtils.token));
 
-    List<Elector> electors = Api.parseJsonArray(electorsJson, Elector.class);
+    List<Elector> electors = JsonUtils.parseJsonArray(electorsJson, Elector.class);
 
     System.out.println(electors.toString());
     System.out.println(requiredElectors.toString());

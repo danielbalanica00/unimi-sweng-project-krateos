@@ -1,22 +1,22 @@
 package com.simpolab.client_manager.login;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.simpolab.client_manager.utils.Api;
-
-import java.util.Map;
-import java.util.TreeMap;
-
+import com.simpolab.client_manager.utils.HttpUtils;
+import com.simpolab.client_manager.utils.JsonUtils;
+import com.simpolab.client_manager.utils.JwtUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.Map;
 
 public class LoginController {
 
@@ -38,24 +38,22 @@ public class LoginController {
 
   @FXML
   private void onLoginClicked(ActionEvent event) throws Exception{
-    String username = txtUsername.getText();
-    String password = txtPassword.getText();
-    String url = "http://127.0.0.1:8080/api/v1/login";
-    String path = "/api/v1/login";
+    var username = txtUsername.getText();
+    var password = txtPassword.getText();
+    var path = "/api/v1/login"; // Todo extract in config file
 
-    Map<String, String> credentials = new TreeMap();
-    credentials.put("username", username);
-    credentials.put("password", password);
+    var credentials = Map.of("username", username, "password", password);
 
-    String res = Api.postUrlParams(path, credentials);
+    String res = HttpUtils.postUrlParams(path, credentials);
+    Map<String, String> map = JsonUtils.parseJson(res, Map.class);
 
-    Map<String, String> map = new Gson().fromJson(res, Map.class);
+    System.out.println("GOT " + map);
 
     Alert alert;
-    if (!map.get("accessToken").isBlank()) {
-      Api.token = map.get("accessToken"); // ONLY FOR TEST PURPOSES
+    if (map != null && !map.get("accessToken").isBlank()) {
+      HttpUtils.token = map.get("accessToken"); // ONLY FOR TEST PURPOSES
 
-      Api.verifyToken(map.get("accessToken"));
+      JwtUtils.verifyToken(map.get("accessToken"));
 
       alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setContentText("Login Successful!");
@@ -70,8 +68,6 @@ public class LoginController {
     alert.setTitle(null);
     alert.setHeaderText(null);
     alert.showAndWait();
-
-
   }
 
   @FXML

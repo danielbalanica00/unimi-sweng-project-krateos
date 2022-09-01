@@ -1,14 +1,9 @@
 package com.simpolab.client_manager.electors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.simpolab.client_manager.utils.Api;
+import com.simpolab.client_manager.utils.HttpUtils;
+import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -41,9 +36,9 @@ public class ElectorsController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    String res = Api.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + Api.token));
+    String res = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + HttpUtils.token));
 
-    List<Elector> electors = Api.parseJsonArray(res, Elector.class);
+    List<Elector> electors = JsonUtils.parseJsonArray(res, Elector.class);
 
     lvElectors.getItems().addAll(electors);
   }

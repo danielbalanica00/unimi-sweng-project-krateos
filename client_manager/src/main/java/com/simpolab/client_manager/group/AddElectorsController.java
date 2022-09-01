@@ -1,10 +1,8 @@
 package com.simpolab.client_manager.group;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpolab.client_manager.electors.Elector;
-import com.simpolab.client_manager.utils.Api;
+import com.simpolab.client_manager.utils.HttpUtils;
+import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.collections.ObservableList;
@@ -12,13 +10,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -73,11 +69,11 @@ public class AddElectorsController implements Initializable {
   private void refreshLists(){
     deleteListEntries();
 
-    String electorsJson = Api.get("/api/v1/elector", Map.of("Authorization", "Bearer " + Api.token));
-    String groupElectorsJson = Api.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer " + Api.token));
+    String electorsJson = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer " + HttpUtils.token));
+    String groupElectorsJson = HttpUtils.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer " + HttpUtils.token));
 
-    List<Elector> electors = Api.parseJsonArray(electorsJson, Elector.class);
-    List<Elector> groupElectors = Api.parseJsonArray(groupElectorsJson, Elector.class);
+    List<Elector> electors = JsonUtils.parseJsonArray(electorsJson, Elector.class);
+    List<Elector> groupElectors = JsonUtils.parseJsonArray(groupElectorsJson, Elector.class);
 
     electors.removeIf(curEl -> groupElectors.stream().anyMatch(reqEl-> reqEl.getId().equals(curEl.getId())));
 

@@ -2,7 +2,7 @@ package com.simpolab.client_manager.electors;
 
 import java.util.*;
 
-import com.simpolab.client_manager.utils.Api;
+import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,7 +63,7 @@ public class NewElectorController {
     User user = new User(username, password);
     Elector elector = new Elector(firstName, lastName, email, user);
 
-    Api.postJson("/api/v1/elector", Map.of("Authorization", "Bearer " + Api.token), elector);
+    HttpUtils.postJson("/api/v1/elector", Map.of("Authorization", "Bearer " + HttpUtils.token), elector);
 
     Alert alert;
     //check if anything went wrong

@@ -1,9 +1,7 @@
 package com.simpolab.client_manager.group;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simpolab.client_manager.utils.Api;
+import com.simpolab.client_manager.utils.HttpUtils;
+import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +14,6 @@ import javafx.stage.Stage;
 import com.simpolab.client_manager.electors.Elector;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -57,9 +54,9 @@ public class GroupController implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     lblGroupName.setText(selectedGroup.getName());
 
-    String electorsJson = Api.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer "+Api.token));
+    String electorsJson = HttpUtils.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer "+ HttpUtils.token));
 
-    List<Elector> electors = Api.parseJsonArray(electorsJson, Elector.class);
+    List<Elector> electors = JsonUtils.parseJsonArray(electorsJson, Elector.class);
 
     lvElectors.getItems().addAll(electors);
   }
