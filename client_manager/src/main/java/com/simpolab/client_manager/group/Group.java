@@ -34,4 +34,9 @@ public class Group {
         this.id = id;
         this.name = name;
     }
+
+    @JsonCreator
+    public Group(@JsonProperty("name") String name){
+        this.name = name;
+    }
 }

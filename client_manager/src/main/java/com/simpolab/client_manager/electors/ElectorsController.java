@@ -43,20 +43,8 @@ public class ElectorsController implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     String res = Api.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + Api.token));
 
-//    List<Elector> electors = new ArrayList<>();
-
-//    List<Elector> electors = new Gson().fromJson(res,  new TypeToken<List<Elector>>(){}.getType());
     List<Elector> electors = Api.parseJsonArray(res, Elector.class);
-//
-//    ObjectMapper mapper = new ObjectMapper();
-//    try {
-//      electors = mapper.readValue(res, new TypeReference<List<Elector>>() {});
-//    } catch (JsonProcessingException e) {
-//      throw new RuntimeException(e);
-//    }
 
     lvElectors.getItems().addAll(electors);
-    Elector e = lvElectors.getItems().get(0);
-    System.out.println(e.getId()); // fuck yes
   }
 }

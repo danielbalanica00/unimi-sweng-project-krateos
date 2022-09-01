@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpolab.client_manager.electors.Elector;
+import com.simpolab.client_manager.utils.Api;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.collections.ObservableList;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class AddElectorsController implements Initializable {
@@ -29,15 +31,10 @@ public class AddElectorsController implements Initializable {
   private ListView<Elector> lvAvailableElectors;
   @FXML
   private ListView<Elector> lvAddedElectors;
-  @FXML
-  private Button btnAddElectors;
-  @FXML
-  private Button btnRemoveElectors;
 
   public static void initGroup(Group group){
     selectedGroup = group;
   }
-
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -58,7 +55,7 @@ public class AddElectorsController implements Initializable {
     ObservableList<Elector> selectedElectors = new ReadOnlyListWrapper<>();
     selectedElectors = lvAvailableElectors.getSelectionModel().getSelectedItems();
 
-    // api post request
+    // api put request
 
     refreshLists();
   }
@@ -68,7 +65,7 @@ public class AddElectorsController implements Initializable {
     ObservableList<Elector> selectedElectors = new ReadOnlyListWrapper<>();
     selectedElectors = lvAddedElectors.getSelectionModel().getSelectedItems();
 
-    // api post request
+    // api del request
 
     refreshLists();
   }
@@ -76,30 +73,21 @@ public class AddElectorsController implements Initializable {
   private void refreshLists(){
     deleteListEntries();
 
-    String electorsJson = "";
-    String groupElectorsJson = "";
+    String electorsJson = Api.get("/api/v1/elector", Map.of("Authorization", "Bearer " + Api.token));
+    String groupElectorsJson = Api.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer " + Api.token));
 
-    List<Elector> electors = new ArrayList<>();
-    List<Elector> groupElectors = new ArrayList<>();
+    List<Elector> electors = Api.parseJsonArray(electorsJson, Elector.class);
+    List<Elector> groupElectors = Api.parseJsonArray(groupElectorsJson, Elector.class);
 
-    ObjectMapper mapper = new ObjectMapper();
-
-    try {
-      electors = mapper.readValue(electorsJson, new TypeReference<List<Elector>>() {});
-      groupElectors = mapper.readValue(groupElectorsJson, new TypeReference<List<Elector>>() {});
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
-
-    electors.remove(groupElectors);
+    electors.removeIf(curEl -> groupElectors.stream().anyMatch(reqEl-> reqEl.getId().equals(curEl.getId())));
 
     lvAvailableElectors.getItems().addAll(electors);
     lvAddedElectors.getItems().addAll(groupElectors);
   }
 
   private void deleteListEntries(){
-    lvAvailableElectors.getItems().removeAll();
-    lvAddedElectors.getItems().removeAll();
+    lvAvailableElectors.getItems().clear();
+    lvAddedElectors.getItems().clear();
   }
 
 }

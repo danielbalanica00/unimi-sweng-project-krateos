@@ -1,11 +1,9 @@
 package com.simpolab.client_manager.group;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.simpolab.client_manager.electors.Elector;
+import com.simpolab.client_manager.utils.Api;
 import com.simpolab.client_manager.utils.SceneSwitch;
-import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +19,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class NewGroupController implements Initializable {
@@ -54,24 +53,26 @@ public class NewGroupController implements Initializable {
 
   @FXML
   private void onBtnCreateGroupClicked(ActionEvent event) throws Exception{
-    // api request
+    Api.postJson("/api/v1/group", Map.of("Authorization", "Bearer " + Api.token), new Group(txtGroupName.getText()));
+
+    // put requests
 
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("homepage/homepage.fxml", stage);
+    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
   }
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("homepage/homepage.fxml", stage);
+    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
   }
 
   @FXML
   private void onBtnAddElectorsClicked(ActionEvent event) throws Exception{
-    ObservableList<Elector> selectedElectors = new ReadOnlyListWrapper<>();
-    selectedElectors = lvAvailableElectors.getSelectionModel().getSelectedItems();
+    ObservableList<Elector> selectedElectors = lvAvailableElectors.getSelectionModel().getSelectedItems();
 
-    requiredElectors.removeAll(selectedElectors);
+    ObservableList<Elector> finalSelectedElectors = selectedElectors;
+    requiredElectors.removeIf(curEl -> finalSelectedElectors.stream().anyMatch(reqEl-> reqEl.getId().equals(curEl.getId())));
     requiredElectors.addAll(selectedElectors);
 
     refreshLists();
@@ -79,10 +80,10 @@ public class NewGroupController implements Initializable {
 
   @FXML
   private void onBtnRemoveElectorsClicked(ActionEvent event) throws Exception{
-    ObservableList<Elector> selectedElectors = new ReadOnlyListWrapper<>();
-    selectedElectors = lvAddedElectors.getSelectionModel().getSelectedItems();
+    ObservableList<Elector> selectedElectors = lvAddedElectors.getSelectionModel().getSelectedItems();
 
-    requiredElectors.removeAll(selectedElectors);
+    ObservableList<Elector> finalSelectedElectors = selectedElectors;
+    requiredElectors.removeIf(curEl -> finalSelectedElectors.stream().anyMatch(reqEl-> reqEl.getId().equals(curEl.getId())));
 
     refreshLists();
   }
@@ -90,26 +91,21 @@ public class NewGroupController implements Initializable {
   private void refreshLists(){
     deleteListEntries();
 
-    String electorsJson = "";
+    String electorsJson = Api.get("/api/v1/elector", Map.of("Authorization", "Bearer " + Api.token));
 
-    List<Elector> electors = new ArrayList<>();
+    List<Elector> electors = Api.parseJsonArray(electorsJson, Elector.class);
 
-    ObjectMapper mapper = new ObjectMapper();
-
-    try {
-      electors = mapper.readValue(electorsJson, new TypeReference<List<Elector>>() {});
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
-
-    electors.remove(requiredElectors);
+    System.out.println(electors.toString());
+    System.out.println(requiredElectors.toString());
+    List<Elector> finalRequiredElectors = requiredElectors;
+    electors.removeIf(curEl -> finalRequiredElectors.stream().anyMatch(reqEl-> reqEl.getId().equals(curEl.getId())));
 
     lvAvailableElectors.getItems().addAll(electors);
     lvAddedElectors.getItems().addAll(requiredElectors);
   }
 
   private void deleteListEntries(){
-    lvAvailableElectors.getItems().removeAll();
-    lvAddedElectors.getItems().removeAll();
+    lvAvailableElectors.getItems().clear();
+    lvAddedElectors.getItems().clear();
   }
 }

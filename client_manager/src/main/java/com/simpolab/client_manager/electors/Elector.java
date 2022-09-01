@@ -10,6 +10,7 @@ public class Elector {
   private String username;
   private String email;
   private String id;
+  private User user;
 
   @JsonCreator
   public Elector(
@@ -24,6 +25,25 @@ public class Elector {
     this.username = username;
     this.email = email;
     this.id = id;
+  }
+
+
+  @JsonCreator
+  public Elector(@JsonProperty("firstName") String firstName,
+                 @JsonProperty("lastName") String lastName,
+                 @JsonProperty("email") String email,
+                 @JsonProperty("user") User user) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.user = user;
+  }
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 
   @Override

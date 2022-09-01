@@ -2,6 +2,7 @@ package com.simpolab.client_manager.electors;
 
 import java.util.*;
 
+import com.simpolab.client_manager.utils.Api;
 import com.simpolab.client_manager.utils.SceneSwitch;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class NewElectorController {
+
 
   private Stage stage;
   private Scene scene;
@@ -50,15 +52,18 @@ public class NewElectorController {
     String password = txtPassword.getText();
     String passwordReEntered = txtPasswordReEntered.getText();
 
-    Map<String, String> params = new TreeMap<>();
-    params.put("username", txtUsername.getText());
-    params.put("firstName", txtUsername.getText());
-    params.put("username", txtUsername.getText());
-    params.put("username", txtUsername.getText());
-    params.put("username", txtUsername.getText());
-    params.put("username", txtUsername.getText());
+//    Map<String, String> params = new TreeMap<>();
+//    params.put("username", txtUsername.getText());
+//    params.put("firstName", txtUsername.getText());
+//    params.put("username", txtUsername.getText());
+//    params.put("username", txtUsername.getText());
+//    params.put("username", txtUsername.getText());
+//    params.put("username", txtUsername.getText());
 
-    // do shit
+    User user = new User(username, password);
+    Elector elector = new Elector(firstName, lastName, email, user);
+
+    Api.postJson("/api/v1/elector", Map.of("Authorization", "Bearer " + Api.token), elector);
 
     Alert alert;
     //check if anything went wrong

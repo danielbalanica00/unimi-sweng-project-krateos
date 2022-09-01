@@ -59,6 +59,7 @@ public class Api {
     if (headers != null) headers.forEach(request::setHeader);
 
     request.setEntity(new StringEntity(new Gson().toJson(body)));
+    System.out.println("BODY: " + new Gson().toJson(body));
     return makeRequest(request);
   }
 

@@ -25,7 +25,7 @@
             </Button>
          </children>
       </AnchorPane>
-      <HBox prefHeight="247.0" prefWidth="560.0" spacing="15.0">
+      <HBox prefHeight="285.0" prefWidth="560.0" spacing="15.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
@@ -43,7 +43,6 @@
             </VBox>
          </children>
       </HBox>
-      <Button fx:id="btnSave" mnemonicParsing="false" onAction="#onBtnSaveClicked" prefHeight="35.0" prefWidth="72.0" text="Save" />
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

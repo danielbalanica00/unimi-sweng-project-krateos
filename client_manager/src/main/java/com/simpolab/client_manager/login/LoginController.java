@@ -47,11 +47,8 @@ public class LoginController {
     credentials.put("username", username);
     credentials.put("password", password);
 
-//    String res = Api.sendPost(url, credentials);
     String res = Api.postUrlParams(path, credentials);
 
-    //    ObjectMapper mapper = new ObjectMapper();
-//    Map<String, String> map = mapper.readValue(res, Map.class);
     Map<String, String> map = new Gson().fromJson(res, Map.class);
 
     Alert alert;
@@ -64,7 +61,7 @@ public class LoginController {
       alert.setContentText("Login Successful!");
 
       stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-      SceneSwitch.switchTo("../electors/electors.fxml", stage);
+      SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
     } else {
       alert = new Alert(Alert.AlertType.ERROR);
       alert.setContentText("Login Failed!");

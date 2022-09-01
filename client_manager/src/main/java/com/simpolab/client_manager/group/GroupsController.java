@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.simpolab.client_manager.utils.SceneSwitch;
@@ -47,12 +48,6 @@ public class GroupsController implements Initializable {
 
   @FXML
   private void onBtnSearchGroupClicked(ActionEvent event) throws Exception {
-    int selectedIndex = lvGroups.getSelectionModel().getSelectedIndex();
-    Group selectedGroup = lvGroups.getItems().get(selectedIndex);
-    GroupController.initGroup(selectedGroup);
-
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/group.fxml", stage);
   }
 
   @FXML
@@ -62,29 +57,28 @@ public class GroupsController implements Initializable {
   }
 
   @FXML
-  private void onBtnBackClicked(ActionEvent event) throws Exception {
-    System.out.println(getClass().getName());
-    Parent root = FXMLLoader.load(getClass().getResource("../homepage/homepage.fxml"));
+  private void onBtnOpenGroupClicked(ActionEvent event) throws Exception{
+    int selectedIndex = lvGroups.getSelectionModel().getSelectedIndex();
+    Group selectedGroup = lvGroups.getItems().get(selectedIndex);
+    GroupController.initGroup(selectedGroup);
+
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    scene = new Scene(root);
-    stage.setScene(scene);
-    stage.show();
+    SceneSwitch.switchTo("../group/group.fxml", stage);
+  }
+
+  @FXML
+  private void onBtnBackClicked(ActionEvent event) throws Exception {
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     lvGroups.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-    String res = "";
+    String res = Api.get("/api/v1/group", Map.of("Authorization", "Bearer " + Api.token));
 
-    ObjectMapper mapper = new ObjectMapper();
-    List<Group> groups = new ArrayList<>();
-
-    try {
-      groups = mapper.readValue(res, new TypeReference<List<Group>>() {});
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
+    List<Group> groups = Api.parseJsonArray(res, Group.class);
 
     lvGroups.getItems().addAll(groups);
   }
