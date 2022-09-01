@@ -3,6 +3,8 @@ package com.simpolab.client_manager.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.simpolab.client_manager.electors.Elector;
 import lombok.NonNull;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -17,6 +19,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,7 +43,6 @@ public class Api {
 
     request.setHeader("Content-type", "application/x-www-form-urlencoded");
     if (headers != null) headers.forEach(request::setHeader);
-
 
     request.setEntity(new UrlEncodedFormEntity(formatUrlParams(params)));
     return makeRequest(request);
@@ -80,6 +82,13 @@ public class Api {
     return urlParams;
   }
 
+  public static <T> T parseJson(String jsonString, Class<T> objectClass) {
+    return new Gson().fromJson(jsonString, objectClass);
+  }
+  public static <T> List<T> parseJsonArray(String jsonString, Class<T> objectClass) {
+    var type = TypeToken.getParameterized(List.class, objectClass).getType();
+    return new Gson().fromJson(jsonString, type);
+  }
 
   public static String sendGet(String url, String token) {
     HttpGet req = new HttpGet(url);

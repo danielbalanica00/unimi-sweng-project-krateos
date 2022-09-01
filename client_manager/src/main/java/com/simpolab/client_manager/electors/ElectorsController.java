@@ -45,7 +45,8 @@ public class ElectorsController implements Initializable {
 
 //    List<Elector> electors = new ArrayList<>();
 
-    List<Elector> electors = new Gson().fromJson(res,  new TypeToken<List<Elector>>(){}.getType());
+//    List<Elector> electors = new Gson().fromJson(res,  new TypeToken<List<Elector>>(){}.getType());
+    List<Elector> electors = Api.parseJsonArray(res, Elector.class);
 //
 //    ObjectMapper mapper = new ObjectMapper();
 //    try {
