@@ -3,9 +3,11 @@ package com.simpolab.server_main.db.das;
 import com.simpolab.server_main.db.ElectorDAO;
 import com.simpolab.server_main.db.UserDAO;
 import com.simpolab.server_main.elector.domain.Elector;
+import com.simpolab.server_main.elector.domain.NewElector;
 import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,34 +38,47 @@ public class ElectorDAS implements ElectorDAO {
     );
   };
 
+  private final RowMapper<NewElector> newElectorRowMapper = (rs, rowNum) ->
+    NewElector
+      .builder()
+      .id(rs.getLong("id"))
+      .username(rs.getString("username"))
+      .password(rs.getString("password"))
+      .role(rs.getString("role"))
+      .firstName(rs.getString("first_name"))
+      .lastName(rs.getString("last_name"))
+      .email(rs.getString("email"))
+      .build();
+
   @Autowired
   private UserDAO userRepo;
 
   @Override
-  public void create(Elector newElector) throws SQLException {
-    Long id = null;
-    var appUser = newElector.getUser();
-    appUser.setRole("elector");
+  public void create(NewElector newElector) throws SQLException {
+    newElector.setRole("elector");
 
     try {
-      userRepo.newUser(appUser);
-      id = userRepo.findByUsername(appUser.getUsername()).getId();
-      if (id == null) throw new IllegalStateException("The user with id " + id + " was not found");
+      userRepo.newUser(AppUser.from(newElector));
+      Optional<AppUser> user = userRepo.findByUsername2(newElector.getUsername());
+      if (user.isEmpty()) throw new IllegalStateException(
+        "[XXX] - Couldn't find the user that was just created"
+      );
 
       String createElector =
         "INSERT IGNORE INTO elector (id, email, first_name, last_name) VALUES (?, ?, ?, ?)";
-      jdbcTemplate.update(
+      var rows = jdbcTemplate.update(
         createElector,
-        id,
+        user.get().getId(),
         newElector.getEmail(),
         newElector.getFirstName(),
         newElector.getLastName()
       );
+      log.debug("affected rows: " + rows);
     } catch (Exception e) {
       log.error("Failed to create new elector");
       throw new SQLException("Failed to create new elector", e);
     }
-    log.info("Elector created successfully");
+    log.debug("Elector created successfully");
   }
 
   @Override
@@ -78,13 +93,14 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
-  public Elector get(Long id) {
+  public Optional<NewElector> get(long id) {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id AND elector.id = ?";
     try {
-      return jdbcTemplate.queryForObject(query, electorRowMapper, id);
+      NewElector newElector = jdbcTemplate.queryForObject(query, newElectorRowMapper, id);
+      return Optional.ofNullable(newElector);
     } catch (Exception e) {
-      log.warn(e.getMessage());
-      return null;
+      log.error(e.getMessage());
+      return Optional.empty();
     }
   }
 
@@ -101,13 +117,13 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
-  public List<Elector> getAll() {
+  public List<NewElector> getAll() {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id";
     try {
-      return jdbcTemplate.query(query, electorRowMapper);
+      return jdbcTemplate.query(query, newElectorRowMapper);
     } catch (Exception e) {
       log.warn(e.getMessage());
-      return null;
+      return List.of();
     }
   }
 

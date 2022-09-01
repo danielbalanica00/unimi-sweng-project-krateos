@@ -6,5 +6,11 @@ spring:
   jackson:
     default-property-inclusion: non_null
 ---
+logging:
+  level:
+    com:
+      simpolab:
+        server_main: debug
+---
 auth:
   secret: "This is a secret"

@@ -1,7 +1,6 @@
 package com.simpolab.server_main.elector.domain;
 
 import com.simpolab.server_main.user_authentication.domain.AppUser;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.validation.Valid;

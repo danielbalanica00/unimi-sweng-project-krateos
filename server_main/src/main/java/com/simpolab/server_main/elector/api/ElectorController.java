@@ -1,11 +1,9 @@
 package com.simpolab.server_main.elector.api;
 
-import com.simpolab.server_main.elector.domain.Elector;
+import com.simpolab.server_main.elector.domain.NewElector;
 import com.simpolab.server_main.elector.services.ElectorService;
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,56 +22,49 @@ public class ElectorController {
   private ElectorService electorService;
 
   @GetMapping(path = "{elector_id}")
-  public ResponseEntity<Map<String, String>> getElector(
-    @PathVariable("elector_id") Long electorId
-  ) {
+  public ResponseEntity<NewElector> getElector(@PathVariable("elector_id") long electorId) {
     var elector = electorService.getElector(electorId);
 
     if (elector == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-    return ResponseEntity.ok(elector.toFlatMap());
+    return ResponseEntity.ok(elector);
   }
 
   @GetMapping
-  public ResponseEntity<List<Map<String, String>>> getElectors() {
+  public ResponseEntity<List<NewElector>> getElectors() {
     var electors = electorService.getElectors();
-
-    var result = electors.stream().map(Elector::toFlatMap).toList();
-
-    return ResponseEntity.ok(result);
+    return ResponseEntity.ok(electors);
   }
 
   @DeleteMapping(path = "{elector_id}")
-  public ResponseEntity<Void> deleteElector(@PathVariable("elector_id") Long id) {
+  public ResponseEntity<Void> deleteElector(@PathVariable("elector_id") long id) {
     try {
       electorService.deleteElector(id);
     } catch (Exception e) {
-      log.error("User {} not found", id, e);
+      log.error("Elector {} not found", id, e);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
-    return null;
+    return ResponseEntity.ok().build();
   }
 
   // https://reflectoring.io/bean-validation-with-spring-boot/
-  @PostMapping(
-    path = "",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE
-  )
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> newElector(
-    @Valid @RequestBody Elector elector,
+    @Valid @RequestBody NewElector elector,
     BindingResult bindingResult
   ) {
+    log.debug("[New Elector] -  {}", elector);
     if (bindingResult.hasErrors()) {
-      log.warn("Error: {}", bindingResult.getAllErrors());
+      log.debug("[New Elector] - Validation error: {}", bindingResult.getAllErrors());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     try {
       electorService.newElector(elector);
     } catch (Exception e) {
-      log.error("Error ---> ", e);
+      log.error("[New Elector] - Error:  ", e);
       throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
     }
-    return null;
+
+    return ResponseEntity.ok().build();
   }
 }

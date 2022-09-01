@@ -2,6 +2,7 @@ package com.simpolab.server_main.elector.services;
 
 import com.simpolab.server_main.db.ElectorDAO;
 import com.simpolab.server_main.elector.domain.Elector;
+import com.simpolab.server_main.elector.domain.NewElector;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class ElectorServiceImpl implements ElectorService {
   private ElectorDAO electorDAO;
 
   @Override
-  public void newElector(Elector newElector) {
+  public void newElector(NewElector newElector) {
     try {
       electorDAO.create(newElector);
     } catch (SQLException e) {
@@ -26,23 +27,15 @@ public class ElectorServiceImpl implements ElectorService {
   }
 
   @Override
-  public Elector getElector(Long id) {
+  public NewElector getElector(long id) {
     var elector = electorDAO.get(id);
-    if (elector == null) return null;
-
-    var user = elector.getUser();
-    user.sanitize();
-
-    return elector;
+    return elector.isEmpty() ? null : elector.get().sanitized();
   }
 
   @Override
-  public List<Elector> getElectors() {
-    var electors = electorDAO.getAll();
-
-    electors.forEach(elector -> elector.getUser().sanitize());
-
-    return electors;
+  public List<NewElector> getElectors() {
+    List<NewElector> electors = electorDAO.getAll();
+    return electors.stream().map(NewElector::sanitized).toList();
   }
 
   @Override
