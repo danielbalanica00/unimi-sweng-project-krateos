@@ -95,7 +95,7 @@ public class HttpUtils {
   private static String makeRequest(ClassicHttpRequest request) {
     try (CloseableHttpClient httpClient = HttpClients.createDefault(); CloseableHttpResponse res = httpClient.execute(request)) {
       var result = EntityUtils.toString(res.getEntity());
-      System.out.println("RES: " + result);
+      System.out.printf("[%d] - Result: %s \n", res.getCode(), result);
       return result;
     } catch (Exception e) {
       System.out.println("******** ERRORE *********");

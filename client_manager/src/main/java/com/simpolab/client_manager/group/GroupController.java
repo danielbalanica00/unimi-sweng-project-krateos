@@ -1,5 +1,7 @@
 package com.simpolab.client_manager.group;
 
+import com.simpolab.client_manager.electors.Elector;
+import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
@@ -11,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import com.simpolab.client_manager.electors.Elector;
 
 import java.net.URL;
 import java.util.List;
@@ -54,7 +55,7 @@ public class GroupController implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     lblGroupName.setText(selectedGroup.getName());
 
-    String electorsJson = HttpUtils.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer "+ HttpUtils.token));
+    String electorsJson = HttpUtils.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer "+ LoginSession.getAccessToken()));
 
     List<Elector> electors = JsonUtils.parseJsonArray(electorsJson, Elector.class);
 

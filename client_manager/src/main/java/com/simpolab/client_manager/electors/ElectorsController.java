@@ -1,12 +1,9 @@
 package com.simpolab.client_manager.electors;
 
+import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +12,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ElectorsController implements Initializable {
   private Stage stage;
@@ -36,7 +38,7 @@ public class ElectorsController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    String res = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + HttpUtils.token));
+    String res = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + LoginSession.getAccessToken()));
 
     List<Elector> electors = JsonUtils.parseJsonArray(res, Elector.class);
 

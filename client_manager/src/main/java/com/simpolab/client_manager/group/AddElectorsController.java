@@ -1,6 +1,7 @@
 package com.simpolab.client_manager.group;
 
 import com.simpolab.client_manager.electors.Elector;
+import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneSwitch;
@@ -69,8 +70,8 @@ public class AddElectorsController implements Initializable {
   private void refreshLists(){
     deleteListEntries();
 
-    String electorsJson = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer " + HttpUtils.token));
-    String groupElectorsJson = HttpUtils.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer " + HttpUtils.token));
+    String electorsJson = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()));
+    String groupElectorsJson = HttpUtils.get("/api/v1/group/"+selectedGroup.getId()+"/elector", Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()));
 
     List<Elector> electors = JsonUtils.parseJsonArray(electorsJson, Elector.class);
     List<Elector> groupElectors = JsonUtils.parseJsonArray(groupElectorsJson, Elector.class);
