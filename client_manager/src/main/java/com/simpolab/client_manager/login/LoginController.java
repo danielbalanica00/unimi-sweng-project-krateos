@@ -1,9 +1,6 @@
 package com.simpolab.client_manager.login;
 
-import com.simpolab.client_manager.utils.HttpUtils;
-import com.simpolab.client_manager.utils.JsonUtils;
-import com.simpolab.client_manager.utils.JwtUtils;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -37,39 +34,37 @@ public class LoginController {
   private Text lblSignUp;
 
   @FXML
-  private void onLoginClicked(ActionEvent event) throws Exception{
+  private void onLoginClicked(ActionEvent event) throws Exception {
     var username = txtUsername.getText();
     var password = txtPassword.getText();
     var path = "/api/v1/login"; // Todo extract in config file
 
     var credentials = Map.of("username", username, "password", password);
 
-    String res = HttpUtils.postUrlParams(path, credentials);
-    Map<String, String> map = JsonUtils.parseJson(res, Map.class);
+    String tokensJson = HttpUtils.postUrlParams(path, credentials);
+    System.out.println("Got: " + tokensJson);
 
-    System.out.println("GOT " + map);
-
-    Alert alert;
-    if (map != null && !map.get("accessToken").isBlank()) {
-      HttpUtils.token = map.get("accessToken"); // ONLY FOR TEST PURPOSES
-
-      JwtUtils.verifyToken(map.get("accessToken"));
-
-      alert = new Alert(Alert.AlertType.INFORMATION);
-      alert.setContentText("Login Successful!");
-
-      stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-      SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
-    } else {
-      alert = new Alert(Alert.AlertType.ERROR);
-      alert.setContentText("Login Failed!");
+    // CASE 1: Failed login
+    if (tokensJson == null || tokensJson.isBlank()) {
+      AlertUtils.alert(Alert.AlertType.ERROR, "Your username or password is invalid");
+      return;
     }
 
-    alert.setTitle(null);
-    alert.setHeaderText(null);
-    alert.showAndWait();
+    AuthTokens tokens = JsonUtils.parseJson(tokensJson, AuthTokens.class);
+    String[] roles = JwtUtils.getRoles(tokens.getAccessToken());
+
+    // CASE 2: Login successfully but user is not a manager
+    if (!roles[0].equals("MANAGER")) {
+      AlertUtils.alert(Alert.AlertType.ERROR, "Unauthorized User");
+      return;
+    }
+
+    // CASE 3: Login successfully and user is a manager
+    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
   }
 
   @FXML
-  private void onSignUpClicked() {}
+  private void onSignUpClicked() {
+  }
 }
