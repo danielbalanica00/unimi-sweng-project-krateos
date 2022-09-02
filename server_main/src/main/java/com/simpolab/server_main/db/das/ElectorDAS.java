@@ -128,14 +128,14 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
-  public List<Elector> getAllInGroup(Long groupId) {
+  public List<NewElector> getAllInGroup(Long groupId) {
     String query =
       "SELECT * FROM elector_group AS eg, elector, user WHERE elector.id = user.id AND eg.elector_id = elector.id AND eg.voting_group_id = ?";
     try {
-      return jdbcTemplate.query(query, electorRowMapper, groupId);
+      return jdbcTemplate.query(query, newElectorRowMapper, groupId);
     } catch (Exception e) {
       log.warn(e.getMessage());
-      return null;
+      return List.of();
     }
   }
 }

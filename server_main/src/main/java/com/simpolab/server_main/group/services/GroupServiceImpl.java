@@ -2,7 +2,7 @@ package com.simpolab.server_main.group.services;
 
 import com.simpolab.server_main.db.ElectorDAO;
 import com.simpolab.server_main.db.GroupDAO;
-import com.simpolab.server_main.elector.domain.Elector;
+import com.simpolab.server_main.elector.domain.NewElector;
 import com.simpolab.server_main.group.domain.Group;
 import java.sql.SQLException;
 import java.util.List;
@@ -38,12 +38,10 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public List<Elector> getElectorsInGroup(Long id) {
+  public List<NewElector> getElectorsInGroup(Long id) {
     var electors = electorDAO.getAllInGroup(id);
 
-    electors.forEach(elector -> elector.getUser().sanitize());
-
-    return electors;
+    return electors.stream().map(NewElector::sanitized).toList();
   }
 
   @Override

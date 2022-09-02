@@ -1,10 +1,8 @@
 package com.simpolab.server_main.group.api;
 
-import com.simpolab.server_main.elector.domain.Elector;
+import com.simpolab.server_main.elector.domain.NewElector;
 import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.group.services.GroupService;
-import java.util.List;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/group")
@@ -36,7 +37,7 @@ public class GroupController {
   }
 
   @GetMapping(path = "{group_id}/elector", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<Elector>> getElectorsInGroup(@PathVariable("group_id") Long id) {
+  public ResponseEntity<List<NewElector>> getElectorsInGroup(@PathVariable("group_id") Long id) {
     var electors = groupService.getElectorsInGroup(id);
     return ResponseEntity.ok(electors);
   }

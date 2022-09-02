@@ -17,5 +17,5 @@ public interface ElectorDAO {
 
   List<NewElector> getAll();
 
-  List<Elector> getAllInGroup(Long groupId);
+  List<NewElector> getAllInGroup(Long groupId);
 }
