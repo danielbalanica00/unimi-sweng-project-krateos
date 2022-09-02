@@ -4,7 +4,7 @@ import com.simpolab.client_manager.electors.Elector;
 import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,7 +40,7 @@ public class GroupController implements Initializable {
     AddElectorsController.initGroup(selectedGroup);
 
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/add_electors.fxml", stage);
+    SceneUtils.switchTo("../group/add_electors.fxml", stage);
   }
 
   @FXML
@@ -48,7 +48,7 @@ public class GroupController implements Initializable {
     selectedGroup = null;
 
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/groups.fxml", stage);
+    SceneUtils.switchTo("../group/groups.fxml", stage);
   }
 
   @Override

@@ -2,7 +2,7 @@ package com.simpolab.client_manager.electors;
 
 import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,26 +53,25 @@ public class NewElectorController {
     String password = txtPassword.getText();
     String passwordReEntered = txtPasswordReEntered.getText();
 
-//    Map<String, String> params = new TreeMap<>();
-//    params.put("username", txtUsername.getText());
-//    params.put("firstName", txtUsername.getText());
-//    params.put("username", txtUsername.getText());
-//    params.put("username", txtUsername.getText());
-//    params.put("username", txtUsername.getText());
-//    params.put("username", txtUsername.getText());
-
-    User user = new User(username, password);
-    Elector elector = new Elector(firstName, lastName, email, user);
-
-    HttpUtils.postJson("/api/v1/elector", Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()), elector);
-
     Alert alert;
-    //check if anything went wrong
+
+    if(!password.equals(passwordReEntered)){
+      alert = new Alert(Alert.AlertType.ERROR);
+      alert.setContentText("Passwords do not match");
+      txtPassword.clear();
+      txtPasswordReEntered.clear();
+      return;
+    }
+
+    Elector elector = new Elector(firstName, lastName, email, username, password);
+
+    String response =  HttpUtils.postJson("/api/v1/elector", Map.of("Authorization", "Bearer " + HttpUtils.token), elector);
+
     alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setContentText("Group created successfully");
+    alert.setContentText("Elector created successfully");
 
     stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
+    SceneUtils.switchTo("../electors/electors.fxml", stage);
   }
 
   @FXML

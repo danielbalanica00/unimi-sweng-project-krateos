@@ -4,7 +4,7 @@ import com.simpolab.client_manager.electors.Elector;
 import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,16 +56,21 @@ public class NewGroupController implements Initializable {
   private void onBtnCreateGroupClicked(ActionEvent event) throws Exception{
     HttpUtils.postJson("/api/v1/group", Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()), new Group(txtGroupName.getText()));
 
-    // put requests
+    // retrieve group id first
+
+//    for(Elector el : requiredElectors){
+//      HttpUtils.put("/api/v1/group/" + selectedGroup.getId()+"/elector/" + el.getId(), Map.of("Authorization", "Bearer " + HttpUtils.token), null);
+//    }
+
 
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
+    SceneUtils.switchTo("../homepage/homepage.fxml", stage);
   }
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
+    SceneUtils.switchTo("../homepage/homepage.fxml", stage);
   }
 
   @FXML

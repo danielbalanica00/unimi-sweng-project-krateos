@@ -1,23 +1,14 @@
 package com.simpolab.client_manager.homepage;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simpolab.client_manager.session.Session;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +37,7 @@ public class HomepageController implements Initializable {
   @FXML
   private void onBtnNewElectorClicked(ActionEvent event) throws Exception{
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../electors/new_elector.fxml", stage);
+    SceneUtils.switchTo("../electors/new_elector.fxml", stage);
   }
 
   /**
@@ -57,7 +48,7 @@ public class HomepageController implements Initializable {
   @FXML
   private void onBtnManageElectorsClicked(ActionEvent event) throws Exception{
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../electors/electors.fxml", stage);
+    SceneUtils.switchTo("../electors/electors.fxml", stage);
   }
 
   /**
@@ -68,7 +59,7 @@ public class HomepageController implements Initializable {
   @FXML
   private void onBtnNewSessionClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../session/new_session.fxml", stage);
+    SceneUtils.switchTo("../session/new_session.fxml", stage);
   }
 
   /**
@@ -79,7 +70,7 @@ public class HomepageController implements Initializable {
   @FXML
   private void onBtnManageSessionClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../session/sessions.fxml", stage);
+    SceneUtils.switchTo("../session/sessions.fxml", stage);
   }
 
   /**
@@ -90,7 +81,7 @@ public class HomepageController implements Initializable {
   @FXML
   private void onBtnNewGroupClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/new_group.fxml", stage);
+    SceneUtils.switchTo("../group/new_group.fxml", stage);
   }
 
   /**
@@ -101,7 +92,7 @@ public class HomepageController implements Initializable {
   @FXML
   private void onBtnManageGroupClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/groups.fxml", stage);
+    SceneUtils.switchTo("../group/groups.fxml", stage);
   }
 
 

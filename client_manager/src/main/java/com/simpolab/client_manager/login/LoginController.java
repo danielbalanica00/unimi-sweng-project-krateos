@@ -1,7 +1,8 @@
 package com.simpolab.client_manager.login;
 
 import com.simpolab.client_manager.utils.AlertUtils;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.SceneUtils;
+import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -41,7 +42,7 @@ public class LoginController {
       case 1 -> AlertUtils.alert(Alert.AlertType.ERROR, "Unauthorized User");
       case 2 -> {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
+        SceneUtils.switchTo("../homepage/homepage.fxml", stage);
       }
     }
   }

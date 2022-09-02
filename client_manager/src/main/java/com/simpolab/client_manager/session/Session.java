@@ -4,6 +4,23 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Session {
+    public enum SessionType{
+        ORDINAL("ORDINAL"),
+        CATEGORIC_WITH_PREFERENCES("CATEGORIC_WITH_PREFERENCES"),
+        CATEGORIC("CATEGORIC"),
+        REFERENDUM("REFERENDUM");
+
+        private final String name;
+
+        private SessionType(String name){
+            this.name = name;
+        }
+
+        public String toString(){
+            return this.name;
+        }
+    }
+
     private String name;
     private String endsOn;
     private boolean needAbsoluteMajority;

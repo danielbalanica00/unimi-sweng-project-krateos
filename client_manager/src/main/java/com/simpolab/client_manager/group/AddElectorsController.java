@@ -4,7 +4,7 @@ import com.simpolab.client_manager.electors.Elector;
 import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.beans.property.ReadOnlyListWrapper;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,7 +44,7 @@ public class AddElectorsController implements Initializable {
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/group.fxml", stage);
+    SceneUtils.switchTo("../group/group.fxml", stage);
   }
 
   @FXML
@@ -52,7 +52,9 @@ public class AddElectorsController implements Initializable {
     ObservableList<Elector> selectedElectors = new ReadOnlyListWrapper<>();
     selectedElectors = lvAvailableElectors.getSelectionModel().getSelectedItems();
 
-    // api put request
+    for(Elector el : selectedElectors){
+      HttpUtils.put("/api/v1/group/"+selectedGroup.getId()+"/elector/"+el.getId(), Map.of("Authorization", "Bearer " + HttpUtils.token), null);
+    }
 
     refreshLists();
   }
@@ -62,7 +64,9 @@ public class AddElectorsController implements Initializable {
     ObservableList<Elector> selectedElectors = new ReadOnlyListWrapper<>();
     selectedElectors = lvAddedElectors.getSelectionModel().getSelectedItems();
 
-    // api del request
+    for(Elector el : selectedElectors){
+      HttpUtils.delete("/api/v1/group/"+selectedGroup.getId()+"/elector/"+el.getId(), Map.of("Authorization", "Bearer " + HttpUtils.token));
+    }
 
     refreshLists();
   }

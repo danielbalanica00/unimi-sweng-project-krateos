@@ -3,7 +3,7 @@ package com.simpolab.client_manager.group;
 import com.simpolab.client_manager.login.LoginSession;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
-import com.simpolab.client_manager.utils.SceneSwitch;
+import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,12 +42,13 @@ public class GroupsController implements Initializable {
 
   @FXML
   private void onBtnSearchGroupClicked(ActionEvent event) throws Exception {
+
   }
 
   @FXML
   private void onBtnCreateGroupClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/new_group.fxml", stage);
+    SceneUtils.switchTo("../group/new_group.fxml", stage);
   }
 
   @FXML
@@ -57,13 +58,13 @@ public class GroupsController implements Initializable {
     GroupController.initGroup(selectedGroup);
 
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../group/group.fxml", stage);
+    SceneUtils.switchTo("../group/group.fxml", stage);
   }
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneSwitch.switchTo("../homepage/homepage.fxml", stage);
+    SceneUtils.switchTo("../homepage/homepage.fxml", stage);
   }
 
   @Override
