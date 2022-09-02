@@ -2,18 +2,23 @@ package com.simpolab.server_main.voting_session.domain;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Date;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.time.Instant;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @Validated
 @Builder
+@Slf4j
 public class VotingSession {
 
   public enum Type {
@@ -50,9 +55,19 @@ public class VotingSession {
     this.hasQuorum = false;
   }
 
+  @JsonIgnore
+  public Date getEndsOn() {
+    return endsOn;
+  }
+
+  @JsonSetter("endsOn")
+  public void setEndsOnFromEpoch(long epochTime) {
+    this.endsOn = Date.from(Instant.ofEpochSecond(epochTime));
+  }
+
   @JsonGetter("endsOn")
-  public long getEndsOn() {
-    return endsOn.getTime();
+  public long getUnixTime() {
+    return endsOn.getTime() / 1000;
   }
 
   @JsonIgnore

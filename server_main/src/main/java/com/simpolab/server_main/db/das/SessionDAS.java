@@ -5,7 +5,9 @@ import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +26,14 @@ public class SessionDAS implements SessionDAO {
 
   private final RowMapper<Long> electorIdMapper = (rs, _ignore) -> rs.getLong("elector_id");
 
+  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
   private final RowMapper<VotingSession> votingSessionRowMapper = (rs, _ignore) ->
     VotingSession
       .builder()
       .id(rs.getLong("id"))
       .name(rs.getString("name"))
-      .endsOn(rs.getDate("ends_on"))
+      .endsOn(new Date(rs.getTimestamp("ends_on").getTime()))
       .state(VotingSession.State.valueOf(rs.getString("state")))
       .type(VotingSession.Type.valueOf(rs.getString("type")))
       .needAbsoluteMajority(rs.getBoolean("need_absolute_majority"))
@@ -46,6 +50,7 @@ public class SessionDAS implements SessionDAO {
     try {
       String query =
         "INSERT INTO voting_session (id, name, type, ends_on, need_absolute_majority, has_quorum) VALUES (?, ?, ?, ?, ?, ?)";
+
       jdbcTemplate.update(
         query,
         newSession.getId(),
