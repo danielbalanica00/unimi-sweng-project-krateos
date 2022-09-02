@@ -1,16 +1,19 @@
 package com.simpolab.server_main.voting_session.domain;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.validation.annotation.Validated;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @Validated
+@Builder
 public class VotingSession {
 
   public enum Type {
@@ -18,6 +21,13 @@ public class VotingSession {
     CATEGORIC,
     CATEGORIC_WITH_PREFERENCES,
     REFERENDUM,
+  }
+
+  public enum State {
+    INACTIVE,
+    ACTIVE,
+    CANCELLED,
+    ENDED,
   }
 
   @Min(0)
@@ -34,11 +44,19 @@ public class VotingSession {
   private boolean hasQuorum;
   private Type type;
 
+  private State state;
+
   public VotingSession() {
+    this.state = State.INACTIVE;
     this.isActive = false;
     this.isCancelled = false;
     this.hasEnded = false;
     this.needAbsoluteMajority = false;
     this.hasQuorum = false;
+  }
+
+  @JsonGetter("endsOn")
+  public long getEndsOn() {
+    return endsOn.getTime();
   }
 }

@@ -1,10 +1,7 @@
 package com.simpolab.server_main.db.das;
 
 import com.simpolab.server_main.db.SessionDAO;
-import com.simpolab.server_main.elector.domain.Elector;
-import com.simpolab.server_main.user_authentication.domain.AppUser;
 import com.simpolab.server_main.voting_session.domain.Vote;
-import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -28,17 +25,16 @@ public class SessionDAS implements SessionDAO {
   private final RowMapper<Long> electorIdMapper = (rs, _ignore) -> rs.getLong("elector_id");
 
   private final RowMapper<VotingSession> votingSessionRowMapper = (rs, _ignore) ->
-    new VotingSession(
-      rs.getLong("id"),
-      rs.getString("name"),
-      rs.getDate("ends_on"),
-      rs.getBoolean("is_active"),
-      rs.getBoolean("is_cancelled"),
-      rs.getBoolean("has_ended"),
-      rs.getBoolean("need_absolute_majority"),
-      rs.getBoolean("has_quorum"),
-      VotingSession.Type.valueOf(rs.getString("type"))
-    );
+    VotingSession
+      .builder()
+      .id(rs.getLong("id"))
+      .name(rs.getString("name"))
+      .endsOn(rs.getDate("ends_on"))
+      .state(VotingSession.State.valueOf(rs.getString("state")))
+      .type(VotingSession.Type.valueOf(rs.getString("type")))
+      .needAbsoluteMajority(rs.getBoolean("need_absolute_majority"))
+      .hasQuorum(rs.getBoolean("has_quorum"))
+      .build();
 
   public record Touple(long id, Long parentId) {}
 
@@ -174,6 +170,18 @@ public class SessionDAS implements SessionDAO {
     log.info("Session {} is now ended", sessionId);
   }
 
+  public void setState(long sessionId, VotingSession.State newState) throws SQLException {
+    try {
+      String query = "UPDATE voting_session SET state = ? WHERE id = ?";
+      jdbcTemplate.update(query, newState.name(), sessionId);
+
+      log.debug("[Status Update] - Status of session {} updated to {}", sessionId, newState);
+    } catch (Exception e) {
+      log.error("Failed to update the status of the session {} to {}", sessionId, newState);
+      throw new SQLException("Failed update the status of the session", e);
+    }
+  }
+
   private List<Long> getElectorsOfSessionGroups(long sessionId) {
     try {
       var query =
@@ -223,13 +231,14 @@ public class SessionDAS implements SessionDAO {
   }
 
   @Override
-  public VotingSession get(long id) {
+  public Optional<VotingSession> get(long id) {
     try {
       var query = "SELECT * FROM voting_session WHERE id = ?";
-      return jdbcTemplate.queryForObject(query, votingSessionRowMapper, id);
+      VotingSession vs = jdbcTemplate.queryForObject(query, votingSessionRowMapper, id);
+      return Optional.ofNullable(vs);
     } catch (Exception e) {
       log.warn(e.getMessage());
-      return null;
+      return Optional.empty();
     }
   }
 

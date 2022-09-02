@@ -46,6 +46,16 @@ public class SessionController {
     return null;
   }
 
+  @GetMapping(path = "{session_id}")
+  public ResponseEntity<VotingSession> getSession(@PathVariable("session_id") long sessionId) {
+    try {
+      return ResponseEntity.ok(sessionService.getSession(sessionId));
+    } catch (Exception e) {
+      log.error("Session {} not found", sessionId, e);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+  }
+
   @DeleteMapping(path = "{session_id}")
   public ResponseEntity<Void> deleteElector(@PathVariable("session_id") Long id) {
     try {

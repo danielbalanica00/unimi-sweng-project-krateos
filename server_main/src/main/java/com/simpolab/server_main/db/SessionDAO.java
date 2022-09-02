@@ -1,9 +1,7 @@
 package com.simpolab.server_main.db;
 
 import com.simpolab.server_main.db.das.SessionDAS;
-import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.voting_session.domain.Vote;
-import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +11,7 @@ public interface SessionDAO {
   void create(VotingSession newSession) throws SQLException;
   void delete(long id);
 
-  VotingSession get(long id);
+  Optional<VotingSession> get(long id);
 
   void addGroup(long sessionId, long groupId) throws SQLException;
   void removeGroup(long sessionId, long groupId);
@@ -31,6 +29,8 @@ public interface SessionDAO {
 
   void setCancelled(long sessionId) throws SQLException;
   void setEnded(long sessionId) throws SQLException;
+
+  void setState(long sessionId, VotingSession.State newState) throws SQLException;
 
   void populateSessionParticipants(long sessionId) throws SQLException;
 
