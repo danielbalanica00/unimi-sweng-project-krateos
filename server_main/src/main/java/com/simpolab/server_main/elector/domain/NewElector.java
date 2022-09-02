@@ -1,5 +1,7 @@
 package com.simpolab.server_main.elector.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -20,6 +22,7 @@ public class NewElector {
   private String username;
 
   @NotBlank
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   @NotBlank
@@ -33,15 +36,10 @@ public class NewElector {
 
   @NotBlank
   @Pattern(regexp = "(?i)manager|elector")
+  @JsonIgnore
   private String role;
 
   public NewElector() {
     this.role = "elector";
-  }
-
-  public NewElector sanitized() {
-    this.password = null;
-    this.role = null;
-    return this;
   }
 }

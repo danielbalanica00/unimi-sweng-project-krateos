@@ -157,4 +157,9 @@ public class SessionServiceImpl implements SessionService {
     var optSession = sessionDAO.get(sessionId);
     return optSession.isEmpty() ? null : optSession.get();
   }
+
+  @Override
+  public List<VotingSession> getAllSessions() {
+    return sessionDAO.getAll();
+  }
 }

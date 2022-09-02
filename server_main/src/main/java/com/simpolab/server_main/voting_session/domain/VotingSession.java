@@ -1,14 +1,14 @@
 package com.simpolab.server_main.voting_session.domain;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -37,9 +37,7 @@ public class VotingSession {
   private String name;
 
   private Date endsOn;
-  private boolean isActive;
-  private boolean isCancelled;
-  private boolean hasEnded;
+
   private boolean needAbsoluteMajority;
   private boolean hasQuorum;
   private Type type;
@@ -48,9 +46,6 @@ public class VotingSession {
 
   public VotingSession() {
     this.state = State.INACTIVE;
-    this.isActive = false;
-    this.isCancelled = false;
-    this.hasEnded = false;
     this.needAbsoluteMajority = false;
     this.hasQuorum = false;
   }
@@ -58,5 +53,10 @@ public class VotingSession {
   @JsonGetter("endsOn")
   public long getEndsOn() {
     return endsOn.getTime();
+  }
+
+  @JsonIgnore
+  public boolean isActive() {
+    return state == State.ACTIVE;
   }
 }

@@ -43,9 +43,7 @@ public class GroupServiceImpl implements GroupService {
 
   @Override
   public List<NewElector> getElectorsInGroup(Long id) {
-    var electors = electorDAO.getAllInGroup(id);
-
-    return electors.stream().map(NewElector::sanitized).toList();
+    return electorDAO.getAllInGroup(id);
   }
 
   @Override

@@ -1,6 +1,5 @@
 package com.simpolab.server_main.voting_session.services;
 
-import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.util.List;
@@ -11,6 +10,8 @@ public interface SessionService {
   void deleteSession(long sessionId);
 
   VotingSession getSession(long sessionId);
+
+  List<VotingSession> getAllSessions();
 
   /*
     Handle Voting Groups

@@ -13,6 +13,8 @@ public interface SessionDAO {
 
   Optional<VotingSession> get(long id);
 
+  List<VotingSession> getAll();
+
   void addGroup(long sessionId, long groupId) throws SQLException;
   void removeGroup(long sessionId, long groupId);
 

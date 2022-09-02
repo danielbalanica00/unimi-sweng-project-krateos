@@ -56,6 +56,11 @@ public class SessionController {
     }
   }
 
+  @GetMapping
+  public ResponseEntity<List<VotingSession>> getSession() {
+    return ResponseEntity.ok(sessionService.getAllSessions());
+  }
+
   @DeleteMapping(path = "{session_id}")
   public ResponseEntity<Void> deleteElector(@PathVariable("session_id") Long id) {
     try {

@@ -29,13 +29,12 @@ public class ElectorServiceImpl implements ElectorService {
   @Override
   public NewElector getElector(long id) {
     var elector = electorDAO.get(id);
-    return elector.isEmpty() ? null : elector.get().sanitized();
+    return elector.isEmpty() ? null : elector.get();
   }
 
   @Override
   public List<NewElector> getElectors() {
-    List<NewElector> electors = electorDAO.getAll();
-    return electors.stream().map(NewElector::sanitized).toList();
+    return electorDAO.getAll();
   }
 
   @Override

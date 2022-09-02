@@ -242,6 +242,17 @@ public class SessionDAS implements SessionDAO {
     }
   }
 
+  @Override
+  public List<VotingSession> getAll() {
+    try {
+      var query = "SELECT * FROM voting_session";
+      return jdbcTemplate.query(query, votingSessionRowMapper);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return List.of();
+    }
+  }
+
   public Optional<Boolean> getParticipationStatus(long sessionId, long electorId) {
     try {
       var query =
