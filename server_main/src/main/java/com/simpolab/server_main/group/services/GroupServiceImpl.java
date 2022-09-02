@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -19,9 +20,12 @@ public class GroupServiceImpl implements GroupService {
   private final ElectorDAO electorDAO;
 
   @Override
-  public void newGroup(String groupName) {
+  public Group newGroup(String groupName) {
     try {
-      groupDAO.create(groupName);
+      long groupId = groupDAO.create(groupName);
+      return getGroup(groupId);
+    } catch (DuplicateKeyException e) {
+      throw e;
     } catch (SQLException e) {
       throw new IllegalArgumentException(e);
     }

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface GroupDAO {
-  void create(String name) throws SQLException;
+  long create(String name) throws SQLException;
 
   Group get(Long id);
 

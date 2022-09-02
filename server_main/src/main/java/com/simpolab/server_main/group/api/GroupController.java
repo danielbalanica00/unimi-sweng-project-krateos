@@ -3,17 +3,17 @@ package com.simpolab.server_main.group.api;
 import com.simpolab.server_main.elector.domain.NewElector;
 import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.group.services.GroupService;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/group")
@@ -68,12 +68,14 @@ public class GroupController {
   @DeleteMapping(path = "{group_id}")
   public ResponseEntity<Void> deleteGroup(@PathVariable("group_id") Long id) {
     groupService.deleteGroup(id);
-
     return null;
   }
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> newElector(
+  @PostMapping(
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Group> newGroup(
     @Valid @RequestBody Group group,
     BindingResult bindingResult
   ) {
@@ -83,11 +85,13 @@ public class GroupController {
     }
 
     try {
-      groupService.newGroup(group.getName());
+      var newGroup = groupService.newGroup(group.getName());
+      return ResponseEntity.ok(newGroup);
+    } catch (DuplicateKeyException e) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT);
     } catch (Exception e) {
       log.error("Error ---> ", e);
       throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
     }
-    return null;
   }
 }

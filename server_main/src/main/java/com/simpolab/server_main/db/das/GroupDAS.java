@@ -3,11 +3,15 @@ package com.simpolab.server_main.db.das;
 import com.simpolab.server_main.db.GroupDAO;
 import com.simpolab.server_main.group.domain.Group;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,15 +25,33 @@ public class GroupDAS implements GroupDAO {
     new Group(rs.getLong("id"), rs.getString("name"));
 
   @Override
-  public void create(String name) throws SQLException {
+  public long create(String name) throws SQLException {
     try {
-      String query = "INSERT IGNORE INTO voting_group (name) VALUES (?)";
-      jdbcTemplate.update(query, name);
+      final String query = "INSERT INTO voting_group (name) VALUES (?)";
+
+      KeyHolder keyHolder = new GeneratedKeyHolder();
+
+      var affectedRows = jdbcTemplate.update(
+        connection -> {
+          var ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+          ps.setString(1, name);
+          return ps;
+        },
+        keyHolder
+      );
+
+      if (affectedRows == 0) throw new SQLException("Failed to create new group");
+
+      log.debug("Group created successfully");
+
+      return keyHolder.getKey().longValue();
+    } catch (DuplicateKeyException e) {
+      log.debug("The group named {} already exists, skipping creation", name);
+      throw new DuplicateKeyException("Group already exists, skipping creation");
     } catch (Exception e) {
       log.error("Failed to create new group");
-      throw new SQLException("Failed to create new elector", e);
+      throw new SQLException("Failed to create new group", e);
     }
-    log.info("Group created successfully");
   }
 
   @Override

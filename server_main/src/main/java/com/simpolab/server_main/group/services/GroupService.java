@@ -7,9 +7,11 @@ import java.util.List;
 public interface GroupService {
   /**
    * Creates a new group with the given name
+   *
    * @param groupName the name of the group
+   * @return
    */
-  void newGroup(String groupName);
+  Group newGroup(String groupName);
 
   /**
    * Returns the name of the group with the given id
