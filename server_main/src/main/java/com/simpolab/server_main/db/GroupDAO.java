@@ -11,7 +11,7 @@ public interface GroupDAO {
 
   List<Group> getAll();
 
-  void delete(Long id);
+  void delete(Long id) throws SQLException;
 
   void addElector(Long groupId, Long electorId) throws SQLException;
 

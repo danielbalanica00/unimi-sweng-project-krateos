@@ -28,24 +28,23 @@ public class SessionController {
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE
   )
-  public ResponseEntity<Void> newSession(
+  public ResponseEntity<VotingSession> newSession(
     @Valid @RequestBody VotingSession votingSession,
     BindingResult bindingResult
   ) {
     if (bindingResult.hasErrors()) {
-      log.warn("Error: {}", bindingResult.getAllErrors());
+      log.debug("[New Session] - Validation error: {}", bindingResult.getAllErrors());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     try {
-      log.debug("Sess: {}", votingSession);
-
-      sessionService.newSession(votingSession);
+      log.debug("[New Session] - {}", votingSession);
+      var newSession = sessionService.newSession(votingSession);
+      return ResponseEntity.ok(newSession);
     } catch (Exception e) {
-      log.error("Error ---> ", e);
+      log.error("[New Session] - Error:  ", e);
       throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
     }
-    return null;
   }
 
   @GetMapping(path = "{session_id}")

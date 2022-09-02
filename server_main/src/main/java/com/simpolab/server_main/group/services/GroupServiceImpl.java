@@ -47,7 +47,13 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public void deleteGroup(Long id) {}
+  public void deleteGroup(Long id) {
+    try {
+      groupDAO.delete(id);
+    } catch (SQLException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
 
   @Override
   public void addElector(Long groupId, Long electorId) {

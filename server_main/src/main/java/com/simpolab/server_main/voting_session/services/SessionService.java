@@ -5,7 +5,7 @@ import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.util.List;
 
 public interface SessionService {
-  void newSession(VotingSession newSession);
+  VotingSession newSession(VotingSession newSession);
 
   void deleteSession(long sessionId);
 

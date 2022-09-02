@@ -5,6 +5,8 @@ import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,25 +50,44 @@ public class SessionDAS implements SessionDAO {
     new Touple(rs.getLong("id"), rs.getLong("parent_option_id"));
 
   @Override
-  public void create(VotingSession newSession) throws SQLException {
+  public long create(VotingSession newSession) throws SQLException {
     try {
-      String query =
-        "INSERT INTO voting_session (id, name, type, ends_on, need_absolute_majority, has_quorum) VALUES (?, ?, ?, ?, ?, ?)";
+      final String query =
+        "INSERT INTO voting_session (name, type, ends_on, need_absolute_majority, has_quorum) VALUES (?, ?, ?, ?, ?)";
 
-      jdbcTemplate.update(
-        query,
-        newSession.getId(),
-        newSession.getName(),
-        newSession.getType().name(),
-        newSession.getEndsOn(),
-        newSession.isNeedAbsoluteMajority(),
-        newSession.isHasQuorum()
+      //      jdbcTemplate.update(
+      //        query,
+      //        newSession.getName(),
+      //        newSession.getType().name(),
+      //        newSession.getEndsOn(),
+      //        newSession.isNeedAbsoluteMajority(),
+      //        newSession.isHasQuorum()
+      //      );
+
+      KeyHolder keyHolder = new GeneratedKeyHolder();
+
+      var affectedRows = jdbcTemplate.update(
+        connection -> {
+          var ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+          ps.setString(1, newSession.getName());
+          ps.setString(2, newSession.getType().name());
+          ps.setTimestamp(3, Timestamp.from(newSession.getEndsOn().toInstant()));
+          ps.setBoolean(4, newSession.isNeedAbsoluteMajority());
+          ps.setBoolean(5, newSession.isHasQuorum());
+
+          return ps;
+        },
+        keyHolder
       );
+
+      if (affectedRows == 0) throw new SQLException("Failed to create new session");
+
+      log.debug("Session created successfully");
+      return keyHolder.getKey().longValue();
     } catch (Exception e) {
       log.error("Failed to create new voting session");
       throw new SQLException("Failed to create new voting session", e);
     }
-    log.info("Voting session created successfully");
   }
 
   @Override

@@ -86,9 +86,10 @@ public class ElectorDAS implements ElectorDAO {
     var query = "DELETE FROM elector WHERE id = ?";
     try {
       jdbcTemplate.update(query, id);
-      log.info("Elector {} removed successfully", id);
+      log.info("Elector {} deleted successfully", id);
     } catch (Exception e) {
-      log.error("Failed to remove user", e);
+      log.error("Failed to delete user " + id, e);
+      throw new SQLException("Failed to delete user " + id, e);
     }
   }
 

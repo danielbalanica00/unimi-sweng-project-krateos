@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SessionDAO {
-  void create(VotingSession newSession) throws SQLException;
+  long create(VotingSession newSession) throws SQLException;
   void delete(long id);
 
   Optional<VotingSession> get(long id);

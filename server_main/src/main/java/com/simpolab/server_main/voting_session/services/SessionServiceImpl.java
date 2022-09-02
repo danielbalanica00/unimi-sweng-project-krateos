@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -24,9 +25,12 @@ public class SessionServiceImpl implements SessionService {
   private ElectorService electorService;
 
   @Override
-  public void newSession(VotingSession newSession) {
+  public VotingSession newSession(VotingSession newSession) {
     try {
-      sessionDAO.create(newSession);
+      long sessionId = sessionDAO.create(newSession);
+      return getSession(sessionId);
+    } catch (DuplicateKeyException e) {
+      throw e;
     } catch (SQLException e) {
       throw new IllegalArgumentException(e);
     }

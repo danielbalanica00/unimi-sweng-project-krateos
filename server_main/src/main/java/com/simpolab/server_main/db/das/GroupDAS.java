@@ -77,7 +77,16 @@ public class GroupDAS implements GroupDAO {
   }
 
   @Override
-  public void delete(Long id) {}
+  public void delete(Long id) throws SQLException {
+    var query = "DELETE FROM voting_group WHERE id = ?";
+    try {
+      jdbcTemplate.update(query, id);
+      log.info("Group {} deleted successfully", id);
+    } catch (Exception e) {
+      log.error("Failed to delete group " + id, e);
+      throw new SQLException("Failed to delete group " + id, e);
+    }
+  }
 
   @Override
   public void addElector(Long groupId, Long electorId) throws SQLException {

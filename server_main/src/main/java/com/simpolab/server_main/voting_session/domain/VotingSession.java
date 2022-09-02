@@ -3,16 +3,15 @@ package com.simpolab.server_main.voting_session.domain;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import java.time.Instant;
+import java.util.Date;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import java.time.Instant;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor

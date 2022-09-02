@@ -52,13 +52,13 @@ public class ElectorController {
     @Valid @RequestBody NewElector elector,
     BindingResult bindingResult
   ) {
-    log.debug("[New Elector] -  {}", elector);
     if (bindingResult.hasErrors()) {
       log.debug("[New Elector] - Validation error: {}", bindingResult.getAllErrors());
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     try {
+      log.debug("[New Elector] -  {}", elector);
       electorService.newElector(elector);
     } catch (Exception e) {
       log.error("[New Elector] - Error:  ", e);
