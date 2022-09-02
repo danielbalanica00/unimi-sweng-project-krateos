@@ -2,15 +2,16 @@ package com.simpolab.client_manager.electors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class Elector {
 
+  private String id;
+  private String username;
   private String firstName;
   private String lastName;
-  private String username;
   private String email;
-  private String id;
-//  private User user;
 
   @JsonCreator
   public Elector(
@@ -29,46 +30,6 @@ public class Elector {
 
   @Override
   public String toString() {
-    return firstName + " " + lastName + " (" + username + ")";
-  }
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
+    return firstName + " " + lastName + "  (" + username + ")";
   }
 }

@@ -1,6 +1,11 @@
 package com.simpolab.client_manager.utils;
 
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -11,18 +16,18 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+@Slf4j
+public final class HttpUtils {
 
-public class HttpUtils {
+  private HttpUtils() {}
+
   private static final String baseUrl = "http://127.0.0.1:8080";
-
 
   public static String get(String path, @Nullable Map<String, String> headers) {
     var request = new HttpGet(baseUrl + path);
@@ -48,7 +53,7 @@ public class HttpUtils {
     if (body != null) {
       request.setHeader("Content-type", "application/json");
       request.setEntity(new StringEntity(new Gson().toJson(body)));
-      System.out.println("BODY: " + new Gson().toJson(body));
+      log.error("BODY: " + new Gson().toJson(body));
     }
 
     return makeRequest(request);
@@ -58,7 +63,11 @@ public class HttpUtils {
     return postUrlParams(path, null, params);
   }
 
-  public static String postUrlParams(String path, @Nullable Map<String, String> headers, Map<String, String> params) {
+  public static String postUrlParams(
+    String path,
+    @Nullable Map<String, String> headers,
+    Map<String, String> params
+  ) {
     var request = new HttpPost(baseUrl + path);
 
     request.setHeader("Content-type", "application/x-www-form-urlencoded");
@@ -79,7 +88,7 @@ public class HttpUtils {
     if (headers != null) headers.forEach(request::setHeader);
 
     request.setEntity(new StringEntity(new Gson().toJson(body)));
-    System.out.println("BODY: " + new Gson().toJson(body));
+    log.debug("BODY: " + new Gson().toJson(body));
     return makeRequest(request);
   }
 
@@ -92,14 +101,25 @@ public class HttpUtils {
   }
 
   private static String makeRequest(ClassicHttpRequest request) {
-    try (CloseableHttpClient httpClient = HttpClients.createDefault(); CloseableHttpResponse res = httpClient.execute(request)) {
+    try (
+      CloseableHttpClient httpClient = HttpClients.createDefault();
+      CloseableHttpResponse res = httpClient.execute(request)
+    ) {
       var result = EntityUtils.toString(res.getEntity());
-      System.out.printf("[%d] - Result: %s \n", res.getCode(), result);
+      log.debug(
+        "{} {} - Response [{}] {}",
+        request.getMethod(),
+        request.getPath(),
+        res.getCode(),
+        result.isBlank() ? "<empty>" : result
+      );
       return result;
-    } catch (Exception e) {
-      System.out.println("******** ERRORE *********");
-      e.printStackTrace();
+    } catch (ParseException e) {
+      log.error("[Http Request] - Parsing Error", e);
+      throw new IllegalStateException("Parsing Error", e);
+    } catch (IOException e) {
+      log.error("[Http Request] - Network Error", e);
+      throw new IllegalStateException("Network Error", e);
     }
-    throw new IllegalStateException("Shouldn't be here");
   }
 }

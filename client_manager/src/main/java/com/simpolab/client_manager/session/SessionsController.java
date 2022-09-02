@@ -10,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SessionsController {
 
   private Stage stage;
@@ -39,7 +41,7 @@ public class SessionsController {
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
-    System.out.println(getClass().getName());
+    log.debug(getClass().getName());
     Parent root = FXMLLoader.load(getClass().getResource("../homepage/homepage.fxml"));
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
     scene = new Scene(root);

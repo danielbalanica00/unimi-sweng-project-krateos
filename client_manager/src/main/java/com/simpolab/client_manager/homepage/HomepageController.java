@@ -2,19 +2,18 @@ package com.simpolab.client_manager.homepage;
 
 import com.simpolab.client_manager.session.Session;
 import com.simpolab.client_manager.utils.SceneUtils;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.ListView;
-import javafx.stage.Stage;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 
 public class HomepageController implements Initializable {
+
   private Stage stage;
 
   @FXML
@@ -35,9 +34,8 @@ public class HomepageController implements Initializable {
    * @throws Exception
    */
   @FXML
-  private void onBtnNewElectorClicked(ActionEvent event) throws Exception{
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../electors/new_elector.fxml", stage);
+  private void onBtnNewElectorClicked(ActionEvent event) throws Exception {
+    SceneUtils.switchTo("electors/new_elector.fxml");
   }
 
   /**
@@ -46,9 +44,8 @@ public class HomepageController implements Initializable {
    * @throws Exception
    */
   @FXML
-  private void onBtnManageElectorsClicked(ActionEvent event) throws Exception{
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../electors/electors.fxml", stage);
+  private void onBtnManageElectorsClicked(ActionEvent event) throws Exception {
+    SceneUtils.switchTo("electors/electors.fxml");
   }
 
   /**
@@ -58,8 +55,7 @@ public class HomepageController implements Initializable {
    */
   @FXML
   private void onBtnNewSessionClicked(ActionEvent event) throws Exception {
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../session/new_session.fxml", stage);
+    SceneUtils.switchTo("session/new_session.fxml");
   }
 
   /**
@@ -69,8 +65,7 @@ public class HomepageController implements Initializable {
    */
   @FXML
   private void onBtnManageSessionClicked(ActionEvent event) throws Exception {
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../session/sessions.fxml", stage);
+    SceneUtils.switchTo("session/sessions.fxml");
   }
 
   /**
@@ -80,8 +75,7 @@ public class HomepageController implements Initializable {
    */
   @FXML
   private void onBtnNewGroupClicked(ActionEvent event) throws Exception {
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../group/new_group.fxml", stage);
+    SceneUtils.switchTo("group/new_group.fxml");
   }
 
   /**
@@ -91,9 +85,6 @@ public class HomepageController implements Initializable {
    */
   @FXML
   private void onBtnManageGroupClicked(ActionEvent event) throws Exception {
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../group/groups.fxml", stage);
+    SceneUtils.switchTo("group/groups.fxml");
   }
-
-
 }

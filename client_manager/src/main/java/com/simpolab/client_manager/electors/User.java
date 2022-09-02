@@ -2,31 +2,20 @@ package com.simpolab.client_manager.electors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-public class User{
-    private String username;
-    private String password;
+@Data
+public class User {
 
-    @JsonCreator
-    public User(@JsonProperty("username") String username,
-                @JsonProperty("password") String password) {
-        this.username = username;
-        this.password = password;
-    }
+  private String username;
+  private String password;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  @JsonCreator
+  public User(
+    @JsonProperty("username") String username,
+    @JsonProperty("password") String password
+  ) {
+    this.username = username;
+    this.password = password;
+  }
 }

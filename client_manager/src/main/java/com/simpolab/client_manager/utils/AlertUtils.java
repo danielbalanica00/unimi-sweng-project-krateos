@@ -3,6 +3,7 @@ package com.simpolab.client_manager.utils;
 import javafx.scene.control.Alert;
 
 public final class AlertUtils {
+
   private AlertUtils() {}
 
   public static void alert(Alert.AlertType type, String body) {

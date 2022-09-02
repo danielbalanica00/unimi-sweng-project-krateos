@@ -2,10 +2,8 @@ package com.simpolab.client_manager.login;
 
 import com.simpolab.client_manager.utils.AlertUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
-import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -35,19 +33,15 @@ public class LoginController {
 
   @FXML
   private void onLoginClicked(ActionEvent event) throws Exception {
-    int result = LoginSession.login(txtUsername.getText(), txtPassword.getText());
+    int result = AuthHandler.login(txtUsername.getText(), txtPassword.getText());
 
     switch (result) {
       case 0 -> AlertUtils.alert(Alert.AlertType.ERROR, "Your username or password is invalid");
       case 1 -> AlertUtils.alert(Alert.AlertType.ERROR, "Unauthorized User");
-      case 2 -> {
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SceneUtils.switchTo("../homepage/homepage.fxml", stage);
-      }
+      case 2 -> SceneUtils.switchToHomepage();
     }
   }
 
   @FXML
-  private void onSignUpClicked() {
-  }
+  private void onSignUpClicked() {}
 }

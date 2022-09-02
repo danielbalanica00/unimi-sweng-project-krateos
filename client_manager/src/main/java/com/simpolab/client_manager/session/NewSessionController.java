@@ -1,25 +1,19 @@
 package com.simpolab.client_manager.session;
 
+import com.simpolab.client_manager.utils.AlertUtils;
+import com.simpolab.client_manager.utils.SceneUtils;
 import java.awt.*;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.chrono.Chronology;
 import java.util.ResourceBundle;
-
-import com.simpolab.client_manager.utils.AlertUtils;
-import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class NewSessionController implements Initializable {
@@ -47,8 +41,7 @@ public class NewSessionController implements Initializable {
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../homepage/homepage.fxml", stage);
+    SceneUtils.switchToHomepage();
   }
 
   @Override
@@ -57,46 +50,49 @@ public class NewSessionController implements Initializable {
     choiceSessionType.getItems().add(Session.SessionType.CATEGORIC);
     choiceSessionType.getItems().add(Session.SessionType.CATEGORIC_WITH_PREFERENCES);
     choiceSessionType.getItems().add(Session.SessionType.REFERENDUM);
-
-
   }
 
   @FXML
-  private void onBtnNextClicked(ActionEvent event) throws Exception{
+  private void onBtnNextClicked(ActionEvent event) throws Exception {
     String name = txtName.getText();
     Long epochDay = dateEndsOn.getValue().toEpochDay();
     boolean hasQuorum = cbQuorum.isSelected();
     boolean hasAbsoluteMajority = cbAbsoluteMajority.isSelected();
     Session.SessionType type = choiceSessionType.getValue();
 
-    if(name.isBlank() || name == null){
+    if (name.isBlank() || name == null) {
       AlertUtils.alert(Alert.AlertType.ERROR, "The session name cannot be blank");
       return;
     }
-    if(epochDay < LocalDate.now().toEpochDay()){
+    if (epochDay < LocalDate.now().toEpochDay()) {
       AlertUtils.alert(Alert.AlertType.ERROR, "The session can not end in the past");
       return;
     }
-    if(type == null || type.toString().isBlank()){
+    if (type == null || type.toString().isBlank()) {
       AlertUtils.alert(Alert.AlertType.ERROR, "You have to select a session type");
       return;
     }
 
-    Session session = new Session(name, epochDay.toString(), hasAbsoluteMajority, hasQuorum, type.toString());
+    Session session = new Session(
+      name,
+      epochDay.toString(),
+      hasAbsoluteMajority,
+      hasQuorum,
+      type.toString()
+    );
 
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    switch (type){
+    switch (type) {
       case CATEGORIC:
-        SceneUtils.switchTo("../session/add_categoric.fxml", stage);
+        SceneUtils.switchTo("session/add_categoric.fxml");
         break;
       case CATEGORIC_WITH_PREFERENCES:
-        SceneUtils.switchTo("../session/add_categoric_preferences.fxml", stage);
+        SceneUtils.switchTo("session/add_categoric_preferences.fxml");
         break;
       case ORDINAL:
-        SceneUtils.switchTo("../session/add_ordinal.fxml", stage);
+        SceneUtils.switchTo("session/add_ordinal.fxml");
         break;
       case REFERENDUM:
-        SceneUtils.switchTo("../session/add_referendum.fxml", stage);
+        SceneUtils.switchTo("session/add_referendum.fxml");
         break;
     }
   }
