@@ -54,13 +54,13 @@ public class NewGroupController implements Initializable {
 
   @FXML
   private void onBtnCreateGroupClicked(ActionEvent event) throws Exception{
-    HttpUtils.postJson("/api/v1/group", Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()), new Group(txtGroupName.getText()));
+    String groupJson = HttpUtils.postJson("/api/v1/group", Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()), new Group(txtGroupName.getText()));
+    Group newGroup = JsonUtils.parseJson(groupJson, Group.class);
 
-    // retrieve group id first
 
-//    for(Elector el : requiredElectors){
-//      HttpUtils.put("/api/v1/group/" + selectedGroup.getId()+"/elector/" + el.getId(), Map.of("Authorization", "Bearer " + HttpUtils.token), null);
-//    }
+    for(Elector el : requiredElectors){
+      HttpUtils.put("/api/v1/group/" + newGroup.getId()+"/elector/" + el.getId(), Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()), null);
+    }
 
 
     stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

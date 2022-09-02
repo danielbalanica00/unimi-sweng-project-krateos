@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpUtils {
-  public static String token = "";
   private static final String baseUrl = "http://127.0.0.1:8080";
 
 

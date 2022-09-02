@@ -65,7 +65,7 @@ public class NewElectorController {
 
     Elector elector = new Elector(firstName, lastName, email, username, password);
 
-    String response =  HttpUtils.postJson("/api/v1/elector", Map.of("Authorization", "Bearer " + HttpUtils.token), elector);
+    String response =  HttpUtils.postJson("/api/v1/elector", Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()), elector);
 
     alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Elector created successfully");

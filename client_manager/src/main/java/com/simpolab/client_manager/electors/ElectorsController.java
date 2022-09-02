@@ -38,7 +38,7 @@ public class ElectorsController implements Initializable {
   private void onBtnRevokeSelectedClicked(ActionEvent event) throws Exception {
     ObservableList<Elector> selectedElectors = lvElectors.getSelectionModel().getSelectedItems();
     for(Elector el : selectedElectors){
-      HttpUtils.delete("/api/v1/elector/"+el.getId(), Map.of("Authorization", "Bearer " + HttpUtils.token));
+      HttpUtils.delete("/api/v1/elector/"+el.getId(), Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()));
     }
   }
 
@@ -51,10 +51,8 @@ public class ElectorsController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     lvElectors.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-    String res = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + HttpUtils.token));
+    String res = HttpUtils.get("/api/v1/elector", Map.of("Authorization", "Bearer "  + LoginSession.getAccessToken()));
 
-    System.out.println(HttpUtils.token);
-    System.out.println(res);
     List<Elector> electors = JsonUtils.parseJsonArray(res, Elector.class);
 
     lvElectors.getItems().addAll(electors);

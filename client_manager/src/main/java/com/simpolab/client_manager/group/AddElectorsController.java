@@ -53,7 +53,7 @@ public class AddElectorsController implements Initializable {
     selectedElectors = lvAvailableElectors.getSelectionModel().getSelectedItems();
 
     for(Elector el : selectedElectors){
-      HttpUtils.put("/api/v1/group/"+selectedGroup.getId()+"/elector/"+el.getId(), Map.of("Authorization", "Bearer " + HttpUtils.token), null);
+      HttpUtils.put("/api/v1/group/"+selectedGroup.getId()+"/elector/"+el.getId(), Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()), null);
     }
 
     refreshLists();
@@ -65,7 +65,7 @@ public class AddElectorsController implements Initializable {
     selectedElectors = lvAddedElectors.getSelectionModel().getSelectedItems();
 
     for(Elector el : selectedElectors){
-      HttpUtils.delete("/api/v1/group/"+selectedGroup.getId()+"/elector/"+el.getId(), Map.of("Authorization", "Bearer " + HttpUtils.token));
+      HttpUtils.delete("/api/v1/group/"+selectedGroup.getId()+"/elector/"+el.getId(), Map.of("Authorization", "Bearer " + LoginSession.getAccessToken()));
     }
 
     refreshLists();
