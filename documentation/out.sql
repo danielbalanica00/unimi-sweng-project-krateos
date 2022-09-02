@@ -29,7 +29,7 @@ CREATE TABLE `elector` (
   `last_name` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `elector_ibfk_1` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `elector` (
 
 LOCK TABLES `elector` WRITE;
 /*!40000 ALTER TABLE `elector` DISABLE KEYS */;
-INSERT INTO `elector` (`id`, `email`, `first_name`, `last_name`) VALUES (9,'asdasd@gmail.com','Daniel','Balanica'),(18,'asdasd@gmail.com','Dal','Balani'),(20,'asdasd@gmail.com','Dal','Balani');
+INSERT INTO `elector` (`id`, `email`, `first_name`, `last_name`) VALUES (9,'asdasd@gmail.com','Daniel','Balanica'),(20,'asdasd@gmail.com','Dal','Balani'),(28,'asdasd@gmail.com','Dalaaa','Balani'),(31,'asdasd@gmail.com','Dalaaa','Balani');
 /*!40000 ALTER TABLE `elector` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,7 +56,7 @@ CREATE TABLE `elector_group` (
   KEY `voting_group_id` (`voting_group_id`),
   CONSTRAINT `elector_group_ibfk_1` FOREIGN KEY (`elector_id`) REFERENCES `elector` (`id`),
   CONSTRAINT `elector_group_ibfk_2` FOREIGN KEY (`voting_group_id`) REFERENCES `voting_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,7 +83,7 @@ CREATE TABLE `session_group` (
   KEY `voting_group_id` (`voting_group_id`),
   CONSTRAINT `session_group_ibfk_1` FOREIGN KEY (`voting_group_id`) REFERENCES `voting_group` (`id`),
   CONSTRAINT `session_group_ibfk_2` FOREIGN KEY (`voting_session_id`) REFERENCES `voting_session` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +111,7 @@ CREATE TABLE `session_participation` (
   KEY `vote_voting_session_id_fk` (`voting_session_id`),
   CONSTRAINT `vote_elector_id_fk` FOREIGN KEY (`elector_id`) REFERENCES `elector` (`id`),
   CONSTRAINT `vote_voting_session_id_fk` FOREIGN KEY (`voting_session_id`) REFERENCES `voting_session` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,7 +139,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `username_index` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -148,7 +148,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES (1,'admin','$2a$10$FOZRBerLcj0lMXhdIfcCL.CoKcwkQgKTD3BOdQzR3BScQvo/7DP3a','MANAGER'),(9,'username','$2a$10$x3f1AAUXECBC760p8QP.5.a0gjSFK/HKjM4.jcbncnI2cgu.3xtk6','ELECTOR'),(18,'otherUsername','$2a$10$ZzPWsITqvcTUTxbIKpPwve4Cp2VvA5o2vc14h.LwY63i9IweNbOR.','ELECTOR'),(20,'Dal.Balani1','$2a$10$B3sgLmqxmdWC3fb/WnV2EudMNCKmZzw9qPwghJcukOVsurrnMZwVi','ELECTOR');
+INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES (1,'admin','$2a$10$FOZRBerLcj0lMXhdIfcCL.CoKcwkQgKTD3BOdQzR3BScQvo/7DP3a','MANAGER'),(9,'username','$2a$10$x3f1AAUXECBC760p8QP.5.a0gjSFK/HKjM4.jcbncnI2cgu.3xtk6','ELECTOR'),(18,'otherUsername','$2a$10$ZzPWsITqvcTUTxbIKpPwve4Cp2VvA5o2vc14h.LwY63i9IweNbOR.','ELECTOR'),(20,'Dal.Balani1','$2a$10$B3sgLmqxmdWC3fb/WnV2EudMNCKmZzw9qPwghJcukOVsurrnMZwVi','ELECTOR'),(28,'otherUsername2','$2a$10$uiRmdU/U6t/WJgEg/jI7/.66XvvP6vCxZS3R4Eo8cNwZ24SiKjuwC','ELECTOR'),(31,'otherUsername2sd','$2a$10$c44GJqCDZm/1aDxYLB4/LeyXBDuxrO4AFPmT79HW8PQpwRqigAzpG','ELECTOR');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,7 +166,7 @@ CREATE TABLE `vote` (
   PRIMARY KEY (`voting_option_id`,`id`,`order_idx`),
   KEY `table_name_voting_session_id_fk` (`voting_option_id`),
   CONSTRAINT `table_name_voting_session_id_fk` FOREIGN KEY (`voting_option_id`) REFERENCES `voting_option` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,7 +191,7 @@ CREATE TABLE `voting_group` (
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_name_index` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,7 +200,7 @@ CREATE TABLE `voting_group` (
 
 LOCK TABLES `voting_group` WRITE;
 /*!40000 ALTER TABLE `voting_group` DISABLE KEYS */;
-INSERT INTO `voting_group` (`id`, `name`) VALUES (1,'Group0'),(5,'Grousdp0');
+INSERT INTO `voting_group` (`id`, `name`) VALUES (6,'asdasd'),(1,'Group0'),(5,'Grousdp0'),(11,'Grousdsp0'),(13,'Grousdssdp0');
 /*!40000 ALTER TABLE `voting_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,7 +221,7 @@ CREATE TABLE `voting_option` (
   KEY `voting_option_voting_option_id_fk` (`parent_option_id`),
   CONSTRAINT `voting_option_ibfk_1` FOREIGN KEY (`voting_session_id`) REFERENCES `voting_session` (`id`),
   CONSTRAINT `voting_option_voting_option_id_fk` FOREIGN KEY (`parent_option_id`) REFERENCES `voting_option` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,14 +246,16 @@ CREATE TABLE `voting_session` (
   `name` varchar(64) NOT NULL,
   `ends_on` datetime NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `state` varchar(64) NOT NULL DEFAULT 'INACTIVE',
   `is_cancelled` tinyint(1) NOT NULL DEFAULT '0',
   `need_absolute_majority` tinyint(1) NOT NULL,
   `has_quorum` tinyint(1) NOT NULL,
   `type` varchar(64) NOT NULL,
   `has_ended` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  CONSTRAINT `check_name` CHECK ((`type` in (_utf8mb4'CATEGORIC_WITH_PREFERENCES',_utf8mb4'CATEGORIC',_utf8mb4'ORDINAL',_utf8mb4'REFERENDUM')))
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CONSTRAINT `check_name` CHECK ((`type` in (_utf8mb4'CATEGORIC_WITH_PREFERENCES',_utf8mb4'CATEGORIC',_utf8mb4'ORDINAL',_utf8mb4'REFERENDUM'))),
+  CONSTRAINT `check_state` CHECK ((`state` in (_utf8mb4'INACTIVE',_utf8mb4'ACTIVE',_utf8mb4'CANCELLED',_utf8mb4'ENDED')))
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +264,7 @@ CREATE TABLE `voting_session` (
 
 LOCK TABLES `voting_session` WRITE;
 /*!40000 ALTER TABLE `voting_session` DISABLE KEYS */;
-INSERT INTO `voting_session` (`id`, `name`, `ends_on`, `is_active`, `is_cancelled`, `need_absolute_majority`, `has_quorum`, `type`, `has_ended`) VALUES (1,'ciao','2022-08-19 17:12:35',1,1,1,1,'ORDINAL',1),(4,'elezione XXX','1970-01-01 01:00:10',0,0,1,1,'CATEGORIC_WITH_PREFERENCES',0),(5,'elezione XXX','1970-01-01 01:00:10',0,1,1,1,'CATEGORIC_WITH_PREFERENCES',0);
+INSERT INTO `voting_session` (`id`, `name`, `ends_on`, `is_active`, `state`, `is_cancelled`, `need_absolute_majority`, `has_quorum`, `type`, `has_ended`) VALUES (1,'ciao','2022-08-19 17:12:35',1,'INACTIVE',1,1,1,'ORDINAL',1),(4,'elezione XXX','1970-01-01 01:00:10',0,'INACTIVE',0,1,1,'CATEGORIC_WITH_PREFERENCES',0),(5,'elezione XXX','1970-01-01 01:00:10',0,'INACTIVE',1,1,1,'CATEGORIC_WITH_PREFERENCES',0),(6,'elezione XXX','1970-01-01 01:00:10',0,'INACTIVE',0,1,1,'CATEGORIC_WITH_PREFERENCES',0),(7,'elezione YYY','1970-01-01 01:00:10',0,'INACTIVE',0,1,1,'CATEGORIC_WITH_PREFERENCES',0);
 /*!40000 ALTER TABLE `voting_session` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -275,4 +277,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-21 15:20:41
+-- Dump completed on 2022-09-02 16:20:07
