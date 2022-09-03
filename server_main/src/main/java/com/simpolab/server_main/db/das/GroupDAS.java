@@ -4,6 +4,7 @@ import com.simpolab.server_main.db.GroupDAO;
 import com.simpolab.server_main.group.domain.Group;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +109,18 @@ public class GroupDAS implements GroupDAO {
       log.info("Elector {} removed from group {} successfully", electorId, groupId);
     } catch (Exception e) {
       log.error("Failed to remove elector {} from group {}", electorId, groupId, e);
+    }
+  }
+
+  @Override
+  public List<Group> getGroupsForSession(long sessionId) {
+    try {
+      var query =
+        "SELECT * FROM voting_group AS vg, session_group AS sg WHERE vg.id = sg.voting_group_id AND sg.voting_session_id = ?";
+      return jdbcTemplate.query(query, groupRowMapper, sessionId);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return new ArrayList<>();
     }
   }
 }

@@ -1,5 +1,6 @@
 package com.simpolab.server_main.voting_session.services;
 
+import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
@@ -21,6 +22,8 @@ public interface SessionService {
 
   void removeGroup(long sessionId, long groupId);
 
+  List<Group> getGroups(long sessionId);
+
   /*
     Handle Voting Options
    */
@@ -30,7 +33,7 @@ public interface SessionService {
 
   void removeOption(long optionId);
 
-  List<VotingOption> getOptions(long votingSessionId);
+  List<VotingOption> getOptions(long sessionId);
 
   void setState(long sessionId, VotingSession.State newState);
 

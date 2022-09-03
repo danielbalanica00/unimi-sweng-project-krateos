@@ -16,4 +16,6 @@ public interface GroupDAO {
   void addElector(Long groupId, Long electorId) throws SQLException;
 
   void removeElector(Long groupId, Long electorId);
+
+  List<Group> getGroupsForSession(long sessionId);
 }

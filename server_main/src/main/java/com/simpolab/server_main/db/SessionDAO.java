@@ -4,7 +4,6 @@ import com.simpolab.server_main.db.das.SessionDAS;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,8 @@ public interface SessionDAO {
 
   void createOption(long votingSessionId, String optionValue) throws SQLException;
 
-  void createOption(long votingSessionId, String optionValue, long parentOptionId) throws SQLException;
+  void createOption(long votingSessionId, String optionValue, long parentOptionId)
+    throws SQLException;
 
   void deleteOption(long optionId);
 

@@ -3,11 +3,10 @@ package com.simpolab.server_main.voting_session;
 import com.simpolab.server_main.db.das.SessionDAS;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class VoteValidator {
@@ -38,8 +37,6 @@ public class VoteValidator {
     // separate toplevel options from lower level options
     var topLevelOptions = new HashSet<SessionDAS.Touple>();
     var lowerLevelOptions = new HashSet<SessionDAS.Touple>();
-
-
 
     options.forEach(opt -> {
       if (opt.parentId() == 0) topLevelOptions.add(opt); else lowerLevelOptions.add(opt);

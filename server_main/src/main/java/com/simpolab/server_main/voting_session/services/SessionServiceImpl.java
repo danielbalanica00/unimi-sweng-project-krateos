@@ -1,30 +1,35 @@
 package com.simpolab.server_main.voting_session.services;
 
+import com.simpolab.server_main.db.GroupDAO;
 import com.simpolab.server_main.db.SessionDAO;
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
+import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.voting_session.VoteValidator;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
 
-  @Autowired
-  private SessionDAO sessionDAO;
+  //  @Autowired
+  private final SessionDAO sessionDAO;
 
-  @Autowired
-  private ElectorService electorService;
+  //  @Autowired
+  private final GroupDAO groupDAO;
+
+  //  @Autowired
+  private final ElectorService electorService;
 
   @Override
   public VotingSession newSession(VotingSession newSession) {
@@ -62,6 +67,11 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
+  public List<Group> getGroups(long sessionId) {
+    return groupDAO.getGroupsForSession(sessionId);
+  }
+
+  @Override
   public void newOption(long votingSessionId, String optionValue) {
     try {
       sessionDAO.createOption(votingSessionId, optionValue);
@@ -89,8 +99,8 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public List<VotingOption> getOptions(long votingSessionId) {
-    return sessionDAO.getOptions(votingSessionId);
+  public List<VotingOption> getOptions(long sessionId) {
+    return sessionDAO.getOptions(sessionId);
   }
 
   public void setState(long sessionId, VotingSession.State newState) {
@@ -99,7 +109,7 @@ public class SessionServiceImpl implements SessionService {
       sessionDAO.setState(sessionId, newState);
 
       if (newState == VotingSession.State.ACTIVE) {
-//        sessionDAO.populateSessionParticipants(sessionId);
+        //        sessionDAO.populateSessionParticipants(sessionId);
       }
     } catch (Exception e) {
       throw new IllegalArgumentException(e);

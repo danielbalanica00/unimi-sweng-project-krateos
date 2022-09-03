@@ -4,15 +4,6 @@ import com.simpolab.server_main.db.SessionDAO;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,6 +13,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -47,12 +46,12 @@ public class SessionDAS implements SessionDAO {
       .build();
 
   private final RowMapper<VotingOption> votingOptionRowMapper = (rs, _ignore) ->
-      VotingOption
-          .builder()
-          .id(rs.getLong("id"))
-          .value(rs.getString("option_value"))
-          .parentOptionId(rs.getLong("parent_option_id"))
-          .build();
+    VotingOption
+      .builder()
+      .id(rs.getLong("id"))
+      .value(rs.getString("option_value"))
+      .parentOptionId(rs.getLong("parent_option_id"))
+      .build();
 
   public record Touple(long id, Long parentId) {}
 
