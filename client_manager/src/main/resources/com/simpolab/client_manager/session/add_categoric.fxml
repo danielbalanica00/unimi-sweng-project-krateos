@@ -13,7 +13,7 @@
    <children>
       <AnchorPane prefHeight="35.0" prefWidth="560.0">
          <children>
-            <Text layoutX="197.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add electors">
+            <Text layoutX="197.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add options">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="23.0" />
                </font>
@@ -28,9 +28,9 @@
       <TextField fx:id="txtOption" promptText="new option" />
       <Button fx:id="btnAddOption" mnemonicParsing="false" onAction="#onBtnAddOptionClicked" text="Add option" />
       <ListView fx:id="lvOptions" prefHeight="200.0" prefWidth="200.0" />
-      <VBox alignment="TOP_CENTER" prefHeight="38.0" prefWidth="560.0">
+      <VBox alignment="TOP_RIGHT" prefHeight="38.0" prefWidth="560.0">
          <children>
-            <Button fx:id="btnCreate" mnemonicParsing="false" onAction="#onBtnCreateClicked" prefHeight="35.0" prefWidth="72.0" text="Create" />
+            <Button fx:id="btnNext" mnemonicParsing="false" onAction="#onBtnNextClicked" prefHeight="35.0" prefWidth="72.0" text="Next" />
          </children>
       </VBox>
    </children>

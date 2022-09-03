@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Group {
 
-  private String id;
+  private int id;
   private String name;
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
@@ -20,7 +20,7 @@ public class Group {
     this.name = name;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -30,7 +30,7 @@ public class Group {
   }
 
   @JsonCreator
-  public Group(@JsonProperty("id") String id, @JsonProperty("name") String name) {
+  public Group(@JsonProperty("id") int id, @JsonProperty("name") String name) {
     this.id = id;
     this.name = name;
   }
@@ -39,4 +39,6 @@ public class Group {
   public Group(@JsonProperty("name") String name) {
     this.name = name;
   }
+
+
 }
