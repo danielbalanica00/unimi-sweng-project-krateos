@@ -54,7 +54,7 @@ public class AddCategoricController implements Initializable {
     SceneUtils.switchTo("session/add_groups.fxml");
   }
 
-  public static void initSession(long initSessionId) {
+  public static void init(long initSessionId) {
     sessionId = initSessionId;
   }
 

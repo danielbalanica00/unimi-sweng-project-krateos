@@ -2,16 +2,16 @@ package com.simpolab.client_manager.session;
 
 import com.simpolab.client_manager.domain.Session;
 import com.simpolab.client_manager.utils.SceneUtils;
-import java.net.URL;
-import java.util.Date;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 public class SessionController implements Initializable {
 
@@ -44,8 +44,7 @@ public class SessionController implements Initializable {
   private void onBtnBackClicked(ActionEvent event) throws Exception {
     selectedSession = null;
 
-    stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    SceneUtils.switchTo("../session/sessions.fxml", stage);
+    SceneUtils.switchTo("session/sessions.fxml");
   }
 
   @Override

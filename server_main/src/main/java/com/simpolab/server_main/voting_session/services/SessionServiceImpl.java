@@ -9,13 +9,14 @@ import com.simpolab.server_main.voting_session.VoteValidator;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -74,6 +75,7 @@ public class SessionServiceImpl implements SessionService {
   @Override
   public void newOption(long votingSessionId, String optionValue) {
     try {
+
       sessionDAO.createOption(votingSessionId, optionValue);
     } catch (SQLException e) {
       throw new IllegalArgumentException(e);
@@ -105,8 +107,11 @@ public class SessionServiceImpl implements SessionService {
 
   public void setState(long sessionId, VotingSession.State newState) {
     try {
+      // todo check if session is a referendum, if it is add the yes and no options
+
       // todo get the state and check if possible
       sessionDAO.setState(sessionId, newState);
+
 
       if (newState == VotingSession.State.ACTIVE) {
         //        sessionDAO.populateSessionParticipants(sessionId);

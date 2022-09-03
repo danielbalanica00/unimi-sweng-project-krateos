@@ -2,20 +2,22 @@ package com.simpolab.client_manager.session;
 
 import com.simpolab.client_manager.domain.Session;
 import com.simpolab.client_manager.session.session_types.AddCategoricController;
+import com.simpolab.client_manager.session.session_types.AddReferendumController;
 import com.simpolab.client_manager.utils.AlertUtils;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 
 public class NewSessionController implements Initializable {
 
@@ -130,14 +132,17 @@ public class NewSessionController implements Initializable {
 
     switch (type) {
       case CATEGORIC -> {
-        AddCategoricController.initSession(sessionId);
+        AddCategoricController.init(sessionId);
         SceneUtils.switchTo("session/add_categoric.fxml");
       }
       case CATEGORIC_WITH_PREFERENCES -> SceneUtils.switchTo(
         "session/add_categoric_preferences.fxml"
       );
       case ORDINAL -> SceneUtils.switchTo("session/add_ordinal.fxml");
-      case REFERENDUM -> SceneUtils.switchTo("session/add_referendum.fxml");
+      case REFERENDUM -> {
+        AddReferendumController.init(sessionId);
+        SceneUtils.switchTo("session/add_referendum.fxml");
+      }
     }
   }
 }
