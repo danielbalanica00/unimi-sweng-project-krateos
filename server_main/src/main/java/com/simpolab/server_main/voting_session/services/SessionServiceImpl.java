@@ -5,6 +5,7 @@ import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
 import com.simpolab.server_main.voting_session.VoteValidator;
 import com.simpolab.server_main.voting_session.domain.Vote;
+import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,11 @@ public class SessionServiceImpl implements SessionService {
     }
   }
 
+  @Override
+  public List<VotingOption> getOptions(long votingSessionId) {
+    return sessionDAO.getOptions(votingSessionId);
+  }
+
   public void setState(long sessionId, VotingSession.State newState) {
     try {
       // todo get the state and check if possible
@@ -155,6 +161,7 @@ public class SessionServiceImpl implements SessionService {
       // check if vote is valid for the voting type
       var sessionType = session.getType();
       var options = sessionDAO.getOptionsForSession(sessionId);
+      log.debug("All Options: {}", options);
       var voteIsValid = VoteValidator.validateVotes(sessionType, votes, options);
       if (!voteIsValid) throw new IllegalArgumentException(
         "The given votes are not valid for the session"

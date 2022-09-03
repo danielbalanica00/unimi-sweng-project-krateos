@@ -2,7 +2,17 @@ package com.simpolab.server_main.db.das;
 
 import com.simpolab.server_main.db.SessionDAO;
 import com.simpolab.server_main.voting_session.domain.Vote;
+import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,14 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -43,6 +45,14 @@ public class SessionDAS implements SessionDAO {
       .needAbsoluteMajority(rs.getBoolean("need_absolute_majority"))
       .hasQuorum(rs.getBoolean("has_quorum"))
       .build();
+
+  private final RowMapper<VotingOption> votingOptionRowMapper = (rs, _ignore) ->
+      VotingOption
+          .builder()
+          .id(rs.getLong("id"))
+          .value(rs.getString("option_value"))
+          .parentOptionId(rs.getLong("parent_option_id"))
+          .build();
 
   public record Touple(long id, Long parentId) {}
 
@@ -159,6 +169,17 @@ public class SessionDAS implements SessionDAO {
       log.info("Voting option {} removed successfully", optionId);
     } catch (Exception e) {
       log.error("Failed to remove voting session", e);
+    }
+  }
+
+  @Override
+  public List<VotingOption> getOptions(long votingSessionId) {
+    try {
+      var query = "SELECT * FROM voting_option WHERE voting_session_id = ?";
+      return jdbcTemplate.query(query, votingOptionRowMapper, votingSessionId);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return new ArrayList<>();
     }
   }
 

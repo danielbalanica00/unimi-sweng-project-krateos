@@ -1,6 +1,7 @@
 package com.simpolab.server_main.voting_session.api;
 
 import com.simpolab.server_main.voting_session.domain.Vote;
+import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingOptionRequest;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.services.SessionService;
@@ -26,12 +27,12 @@ public class SessionController {
   private SessionService sessionService;
 
   @PostMapping(
-    consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<VotingSession> newSession(
-    @Valid @RequestBody VotingSession votingSession,
-    BindingResult bindingResult
+      @Valid @RequestBody VotingSession votingSession,
+      BindingResult bindingResult
   ) {
     if (bindingResult.hasErrors()) {
       log.debug("[New Session] - Validation error: {}", bindingResult.getAllErrors());
@@ -76,8 +77,8 @@ public class SessionController {
 
   @PutMapping(path = "{sessionId}/group/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> insertElectorInGroup(
-    @PathVariable Long sessionId,
-    @PathVariable Long groupId
+      @PathVariable Long sessionId,
+      @PathVariable Long groupId
   ) {
     sessionService.addGroup(sessionId, groupId);
     return null;
@@ -85,8 +86,8 @@ public class SessionController {
 
   @DeleteMapping(path = "{sessionId}/group/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> removeElectorFromGroup(
-    @PathVariable Long sessionId,
-    @PathVariable Long groupId
+      @PathVariable Long sessionId,
+      @PathVariable Long groupId
   ) {
     sessionService.removeGroup(sessionId, groupId);
     return null;
@@ -94,8 +95,8 @@ public class SessionController {
 
   @PutMapping(path = "{sessionId}/option", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> insertOptionInVotingSession(
-    @PathVariable Long sessionId,
-    @RequestBody VotingOptionRequest vor
+      @PathVariable Long sessionId,
+      @RequestBody VotingOptionRequest vor
   ) {
     log.info("Session ID: {}, Value: {}", sessionId, vor.getValue());
 
@@ -103,14 +104,26 @@ public class SessionController {
     return null;
   }
 
+  @GetMapping(path = "{sessionId}/option", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<VotingOption>> getOptions(
+      @PathVariable Long sessionId,
+      @RequestBody VotingOptionRequest vor
+  ) {
+    log.info("Session ID: {}, Value: {}", sessionId, vor.getValue());
+
+    var votingOptions = sessionService.getOptions(sessionId);
+
+    return ResponseEntity.ok(votingOptions);
+  }
+
   @PutMapping(
-    path = "{sessionId}/option/{optionId}/suboption",
-    produces = MediaType.APPLICATION_JSON_VALUE
+      path = "{sessionId}/option/{optionId}/suboption",
+      produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Void> insertSubOptionInVotingSession(
-    @PathVariable Long sessionId,
-    @PathVariable Long optionId,
-    @RequestBody VotingOptionRequest vor
+      @PathVariable Long sessionId,
+      @PathVariable Long optionId,
+      @RequestBody VotingOptionRequest vor
   ) {
     log.info("Session ID: {}, Parent Option: {}, Value: {}", sessionId, optionId, vor.getValue());
 
@@ -163,14 +176,14 @@ public class SessionController {
   }
 
   @PostMapping(
-    path = "{sessionId}/vote",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE
+      path = "{sessionId}/vote",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Void> newVote(
-    Authentication authentication,
-    @PathVariable Long sessionId,
-    @RequestBody List<Vote> votes
+      Authentication authentication,
+      @PathVariable Long sessionId,
+      @RequestBody List<Vote> votes
   ) {
     try {
       var username = (String) authentication.getPrincipal();
