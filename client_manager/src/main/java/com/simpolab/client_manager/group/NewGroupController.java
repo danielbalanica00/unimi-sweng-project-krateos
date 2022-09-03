@@ -1,7 +1,8 @@
 package com.simpolab.client_manager.group;
 
-import com.simpolab.client_manager.electors.Elector;
-import com.simpolab.client_manager.login.AuthHandler;
+import com.simpolab.client_manager.domain.Elector;
+import com.simpolab.client_manager.domain.Group;
+import com.simpolab.client_manager.utils.AuthHandler;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;

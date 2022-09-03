@@ -1,6 +1,7 @@
 package com.simpolab.client_manager.electors;
 
-import com.simpolab.client_manager.login.AuthHandler;
+import com.simpolab.client_manager.domain.Elector;
+import com.simpolab.client_manager.utils.AuthHandler;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
 import java.util.Map;

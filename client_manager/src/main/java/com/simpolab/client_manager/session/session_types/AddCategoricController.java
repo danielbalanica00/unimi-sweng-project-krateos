@@ -1,8 +1,8 @@
 package com.simpolab.client_manager.session.session_types;
 
+import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.session.AddGroupsController;
 import com.simpolab.client_manager.session.NewSessionController;
-import com.simpolab.client_manager.session.domain.Option;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;

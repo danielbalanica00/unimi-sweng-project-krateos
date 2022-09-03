@@ -1,6 +1,7 @@
 package com.simpolab.client_manager.login;
 
 import com.simpolab.client_manager.utils.AlertUtils;
+import com.simpolab.client_manager.utils.AuthHandler;
 import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

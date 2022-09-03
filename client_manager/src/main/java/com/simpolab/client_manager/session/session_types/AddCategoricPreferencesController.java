@@ -1,7 +1,7 @@
 package com.simpolab.client_manager.session.session_types;
 
-import com.simpolab.client_manager.session.domain.Option;
-import com.simpolab.client_manager.session.domain.Session;
+import com.simpolab.client_manager.domain.Option;
+import com.simpolab.client_manager.domain.Session;
 import com.simpolab.client_manager.utils.SceneUtils;
 import java.net.URL;
 import java.util.List;

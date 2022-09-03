@@ -1,4 +1,4 @@
-package com.simpolab.client_manager.login;
+package com.simpolab.client_manager.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

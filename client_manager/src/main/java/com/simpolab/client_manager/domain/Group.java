@@ -1,4 +1,4 @@
-package com.simpolab.client_manager.group;
+package com.simpolab.client_manager.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

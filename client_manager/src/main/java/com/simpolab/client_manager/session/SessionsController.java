@@ -1,6 +1,6 @@
 package com.simpolab.client_manager.session;
 
-import com.simpolab.client_manager.session.domain.Session;
+import com.simpolab.client_manager.domain.Session;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
