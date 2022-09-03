@@ -1,9 +1,8 @@
 package com.simpolab.client_manager.utils;
 
 import com.simpolab.client_manager.domain.AuthTokens;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class AuthHandler {

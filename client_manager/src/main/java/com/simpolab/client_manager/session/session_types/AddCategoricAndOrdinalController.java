@@ -16,7 +16,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
-public class AddCategoricController implements Initializable {
+public class AddCategoricAndOrdinalController implements Initializable {
 
   private static long sessionId;
 

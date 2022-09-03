@@ -10,7 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class AddReferendumController  {
+public class AddReferendumController {
+
   private static long sessionId;
 
   @FXML
@@ -28,7 +29,6 @@ public class AddReferendumController  {
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
-
     NewSessionController.init(sessionId);
     SceneUtils.switchTo("session/new_session.fxml");
   }
