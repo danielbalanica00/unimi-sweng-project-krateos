@@ -32,6 +32,7 @@ public final class AuthHandler {
 
     // CASE 3: Login successfully and user is a manager
     AuthHandler.authTokens = authTokens;
+    HttpUtils.setAuthHeader(authTokens.getAccessToken());
     return 2;
   }
 

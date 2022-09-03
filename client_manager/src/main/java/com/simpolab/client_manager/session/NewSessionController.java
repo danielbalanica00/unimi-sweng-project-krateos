@@ -1,46 +1,47 @@
 package com.simpolab.client_manager.session;
 
-import com.simpolab.client_manager.login.AuthHandler;
+import com.simpolab.client_manager.session.domain.Session;
+import com.simpolab.client_manager.session.session_types.AddCategoricController;
 import com.simpolab.client_manager.utils.AlertUtils;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
-//import java.awt.*;
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 public class NewSessionController implements Initializable {
-  private Stage stage;
-  private Scene scene;
 
   @FXML
   private TextField txtName;
+
   @FXML
   private DatePicker dateEndsOn;
+
   @FXML
   private ChoiceBox<Session.Type> choiceSessionType;
+
   @FXML
   private CheckBox cbQuorum;
+
   @FXML
   private CheckBox cbAbsoluteMajority;
+
   @FXML
   private Button btnNext;
+
+  private static Long sessionId;
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {
     SceneUtils.switchToHomepage();
-    // TODO: 9/3/2022 delete session 
   }
 
   @Override
@@ -49,48 +50,94 @@ public class NewSessionController implements Initializable {
     choiceSessionType.getItems().add(Session.Type.CATEGORIC);
     choiceSessionType.getItems().add(Session.Type.CATEGORIC_WITH_PREFERENCES);
     choiceSessionType.getItems().add(Session.Type.REFERENDUM);
+
+    if (sessionId == null) return;
+
+    // get previously created session to prefill the fields
+    String sessionJson = HttpUtils.get("/api/v1/session/" + sessionId);
+    var session = JsonUtils.parseJson(sessionJson, Session.class);
+    fillSession(session);
+
+    // delete the session
+    HttpUtils.delete("/api/v1/session/" + sessionId);
+    resetState();
+  }
+
+  public static void init(long sessionId) {
+    if (NewSessionController.sessionId != null) throw new IllegalStateException(
+      "Trying to init an already initialized controller"
+    );
+
+    NewSessionController.sessionId = sessionId;
+  }
+
+  private static void resetState() {
+    sessionId = null;
+  }
+
+  private void fillSession(Session session) {
+    txtName.setText(session.getName());
+    dateEndsOn.setValue(
+      LocalDate.ofInstant(
+        Instant.ofEpochSecond(session.getEndsOn()),
+        OffsetDateTime.now().getOffset()
+      )
+    );
+    cbQuorum.setSelected(session.isHasQuorum());
+    cbAbsoluteMajority.setSelected(session.isNeedAbsoluteMajority());
+    choiceSessionType.setValue(session.getType());
   }
 
   @FXML
   private void onBtnNextClicked(ActionEvent event) throws Exception {
+    // check name
     String name = txtName.getText();
-
-    Long epochDay = dateEndsOn.getValue().toEpochSecond(LocalTime.now(), OffsetDateTime.now().getOffset());
-    boolean hasQuorum = cbQuorum.isSelected();
-    boolean hasAbsoluteMajority = cbAbsoluteMajority.isSelected();
-    Session.Type type = choiceSessionType.getValue();
-
-    if (name.isBlank() || name == null) {
+    if (name.isBlank()) {
       AlertUtils.alert(Alert.AlertType.ERROR, "The session name cannot be blank");
       return;
     }
-    if (epochDay < LocalDate.now().toEpochDay()) {
-      AlertUtils.alert(Alert.AlertType.ERROR, "The session can not end in the past");
-      return;
-    }
-    if (type == null || type.toString().isBlank()) {
+
+    // check type was selected
+    Session.Type type = choiceSessionType.getValue();
+    if (type == null) {
       AlertUtils.alert(Alert.AlertType.ERROR, "You have to select a session type");
       return;
     }
 
-    Session session = new Session(name, epochDay, hasAbsoluteMajority, hasQuorum, type.toString());
-    String sessionJson = HttpUtils.postJson("/api/v1/session", Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken()), session);
-    int sessionId = JsonUtils.parseJson(sessionJson, Session.class).getId();
+    // check selected time is in the future
+    long epochSeconds = dateEndsOn
+      .getValue()
+      .toEpochSecond(LocalTime.now(), OffsetDateTime.now().getOffset());
+    if (epochSeconds < Instant.now().getEpochSecond()) {
+      AlertUtils.alert(Alert.AlertType.ERROR, "The session can not end in the past");
+      return;
+    }
+
+    boolean hasQuorum = cbQuorum.isSelected();
+    boolean hasAbsoluteMajority = cbAbsoluteMajority.isSelected();
+
+    final var sessionToCreate = Session
+      .builder()
+      .name(name)
+      .endsOn(epochSeconds)
+      .needAbsoluteMajority(hasAbsoluteMajority)
+      .hasQuorum(hasQuorum)
+      .type(type)
+      .build();
+    //    Session session = new Session(name, epochDay, hasAbsoluteMajority, hasQuorum, type.toString());
+    String sessionJson = HttpUtils.postJson("/api/v1/session", sessionToCreate);
+    long sessionId = JsonUtils.parseJson(sessionJson, Session.class).getId();
 
     switch (type) {
-      case CATEGORIC:
+      case CATEGORIC -> {
         AddCategoricController.initSession(sessionId);
         SceneUtils.switchTo("session/add_categoric.fxml");
-        break;
-      case CATEGORIC_WITH_PREFERENCES:
-        SceneUtils.switchTo("session/add_categoric_preferences.fxml");
-        break;
-      case ORDINAL:
-        SceneUtils.switchTo("session/add_ordinal.fxml");
-        break;
-      case REFERENDUM:
-        SceneUtils.switchTo("session/add_referendum.fxml");
-        break;
+      }
+      case CATEGORIC_WITH_PREFERENCES -> SceneUtils.switchTo(
+        "session/add_categoric_preferences.fxml"
+      );
+      case ORDINAL -> SceneUtils.switchTo("session/add_ordinal.fxml");
+      case REFERENDUM -> SceneUtils.switchTo("session/add_referendum.fxml");
     }
   }
 }

@@ -1,4 +1,4 @@
-package com.simpolab.client_manager.session;
+package com.simpolab.client_manager.session.session_types;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -14,9 +14,7 @@ import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.NameValuePair;
-import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.*;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
@@ -28,6 +26,15 @@ public final class HttpUtils {
   private HttpUtils() {}
 
   private static final String baseUrl = "http://127.0.0.1:8080";
+  private static String accessToken;
+
+  public static void setAuthHeader(String accessToken) {
+    HttpUtils.accessToken = accessToken;
+  }
+
+  public static String get(String path) {
+    return get(path, null);
+  }
 
   public static String get(String path, @Nullable Map<String, String> headers) {
     var request = new HttpGet(baseUrl + path);
@@ -37,12 +44,20 @@ public final class HttpUtils {
     return makeRequest(request);
   }
 
+  public static void delete(String path) {
+    delete(path, null);
+  }
+
   public static void delete(String path, @Nullable Map<String, String> headers) {
     var request = new HttpDelete(baseUrl + path);
 
     if (headers != null) headers.forEach(request::setHeader);
 
     makeRequest(request);
+  }
+
+  public static <T> String put(String path, T body) {
+    return put(path, null, body);
   }
 
   public static <T> String put(String path, @Nullable Map<String, String> headers, T body) {
@@ -70,7 +85,7 @@ public final class HttpUtils {
   ) {
     var request = new HttpPost(baseUrl + path);
 
-    request.setHeader("Content-type", "application/x-www-form-urlencoded");
+    request.setHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
     if (headers != null) headers.forEach(request::setHeader);
 
     request.setEntity(new UrlEncodedFormEntity(formatUrlParams(params)));
@@ -84,7 +99,7 @@ public final class HttpUtils {
   public static <T> String postJson(String path, @Nullable Map<String, String> headers, T body) {
     var request = new HttpPost(baseUrl + path);
 
-    request.setHeader("Content-type", "application/json");
+    request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
     if (headers != null) headers.forEach(request::setHeader);
 
     request.setEntity(new StringEntity(new Gson().toJson(body)));
@@ -101,6 +116,12 @@ public final class HttpUtils {
   }
 
   private static String makeRequest(ClassicHttpRequest request) {
+    try {
+      if (
+        request.getHeader(HttpHeaders.AUTHORIZATION) == null && accessToken != null
+      ) request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+    } catch (ProtocolException ignore) {}
+
     try (
       CloseableHttpClient httpClient = HttpClients.createDefault();
       CloseableHttpResponse res = httpClient.execute(request)

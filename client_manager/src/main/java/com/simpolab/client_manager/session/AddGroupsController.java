@@ -1,100 +1,127 @@
 package com.simpolab.client_manager.session;
 
-import com.simpolab.client_manager.electors.Elector;
 import com.simpolab.client_manager.group.Group;
 import com.simpolab.client_manager.login.AuthHandler;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
+@Slf4j
 public class AddGroupsController implements Initializable {
-    private List<Group> selectedGroups;
-    private static int sessionId;
 
-    @FXML
-    private ListView<Group> lvAvailableGroups;
-    @FXML
-    private ListView<Group> lvAddedGroups;
+  private List<Group> selectedGroups;
+  private static Long sessionId;
 
-    @FXML
-    private void onBtnAddGroupsClicked(ActionEvent event) throws Exception{
-        ObservableList<Group> groups = lvAvailableGroups.getSelectionModel().getSelectedItems();
+  private static String referer;
 
-        // imagine checking before shoving shit into lists
-        for(Group group : groups)
-            HttpUtils.put("/api/v1/session/"+sessionId+"/group/" + group.getId(), Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken()), null);
+  @FXML
+  private ListView<Group> lvAvailableGroups;
 
-        selectedGroups.addAll(groups);
+  @FXML
+  private ListView<Group> lvAddedGroups;
 
-        refreshLists();
-    }
+  @FXML
+  private void onBtnAddGroupsClicked(ActionEvent event) throws Exception {
+    ObservableList<Group> groups = lvAvailableGroups.getSelectionModel().getSelectedItems();
 
-    public static void initSession(int initSessionId){
-        sessionId = initSessionId;
-    }
+    // imagine checking before shoving shit into lists
+    for (Group group : groups) HttpUtils.put(
+      "/api/v1/session/" + sessionId + "/group/" + group.getId(),
+      Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken()),
+      null
+    );
 
-    @FXML
-    private void onBtnRemoveGroupsClicked(ActionEvent event) throws Exception{
-        ObservableList<Group> groups = lvAddedGroups.getSelectionModel().getSelectedItems();
+    selectedGroups.addAll(groups);
 
-        for(Group group : groups)
-            HttpUtils.delete("/api/v1/session/"+sessionId+"/group/"+group.getId(), Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken()));
+    refreshLists();
+  }
 
-        selectedGroups.removeIf(group ->
-                groups.stream().anyMatch(selGroup -> selGroup.getId() == group.getId())
-        );
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    if (sessionId == null) throw new IllegalStateException(
+      "The init method should be called before activating this controller"
+    );
 
-        refreshLists();
-    }
+    lvAddedGroups.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    lvAvailableGroups.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    selectedGroups = new ArrayList<>();
 
-    @FXML
-    private void onBtnBackClicked(ActionEvent event) throws Exception{
-        SceneUtils.switchTo("homepage/homepage.fxml");
-    }
+    refreshLists();
+  }
 
-    @FXML
-    private void onBtnCreateClicked(ActionEvent event) throws Exception{
-        SceneUtils.switchToHomepage();
-    }
+  public static void init(long sessionId, String referer) {
+    if (AddGroupsController.sessionId != null) throw new IllegalStateException(
+      "Trying to init an already initialized controller"
+    );
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        lvAddedGroups.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        lvAvailableGroups.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        selectedGroups = new ArrayList<>();
+    AddGroupsController.sessionId = sessionId;
+    AddGroupsController.referer = referer;
+  }
 
-        refreshLists();
-    }
+  private static void resetState() {
+    sessionId = null;
+    referer = null;
+  }
 
-    private void refreshLists(){
-        deleteEntries();
+  @FXML
+  private void onBtnRemoveGroupsClicked(ActionEvent event) throws Exception {
+    ObservableList<Group> groups = lvAddedGroups.getSelectionModel().getSelectedItems();
 
-        String availableGroupsJson = HttpUtils.get("/api/v1/group", Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken()));
-        List<Group> availableGroups = JsonUtils.parseJsonArray(availableGroupsJson, Group.class);
+    for (Group group : groups) HttpUtils.delete(
+      "/api/v1/session/" + sessionId + "/group/" + group.getId(),
+      Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken())
+    );
 
-        availableGroups.removeIf(group ->
-                selectedGroups.stream().anyMatch(selGroup -> selGroup.getId() == group.getId())
-        );
+    selectedGroups.removeIf(group ->
+      groups.stream().anyMatch(selGroup -> selGroup.getId() == group.getId())
+    );
 
-        lvAvailableGroups.getItems().addAll(availableGroups);
-        lvAddedGroups.getItems().addAll(selectedGroups);
-    }
+    refreshLists();
+  }
 
-    private void deleteEntries(){
-        lvAvailableGroups.getItems().clear();
-        lvAddedGroups.getItems().clear();
-    }
+  @FXML
+  private void onBtnBackClicked(ActionEvent event) throws Exception {
+    var referer = AddGroupsController.referer;
+
+    resetState();
+    SceneUtils.switchTo(referer);
+  }
+
+  @FXML
+  private void onBtnCreateClicked(ActionEvent event) throws Exception {
+    resetState();
+    SceneUtils.switchToHomepage();
+  }
+
+  private void refreshLists() {
+    // clear lists
+    lvAvailableGroups.getItems().clear();
+    lvAddedGroups.getItems().clear();
+
+    // get new values
+    String availableGroupsJson = HttpUtils.get("/api/v1/group");
+    List<Group> availableGroups = JsonUtils.parseJsonArray(availableGroupsJson, Group.class);
+
+    String selectedGroupsJson = HttpUtils.get(("/api/v1/session/" + sessionId + "/group"));
+    List<Group> selectedGroups = JsonUtils.parseJsonArray(selectedGroupsJson, Group.class);
+
+    // remove from the available groups all the ones that have already been added
+    availableGroups.removeAll(selectedGroups);
+
+    // set the new lists' values
+    lvAvailableGroups.getItems().addAll(availableGroups);
+    lvAddedGroups.getItems().addAll(selectedGroups);
+  }
 }

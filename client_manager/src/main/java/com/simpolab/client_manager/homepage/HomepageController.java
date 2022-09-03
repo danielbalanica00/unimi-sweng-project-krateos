@@ -1,22 +1,19 @@
 package com.simpolab.client_manager.homepage;
 
 import com.simpolab.client_manager.login.AuthHandler;
-import com.simpolab.client_manager.session.Session;
+import com.simpolab.client_manager.session.domain.Session;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
-import javafx.collections.ObservableList;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 public class HomepageController implements Initializable {
 
@@ -27,10 +24,16 @@ public class HomepageController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    String sessionsJson = HttpUtils.get("/api/v1/session", Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken()));
+    String sessionsJson = HttpUtils.get(
+      "/api/v1/session",
+      Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken())
+    );
 
     List<Session> sessions = JsonUtils.parseJsonArray(sessionsJson, Session.class);
-    List<Session> activeSessions = sessions.stream().filter(s -> s.getState().equals(Session.State.INACTIVE)).toList();
+    List<Session> activeSessions = sessions
+      .stream()
+      .filter(s -> s.getState().equals(Session.State.INACTIVE))
+      .toList();
 
     lvSessions.getItems().addAll(activeSessions);
   }
