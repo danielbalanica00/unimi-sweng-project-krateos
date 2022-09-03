@@ -5,6 +5,9 @@ import com.simpolab.client_manager.login.AuthHandler;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
+import java.net.URL;
+import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,10 +17,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
-
-import java.net.URL;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 @Log4j2
 public class ElectorsController implements Initializable {

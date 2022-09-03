@@ -4,8 +4,6 @@ import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOptionRequest;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.services.SessionService;
-import java.util.List;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/session")
@@ -139,6 +140,23 @@ public class SessionController {
 
     sessionService.cancelSession(sessionId);
     return null;
+  }
+
+  @PatchMapping(path = "{sessionId}/state/{newStateString}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> setState(@PathVariable Long sessionId, @PathVariable String newStateString) {
+    try {
+      log.debug("[Set State] - received {}", newStateString);
+      var newState = VotingSession.State.valueOf(newStateString.trim().toUpperCase());
+      log.debug("[Set State] - setting session {} state to {}", sessionId, newStateString);
+      sessionService.setState(sessionId, newState);
+    } catch (IllegalArgumentException iae) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+      log.error("Error ---> ", e);
+      throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    return ResponseEntity.ok().build();
   }
 
   @PostMapping(

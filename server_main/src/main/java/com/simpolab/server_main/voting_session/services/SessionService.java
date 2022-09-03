@@ -29,6 +29,8 @@ public interface SessionService {
 
   void removeOption(long optionId);
 
+  void setState(long sessionId, VotingSession.State newState);
+
   /*
     Manage session lifecycle
    */
