@@ -1,23 +1,22 @@
 package com.simpolab.server_main.voting_session.domain;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class VotingOption {
+  private long id;
 
-  @Min(0)
-  private Long id;
+  private String value;
 
-  private VotingSession votingSession;
+  private Long parentOptionId;
 
-  @NotBlank
-  private String optionValue;
-
-  private VotingOption parent;
+  public Long getParentOptionId() {
+    return parentOptionId == 0 ? null : parentOptionId;
+  }
 }

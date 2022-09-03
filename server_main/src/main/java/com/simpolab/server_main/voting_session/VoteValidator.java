@@ -3,10 +3,13 @@ package com.simpolab.server_main.voting_session;
 import com.simpolab.server_main.db.das.SessionDAS;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class VoteValidator {
 
   private VoteValidator() {}
@@ -30,15 +33,21 @@ public class VoteValidator {
 
   private static final Validator categoricWithPreferencesValidator = (votes, options) -> {
     // at least one vote is needed
-    if (votes.size() != 1) return false;
+    if (votes.size() < 1) return false;
 
     // separate toplevel options from lower level options
     var topLevelOptions = new HashSet<SessionDAS.Touple>();
     var lowerLevelOptions = new HashSet<SessionDAS.Touple>();
 
+
+
     options.forEach(opt -> {
-      if (opt.parentId() == null) topLevelOptions.add(opt); else lowerLevelOptions.add(opt);
+      if (opt.parentId() == 0) topLevelOptions.add(opt); else lowerLevelOptions.add(opt);
     });
+
+    log.debug("All Options: {}", options);
+    log.debug("Top Level Options: {}", topLevelOptions);
+    log.debug("Lower Level Options: {}", lowerLevelOptions);
 
     // check that one vote is for a top level option
     var topLevelOptionsIds = topLevelOptions

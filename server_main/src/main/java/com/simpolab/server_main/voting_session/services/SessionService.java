@@ -1,6 +1,7 @@
 package com.simpolab.server_main.voting_session.services;
 
 import com.simpolab.server_main.voting_session.domain.Vote;
+import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.util.List;
 
@@ -28,6 +29,10 @@ public interface SessionService {
   void newOption(long votingSessionId, String optionValue, long parentOptionId);
 
   void removeOption(long optionId);
+
+  List<VotingOption> getOptions(long votingSessionId);
+
+  void setState(long sessionId, VotingSession.State newState);
 
   /*
     Manage session lifecycle

@@ -28,7 +28,6 @@ public class AddCategoricController implements Initializable {
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken()), option);
 
     txtOption.clear();
-    refreshLists();
   }
 
   @FXML
