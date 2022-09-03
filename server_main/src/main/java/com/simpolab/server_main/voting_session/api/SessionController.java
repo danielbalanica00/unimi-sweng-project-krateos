@@ -59,7 +59,7 @@ public class SessionController {
   }
 
   @GetMapping
-  public ResponseEntity<List<VotingSession>> getSession() {
+  public ResponseEntity<List<VotingSession>> getAllSessions() {
     return ResponseEntity.ok(sessionService.getAllSessions());
   }
 
@@ -118,6 +118,7 @@ public class SessionController {
     return null;
   }
 
+  @Deprecated
   @PatchMapping(path = "{sessionId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> startSession(@PathVariable Long sessionId) {
     log.info("Starting session with id: {}", sessionId);
@@ -126,6 +127,7 @@ public class SessionController {
     return null;
   }
 
+  @Deprecated
   @PatchMapping(path = "{sessionId}/end", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> endSession(@PathVariable Long sessionId) {
     log.info("Ending session with id: {}", sessionId);
@@ -134,6 +136,7 @@ public class SessionController {
     return null;
   }
 
+  @Deprecated
   @PatchMapping(path = "{sessionId}/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> cancelSession(@PathVariable Long sessionId) {
     log.info("Canceling session with id: {}", sessionId);
