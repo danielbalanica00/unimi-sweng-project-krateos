@@ -1,15 +1,8 @@
 package com.simpolab.client_manager.utils;
 
 import com.google.gson.Gson;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.hc.client5.http.classic.methods.HttpDelete;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -19,6 +12,11 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public final class HttpUtils {
@@ -68,7 +66,27 @@ public final class HttpUtils {
     if (body != null) {
       request.setHeader("Content-type", "application/json");
       request.setEntity(new StringEntity(new Gson().toJson(body)));
-      log.error("BODY: " + new Gson().toJson(body));
+    }
+
+    return makeRequest(request);
+  }
+
+  public static <T> String patch(String path) {
+    return patch(path, null, null);
+  }
+
+  public static <T> String patch(String path, T body) {
+    return put(path, null, body);
+  }
+
+  public static <T> String patch(String path, @Nullable Map<String, String> headers, T body) {
+    var request = new HttpPatch(baseUrl + path);
+
+    if (headers != null) headers.forEach(request::setHeader);
+
+    if (body != null) {
+      request.setHeader("Content-type", "application/json");
+      request.setEntity(new StringEntity(new Gson().toJson(body)));
     }
 
     return makeRequest(request);
@@ -103,7 +121,6 @@ public final class HttpUtils {
     if (headers != null) headers.forEach(request::setHeader);
 
     request.setEntity(new StringEntity(new Gson().toJson(body)));
-    log.debug("BODY: " + new Gson().toJson(body));
     return makeRequest(request);
   }
 
