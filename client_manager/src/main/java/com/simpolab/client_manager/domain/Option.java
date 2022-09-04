@@ -11,7 +11,6 @@ public class Option {
   private Integer id;
   @Getter @Setter
   private String value;
-  @Setter
   private Integer parentOptionId;
 
   public Option(String value) {

@@ -30,9 +30,9 @@ public class SessionsController implements Initializable {
 
   @FXML
   private void onBtnOpenSessionClicked(ActionEvent event) throws Exception {
-    Session selectedSession = lvSessions.getSelectionModel().getSelectedItems().get(0);
+    Session selectedSession = lvSessions.getSelectionModel().getSelectedItem();
 
-    SessionController.initSession(selectedSession);
+    SessionController.init(selectedSession);
 
     SceneUtils.switchTo("session/session.fxml");
   }

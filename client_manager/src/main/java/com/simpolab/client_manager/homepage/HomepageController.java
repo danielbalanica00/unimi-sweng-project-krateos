@@ -1,6 +1,7 @@
 package com.simpolab.client_manager.homepage;
 
 import com.simpolab.client_manager.domain.Session;
+import com.simpolab.client_manager.session.SessionController;
 import com.simpolab.client_manager.utils.AuthHandler;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
@@ -13,17 +14,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
 
 public class HomepageController implements Initializable {
-
-  private Stage stage;
-
   @FXML
   private ListView<Session> lvSessions;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    lvSessions.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     String sessionsJson = HttpUtils.get(
       "/api/v1/session",
       Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken())
@@ -32,11 +32,21 @@ public class HomepageController implements Initializable {
     List<Session> sessions = JsonUtils.parseJsonArray(sessionsJson, Session.class);
     List<Session> activeSessions = sessions
       .stream()
-      .filter(s -> s.getState().equals(Session.State.INACTIVE))
+      .filter(s -> s.getState().equals(Session.State.ACTIVE))
       .toList();
 
     lvSessions.getItems().addAll(activeSessions);
   }
+
+  @FXML
+  private void onBtnOpenSessionClicked(ActionEvent event) throws Exception {
+    Session session = lvSessions.getSelectionModel().getSelectedItem();
+
+    SessionController.init(session);
+
+    SceneUtils.switchTo("session/session.fxml");
+  }
+
 
   /**
    *

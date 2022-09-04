@@ -97,38 +97,6 @@ public class Session {
     options = new ArrayList<>();
   }
 
-  //    public String getName() {
-  //        return name;
-  //    }
-  //
-  //    public long getEndsOn() {
-  //        return endsOn;
-  //    }
-  //
-  //    public boolean isNeedAbsoluteMajority() {
-  //        return needAbsoluteMajority;
-  //    }
-  //
-  //    public boolean isHasQuorum() {
-  //        return hasQuorum;
-  //    }
-  //
-  //    public Type getType() {
-  //        return type;
-  //    }
-  //
-  //    public State getState() {
-  //        return state;
-  //    }
-  //
-  //    public long getId() {
-  //        return id;
-  //    }
-  //
-  //    public List<Option> getOptions() {
-  //        return options;
-  //    }
-
   public void setOptions(List<Option> options) {
     this.options = new ArrayList<>(options);
   }
