@@ -20,9 +20,6 @@ public class AddReferendumController {
   @FXML
   private TextField txtPrompt;
 
-  @FXML
-  private Button btnCreate;
-
   public static void init(long initSessionId) {
     sessionId = initSessionId;
   }
@@ -34,7 +31,7 @@ public class AddReferendumController {
   }
 
   @FXML
-  private void onBtnCreateClicked() throws Exception {
+  private void onBtnNextClicked() throws Exception {
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", new Option(txtPrompt.getText()));
 
     AddGroupsController.init(sessionId, "session/new_session.fxml");

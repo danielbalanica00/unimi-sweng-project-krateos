@@ -2,15 +2,19 @@ package com.simpolab.client_manager.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Option {
 
+  @Getter
   private Integer id;
+  @Getter @Setter
   private String value;
-  private Integer parentId;
+  @Setter
+  private Integer parentOptionId;
 
-  @JsonCreator
-  public Option(@JsonProperty("value") String value) {
+  public Option(String value) {
     this.value = value;
   }
 
@@ -18,29 +22,35 @@ public class Option {
   public Option(@JsonProperty("id") int id, @JsonProperty("value") String value) {
     this.id = id;
     this.value = value;
+    this.parentOptionId = -1;
   }
 
   @JsonCreator
   public Option(
     @JsonProperty("id") int id,
     @JsonProperty("value") String value,
-    @JsonProperty("parentOptionId") int parentId
+    @JsonProperty("parentOptionId") int parentOptionId
   ) {
     this.id = id;
     this.value = value;
-    this.parentId = parentId;
+    this.parentOptionId = parentOptionId;
   }
 
-  public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
+  public Integer getParentOptionId() {
+    return parentOptionId == null ? -1 : parentOptionId;
   }
 
   @Override
   public String toString() {
     return value;
   }
+
+//  @Override
+//  public String toString() {
+//    return "Option{" +
+//            "id=" + id +
+//            ", value='" + value + '\'' +
+//            ", parentId=" + parentOptionId +
+//            '}';
+//  }
 }

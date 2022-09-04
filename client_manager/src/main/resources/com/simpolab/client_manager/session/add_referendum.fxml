@@ -12,7 +12,7 @@
    <children>
       <AnchorPane prefHeight="35.0" prefWidth="560.0">
          <children>
-            <Text layoutX="197.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add electors">
+            <Text layoutX="211.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Prompt">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="23.0" />
                </font>
@@ -25,9 +25,9 @@
          </children>
       </AnchorPane>
       <TextField fx:id="txtPrompt" promptText="referendum's prompt" />
-      <VBox alignment="TOP_CENTER" prefHeight="38.0" prefWidth="560.0">
+      <VBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="560.0">
          <children>
-            <Button fx:id="btnCreate" mnemonicParsing="false" onAction="#onBtnCreateClicked" prefHeight="35.0" prefWidth="72.0" text="Create" />
+            <Button fx:id="btnNext" mnemonicParsing="false" onAction="#onBtnNextClicked" prefHeight="35.0" prefWidth="72.0" text="Next" />
          </children>
       </VBox>
    </children>

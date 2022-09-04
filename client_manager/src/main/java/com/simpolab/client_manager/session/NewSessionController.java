@@ -2,6 +2,7 @@ package com.simpolab.client_manager.session;
 
 import com.simpolab.client_manager.domain.Session;
 import com.simpolab.client_manager.session.session_types.AddCategoricAndOrdinalController;
+import com.simpolab.client_manager.session.session_types.AddCategoricPreferencesController;
 import com.simpolab.client_manager.session.session_types.AddReferendumController;
 import com.simpolab.client_manager.utils.AlertUtils;
 import com.simpolab.client_manager.utils.HttpUtils;
@@ -134,9 +135,10 @@ public class NewSessionController implements Initializable {
         AddCategoricAndOrdinalController.init(sessionId);
         SceneUtils.switchTo("session/add_categoric.fxml");
       }
-      case CATEGORIC_WITH_PREFERENCES -> SceneUtils.switchTo(
-        "session/add_categoric_preferences.fxml"
-      );
+      case CATEGORIC_WITH_PREFERENCES -> {
+        AddCategoricPreferencesController.init(sessionId);
+        SceneUtils.switchTo("session/add_categoric_preferences.fxml");
+      }
       case REFERENDUM -> {
         AddReferendumController.init(sessionId);
         SceneUtils.switchTo("session/add_referendum.fxml");
