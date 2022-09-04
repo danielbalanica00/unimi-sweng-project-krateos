@@ -1,4 +1,4 @@
-package com.simpolab.client_manager.utils;
+package com.simpolab.client_elector.utils;
 
 import com.google.gson.Gson;
 import java.io.IOException;

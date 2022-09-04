@@ -18,19 +18,24 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class NewElectorController {
+
   @FXML
   private TextField txtFirstName;
+
   @FXML
   private TextField txtUsername;
+
   @FXML
   private TextField txtLastName;
+
   @FXML
   private TextField txtEmail;
+
   @FXML
   private PasswordField txtPassword;
+
   @FXML
   private PasswordField txtPasswordReEntered;
-
 
   @FXML
   private void onBtnCreateClicked(ActionEvent event) throws Exception {
@@ -52,10 +57,7 @@ public class NewElectorController {
     }
 
     Elector elector = new Elector(firstName, lastName, username, email, password);
-    String response = HttpUtils.postJson(
-      "/api/v1/elector",
-            elector
-    );
+    String response = HttpUtils.postJson("/api/v1/elector", elector);
 
     alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Elector created successfully");

@@ -8,13 +8,19 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
-  @Override
-  public void start(Stage stage) throws IOException {
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("login/login-view.fxml"));
-    Scene scene = new Scene(fxmlLoader.load());
+  public static Stage primaryStage;
 
-    stage.setScene(scene);
-    stage.show();
+  @Override
+  public void start(Stage primaryStage) throws IOException {
+    App.primaryStage = primaryStage;
+
+    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login/login.fxml"));
+    Scene scene = new Scene(fxmlLoader.load());
+    primaryStage.setTitle("Krateos Manager");
+    primaryStage.setScene(scene);
+    primaryStage.setHeight(600);
+    primaryStage.setWidth(800);
+    primaryStage.show();
   }
 
   // !DO NOT START FROM HERE, USE LAUNCHER INSTEAD

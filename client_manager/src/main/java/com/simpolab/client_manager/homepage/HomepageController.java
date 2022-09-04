@@ -18,6 +18,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
 
 public class HomepageController implements Initializable {
+
   @FXML
   private ListView<Session> lvSessions;
 
@@ -46,7 +47,6 @@ public class HomepageController implements Initializable {
 
     SceneUtils.switchTo("session/session.fxml");
   }
-
 
   /**
    *

@@ -43,14 +43,14 @@ public class AddCategoricPreferencesController implements Initializable {
   }
 
   @FXML
-  private void onLvOptionsClicked(MouseEvent mouseEvent) throws Exception{
+  private void onLvOptionsClicked(MouseEvent mouseEvent) throws Exception {
     refreshSuboptions();
   }
 
   @FXML
   private void onBtnAddOptionClicked(ActionEvent event) throws Exception {
     Option option = new Option(txtPrompt.getText());
-    HttpUtils.put("/api/v1/session/"+sessionId+"/option", option);
+    HttpUtils.put("/api/v1/session/" + sessionId + "/option", option);
 
     txtPrompt.clear();
     refreshOptions();
@@ -58,16 +58,24 @@ public class AddCategoricPreferencesController implements Initializable {
 
   @FXML
   private void onBtnAddSuboptionClicked(ActionEvent event) throws Exception {
-    if(lvOptions.getItems().isEmpty()){
-      AlertUtils.alert(Alert.AlertType.ERROR, "You first have to select an option to add a suboption");
+    if (lvOptions.getItems().isEmpty()) {
+      AlertUtils.alert(
+        Alert.AlertType.ERROR,
+        "You first have to select an option to add a suboption"
+      );
       return;
     }
-    if(lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions.getSelectionModel().select(0);
+    if (lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions
+      .getSelectionModel()
+      .select(0);
 
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
     Option suboption = new Option(txtPrompt.getText());
 
-    HttpUtils.put("/api/v1/session/"+sessionId+"/option/"+selectedOption.getId()+"/suboption", suboption);
+    HttpUtils.put(
+      "/api/v1/session/" + sessionId + "/option/" + selectedOption.getId() + "/suboption",
+      suboption
+    );
 
     txtPrompt.clear();
     refreshSuboptions();
@@ -79,33 +87,39 @@ public class AddCategoricPreferencesController implements Initializable {
   }
 
   @FXML
-  private void onBtnNextClicked(ActionEvent event) throws Exception{
+  private void onBtnNextClicked(ActionEvent event) throws Exception {
     AddGroupsController.init(sessionId, "session/add_categoric_preferences");
     SceneUtils.switchTo("session/add_groups.fxml");
   }
 
-  private void refreshOptions(){
+  private void refreshOptions() {
     int lastIndex = lvOptions.getSelectionModel().getSelectedIndex();
     lvOptions.getItems().clear();
 
-    String optionsJson = HttpUtils.get("/api/v1/session/"+sessionId+"/option");
+    String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
-    if(options.isEmpty()) return;
+    if (options.isEmpty()) return;
 
-    lvOptions.getItems().addAll(options.stream().filter(opt -> opt.getParentOptionId() < 0).toList());
-    if(lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions.getSelectionModel().select(0);
-    else lvOptions.getSelectionModel().select(lastIndex);
+    lvOptions
+      .getItems()
+      .addAll(options.stream().filter(opt -> opt.getParentOptionId() < 0).toList());
+    if (lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions
+      .getSelectionModel()
+      .select(0); else lvOptions.getSelectionModel().select(lastIndex);
   }
 
-  private void refreshSuboptions(){
+  private void refreshSuboptions() {
     lvSuboptions.getItems().clear();
 
-    String optionsJson = HttpUtils.get("/api/v1/session/"+sessionId+"/option");
+    String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
-    if(options.isEmpty()) return;
+    if (options.isEmpty()) return;
 
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
-    List<Option> suboptions = options.stream().filter(opt -> opt.getParentOptionId().intValue() == selectedOption.getId()).toList();
+    List<Option> suboptions = options
+      .stream()
+      .filter(opt -> opt.getParentOptionId().intValue() == selectedOption.getId())
+      .toList();
 
     lvSuboptions.getItems().addAll(suboptions);
   }

@@ -1,0 +1,20 @@
+package com.simpolab.client_elector.utils;
+
+import javafx.scene.control.Alert;
+
+public final class AlertUtils {
+
+  private AlertUtils() {}
+
+  public static void alert(Alert.AlertType type, String body) {
+    alert(type, null, null, body);
+  }
+
+  public static void alert(Alert.AlertType type, String title, String header, String body) {
+    var alert = new Alert(type);
+    alert.setTitle(null);
+    alert.setHeaderText(null);
+    alert.setContentText(body);
+    alert.showAndWait();
+  }
+}
