@@ -1,6 +1,7 @@
 package com.simpolab.client_elector.homepage;
 
 import com.simpolab.client_elector.domain.Session;
+import com.simpolab.client_elector.session.SessionController;
 import com.simpolab.client_elector.utils.HttpUtils;
 import com.simpolab.client_elector.utils.JsonUtils;
 import com.simpolab.client_elector.utils.SceneUtils;
@@ -31,7 +32,7 @@ public class HomepageController implements Initializable {
   @FXML
   private void onBtnOpenClicked(ActionEvent event) throws Exception{
     Session session = lvSessions.getSelectionModel().getSelectedItem();
-    // init next controller
+    SessionController.init(session);
     SceneUtils.switchTo("session/session.fxml");
   }
 

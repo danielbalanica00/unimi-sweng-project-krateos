@@ -7,11 +7,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_elector.session.SessionController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_elector.session.SessionController">
    <children>
       <AnchorPane prefHeight="43.0" prefWidth="560.0">
          <children>
-            <Text fx:id="lblSessionName" layoutX="189.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Session Name">
+            <Text fx:id="lblSessionName" layoutX="101.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Session Name" textAlignment="CENTER" wrappingWidth="558.453125">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="28.0" />
                </font>
@@ -28,7 +28,6 @@
             <Font name="Lucida Sans Typewriter Regular" size="14.0" />
          </font>
       </Text>
-      <Text fx:id="lblDescription" lineSpacing="1.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brief description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus pharetra vulputate. Nulla luctus felis ac sem elementum, vitae volutpat lacus porttitor. Mauris eget magna vestibulum eros volutpat cursus. Cras sit amet efficitur odio." wrappingWidth="514.5546875" />
       <Text fx:id="lblRemainingTime1" strokeType="OUTSIDE" strokeWidth="0.0">
          <font>
             <Font name="Lucida Sans Typewriter Regular" size="14.0" />
