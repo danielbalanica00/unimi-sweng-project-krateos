@@ -41,6 +41,7 @@ public class SessionController implements Initializable {
         SceneUtils.switchTo("session/categoric_vote.fxml");
       }
       case ORDINAL ->{
+        OrdinalVoteController.init(session);
         SceneUtils.switchTo("session/ordinal_vote.fxml");
       }
       case CATEGORIC_WITH_PREFERENCES -> {
