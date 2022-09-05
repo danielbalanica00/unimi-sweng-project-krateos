@@ -27,29 +27,11 @@
       </AnchorPane>
       <HBox prefHeight="242.0" prefWidth="560.0" spacing="15.0">
          <children>
-            <ListView fx:id="lvOptions" prefHeight="242.0" prefWidth="199.0" HBox.hgrow="ALWAYS" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <ListView fx:id="lvSubOptions" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <VBox alignment="CENTER_LEFT" prefHeight="242.0" prefWidth="35.0" spacing="15.0">
-                     <children>
-                        <Button fx:id="btnMoveUp" mnemonicParsing="false" onAction="#onBtnMoveUpClicked" text="^" textAlignment="CENTER">
-                           <font>
-                              <Font name="Lucida Sans Typewriter Regular" size="13.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="btnMoveDown" mnemonicParsing="false" onAction="#onBtnMoveDownClicked" text="v" textAlignment="CENTER">
-                           <font>
-                              <Font name="Lucida Sans Typewriter Regular" size="13.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
+            <ListView fx:id="lvOptions" onMouseClicked="#onLvOptionsClicked" prefHeight="242.0" prefWidth="199.0" HBox.hgrow="ALWAYS" />
+            <ListView fx:id="lvSuboptions" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <Button fx:id="btnVote" mnemonicParsing="false" onAction="#onBtnVoteClicked" text="Vote" textAlignment="CENTER" />
+      <Button fx:id="btnVote" mnemonicParsing="false" onAction="#onBtnVoteClicked" prefHeight="38.0" prefWidth="70.0" text="Vote" textAlignment="CENTER" />
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
