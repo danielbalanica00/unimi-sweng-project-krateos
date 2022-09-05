@@ -38,6 +38,7 @@ public class SessionController implements Initializable {
 
     switch (session.getType()) {
       case CATEGORIC -> {
+        CategoricVoteController.init(session);
         SceneUtils.switchTo("session/categoric_vote.fxml");
       }
       case ORDINAL ->{
