@@ -44,7 +44,6 @@ public class ReferendumVoteController implements Initializable {
 
   @FXML
   private void onBtnBackClicked(ActionEvent actionEvent) throws Exception {
-    SessionController.init(session);
     SceneUtils.switchTo("session/session.fxml");
   }
 

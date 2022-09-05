@@ -23,11 +23,11 @@ import java.util.ResourceBundle;
 public class CategoricPreferencesController implements Initializable {
   private static Session session;
   private static List<Option> options;
+
   @FXML
   private Text lblSessionName;
   @FXML
   private ListView<Option> lvOptions;
-
   @FXML
   private ListView<Option> lvSuboptions;
 
@@ -51,6 +51,7 @@ public class CategoricPreferencesController implements Initializable {
 
   @FXML
   private void onBtnVoteClicked(ActionEvent event) throws Exception{
+    // check if the user selected the required options
     if(lvOptions.getSelectionModel().getSelectedIndex() < 0){
       AlertUtils.alert(Alert.AlertType.ERROR, "Select an option and one or more suboptions");
       return;
@@ -61,6 +62,7 @@ public class CategoricPreferencesController implements Initializable {
       return;
     }
 
+    // retrieve choices
     Option option = lvOptions.getSelectionModel().getSelectedItem();
     List<Option> suboptions = lvSuboptions.getSelectionModel().getSelectedItems();
 
@@ -71,33 +73,40 @@ public class CategoricPreferencesController implements Initializable {
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception{
-    SessionController.init(session);
     SceneUtils.switchTo("session/session.fxml");
   }
 
   private void refreshOptions() {
+    // save last selection before clearing
     int lastIndex = lvOptions.getSelectionModel().getSelectedIndex();
     lvOptions.getItems().clear();
 
+    // retrieve updated options
     String optionsJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/option");
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
     if (options.isEmpty()) return;
 
+    // filter out only superoptions
     lvOptions
             .getItems()
             .addAll(options.stream().filter(opt -> opt.getParentOptionId() < 0).toList());
+
+    // restore selection or force first position
     if (lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions
             .getSelectionModel()
-            .select(0); else lvOptions.getSelectionModel().select(lastIndex);
+            .select(0);
+    else lvOptions.getSelectionModel().select(lastIndex);
   }
 
   private void refreshSuboptions() {
     lvSuboptions.getItems().clear();
 
+    // retrieve updated options
     String optionsJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/option");
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
     if (options.isEmpty()) return;
 
+    // filter out suboptions of the selected superoption
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
     List<Option> suboptions = options
             .stream()

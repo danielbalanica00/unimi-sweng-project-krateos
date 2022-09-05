@@ -30,19 +30,21 @@ public class CategoricVoteController implements Initializable {
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception{
-    SessionController.init(session);
     SceneUtils.switchTo("session/session.fxml");
   }
 
   @FXML
   private void onBtnVoteClicked(ActionEvent event) throws Exception{
+    // ensure option selection
     if(lvOptions.getSelectionModel().getSelectedIndex() < 0){
       AlertUtils.alert(Alert.AlertType.ERROR, "Select an option");
       return;
     }
 
     Option selctedOption = lvOptions.getSelectionModel().getSelectedItem();
+
     //build vote
+
     SceneUtils.switchToHomepage();
   }
 
