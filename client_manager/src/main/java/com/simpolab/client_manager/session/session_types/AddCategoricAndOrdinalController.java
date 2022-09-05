@@ -1,5 +1,6 @@
 package com.simpolab.client_manager.session.session_types;
 
+import com.google.gson.Gson;
 import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.session.AddGroupsController;
 import com.simpolab.client_manager.session.NewSessionController;
@@ -61,6 +62,8 @@ public class AddCategoricAndOrdinalController implements Initializable {
   private void refreshLists() {
     String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
     List<Option> options = JsonUtils.parseJsonArray(optionsJson, Option.class);
+
+    if(options.isEmpty()) return;
 
     lvOptions.getItems().clear();
     lvOptions.getItems().addAll(options);
