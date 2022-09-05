@@ -47,6 +47,7 @@ public class SessionController implements Initializable {
         SceneUtils.switchTo("session/categoric_preferences_vote.fxml");
       }
       case REFERENDUM -> {
+        ReferendumVoteController.init(session);
         SceneUtils.switchTo("session/referendum_vote.fxml");
       }
     }

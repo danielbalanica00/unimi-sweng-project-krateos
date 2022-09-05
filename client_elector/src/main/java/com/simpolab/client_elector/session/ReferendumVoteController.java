@@ -62,7 +62,7 @@ public class ReferendumVoteController implements Initializable {
 
   @FXML
   private void onBtnVoteClicked(ActionEvent event) throws Exception{
-    if(cbNotAgree.isSelected() ^ cbAgree.isSelected()){
+    if(!(cbNotAgree.isSelected() ^ cbAgree.isSelected())){
       AlertUtils.alert(Alert.AlertType.ERROR, "Select one option");
       return;
     }
