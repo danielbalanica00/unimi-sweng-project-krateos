@@ -1,7 +1,9 @@
 package com.simpolab.client_elector.session;
 
+import com.google.gson.Gson;
 import com.simpolab.client_elector.domain.Option;
 import com.simpolab.client_elector.domain.Session;
+import com.simpolab.client_elector.domain.Vote;
 import com.simpolab.client_elector.utils.AlertUtils;
 import com.simpolab.client_elector.utils.HttpUtils;
 import com.simpolab.client_elector.utils.JsonUtils;
@@ -41,10 +43,10 @@ public class CategoricVoteController implements Initializable {
       return;
     }
 
-    Option selctedOption = lvOptions.getSelectionModel().getSelectedItem();
+    Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
 
-    //build vote
-
+    Vote vote = new Vote(selectedOption.getId());
+    HttpUtils.postJson("/api/v1/session/" + session.getId() + "/vote", List.of(vote));
     SceneUtils.switchToHomepage();
   }
 

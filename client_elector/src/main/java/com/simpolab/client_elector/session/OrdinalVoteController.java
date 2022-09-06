@@ -1,7 +1,9 @@
 package com.simpolab.client_elector.session;
 
+import com.google.gson.Gson;
 import com.simpolab.client_elector.domain.Option;
 import com.simpolab.client_elector.domain.Session;
+import com.simpolab.client_elector.domain.Vote;
 import com.simpolab.client_elector.utils.HttpUtils;
 import com.simpolab.client_elector.utils.JsonUtils;
 import com.simpolab.client_elector.utils.SceneUtils;
@@ -65,7 +67,15 @@ public class OrdinalVoteController implements Initializable {
   @FXML
   private void onBtnVoteClicked(ActionEvent event) throws Exception{
     List<Option> options = lvOptions.getItems().stream().toList();
-    // vote
+
+    List<Vote> votes = new ArrayList<>();
+    for(int i = 0; i < options.size(); i++){
+      votes.add(new Vote(options.get(i).getId(), i+1));
+    }
+    System.out.println(new Gson().toJson(votes));
+
+
+    HttpUtils.postJson("/api/v1/session/" + session.getId() + "/vote", votes);
     SceneUtils.switchToHomepage();
   }
 

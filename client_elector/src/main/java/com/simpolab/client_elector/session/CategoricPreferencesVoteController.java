@@ -2,6 +2,7 @@ package com.simpolab.client_elector.session;
 
 import com.simpolab.client_elector.domain.Option;
 import com.simpolab.client_elector.domain.Session;
+import com.simpolab.client_elector.domain.Vote;
 import com.simpolab.client_elector.utils.AlertUtils;
 import com.simpolab.client_elector.utils.HttpUtils;
 import com.simpolab.client_elector.utils.JsonUtils;
@@ -16,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -66,6 +68,13 @@ public class CategoricPreferencesVoteController implements Initializable {
     List<Option> suboptions = lvSuboptions.getSelectionModel().getSelectedItems();
 
     //build vote
+    List<Vote> votes = new ArrayList<>();
+    votes.add(new Vote(option.getId()));
+    for (Option opt : suboptions) {
+      votes.add(new Vote(opt.getId()));
+    }
+    
+    HttpUtils.postJson("/api/v1/session/"+session.getId()+"/vote", votes);
 
     SceneUtils.switchToHomepage();
   }

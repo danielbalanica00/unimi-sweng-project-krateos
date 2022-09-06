@@ -66,6 +66,8 @@ public class ReferendumVoteController implements Initializable {
       return;
     }
 
+    //retrieve yes/no options
+
     if(cbAgree.isSelected()){
       //vote
     } else {
