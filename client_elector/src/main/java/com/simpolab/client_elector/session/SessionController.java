@@ -4,14 +4,9 @@ import com.simpolab.client_elector.domain.Session;
 import com.simpolab.client_elector.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Date;
@@ -46,7 +41,7 @@ public class SessionController implements Initializable {
         SceneUtils.switchTo("session/ordinal_vote.fxml");
       }
       case CATEGORIC_WITH_PREFERENCES -> {
-        CategoricPreferencesController.init(session);
+        CategoricPreferencesVoteController.init(session);
         SceneUtils.switchTo("session/categoric_preferences_vote.fxml");
       }
       case REFERENDUM -> {

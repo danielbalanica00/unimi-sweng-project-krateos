@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_elector.session.SessionsHistoryController">
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+   <children>
+      <AnchorPane prefHeight="36.0" prefWidth="540.0">
+         <children>
+            <Text layoutX="260.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Past sesisons">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="28.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnBack" mnemonicParsing="false" onAction="#onBtnBackClicked" prefHeight="27.0" prefWidth="50.0" text="Back">
+               <font>
+                  <Font name="Lucida Sans Typewriter Regular" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <HBox alignment="TOP_CENTER" prefHeight="33.0" prefWidth="540.0" spacing="200.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+      <ListView fx:id="lvSessions" prefHeight="417.0" prefWidth="740.0" />
+      <Button fx:id="btnOpenSession" mnemonicParsing="false" onAction="#onBtnOpenSessionClicked" text="Open" />
+   </children>
+</VBox>

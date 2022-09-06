@@ -37,10 +37,8 @@ public class HomepageController implements Initializable {
   }
 
   @FXML
-  private void onBtnSessionsHistoryClicked(ActionEvent event) throws Exception {}
-
-  @FXML
-  private void onBtnSessionsHistorySelected(ActionEvent actionEvent) {
+  private void onBtnSessionsHistoryClicked(ActionEvent event) throws Exception {
+    SceneUtils.switchTo("session/sessions_history.fxml");
   }
 
   @Override
