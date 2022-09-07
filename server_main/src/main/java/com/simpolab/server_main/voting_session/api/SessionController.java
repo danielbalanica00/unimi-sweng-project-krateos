@@ -115,6 +115,17 @@ public class SessionController {
     return null;
   }
 
+  @DeleteMapping(path = "option/{optionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> removeOption(
+      @PathVariable Long optionId
+  ) {
+    log.debug("[remove option] - remove option {}", optionId);
+
+    sessionService.removeOption(optionId);
+
+    return ResponseEntity.ok().build();
+  }
+
   @GetMapping(path = "{sessionId}/option", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<VotingOption>> getOptions(@PathVariable Long sessionId) {
     log.debug("[Get Options] - session {}", sessionId);
@@ -150,33 +161,6 @@ public class SessionController {
     );
 
     sessionService.newOption(sessionId, vor.getValue(), optionId);
-    return null;
-  }
-
-  @Deprecated
-  @PatchMapping(path = "{sessionId}/start", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> startSession(@PathVariable Long sessionId) {
-    log.info("Starting session with id: {}", sessionId);
-
-    sessionService.startSession(sessionId);
-    return null;
-  }
-
-  @Deprecated
-  @PatchMapping(path = "{sessionId}/end", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> endSession(@PathVariable Long sessionId) {
-    log.info("Ending session with id: {}", sessionId);
-
-    sessionService.endSession(sessionId);
-    return null;
-  }
-
-  @Deprecated
-  @PatchMapping(path = "{sessionId}/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> cancelSession(@PathVariable Long sessionId) {
-    log.info("Canceling session with id: {}", sessionId);
-
-    sessionService.cancelSession(sessionId);
     return null;
   }
 
