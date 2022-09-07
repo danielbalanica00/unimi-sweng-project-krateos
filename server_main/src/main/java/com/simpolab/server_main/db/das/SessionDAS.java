@@ -101,7 +101,7 @@ public class SessionDAS implements SessionDAO {
 
   @Override
   public void delete(long id) {
-    var query = "DELETE FROM voting_session WHERE id = ? AND is_active = 0 AND is_cancelled = 0";
+    var query = "DELETE FROM voting_session WHERE id = ? AND state = 'INACTIVE'";
     try {
       jdbcTemplate.update(query, id);
       log.info("Voting session {} removed successfully", id);

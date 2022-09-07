@@ -82,7 +82,7 @@ public class VoteValidator {
     if (votes.size() != 1) return false;
 
     // remove the question from the list of options so only yes and no remain
-    var booleanOptions = options.stream().filter(vote -> vote.parentId() != null).toList();
+    var booleanOptions = options.stream().filter(vote -> vote.parentId() != 0).toList();
 
     // check if the voted option is yer or no
     var votedOption = votes.get(0).getOptionId();
@@ -99,7 +99,7 @@ public class VoteValidator {
     var indexes = votes.stream().sorted().map(Vote::getOrderIndex).toList();
     var fstIdx = indexes.get(0);
     var lstIdx = indexes.get(votesSize - 1);
-    if (fstIdx != 1 || lstIdx  != optionsSize) return false;
+    if (fstIdx != 1 || lstIdx != optionsSize) return false;
 
     // the given votes have to be valid options
     var optionsIds = options.stream().map(SessionDAS.Touple::id).collect(Collectors.toSet());
