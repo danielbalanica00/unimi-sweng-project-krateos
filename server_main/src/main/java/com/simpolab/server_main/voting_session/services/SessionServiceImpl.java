@@ -127,34 +127,6 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public void startSession(long sessionId) {
-    try {
-      sessionDAO.setActive(sessionId);
-      sessionDAO.populateSessionParticipants(sessionId);
-    } catch (Exception e) {
-      throw new IllegalArgumentException(e);
-    }
-  }
-
-  @Override
-  public void endSession(long sessionId) {
-    try {
-      sessionDAO.setEnded(sessionId);
-    } catch (Exception e) {
-      throw new IllegalArgumentException(e);
-    }
-  }
-
-  @Override
-  public void cancelSession(long sessionId) {
-    try {
-      sessionDAO.setCancelled(sessionId);
-    } catch (Exception e) {
-      throw new IllegalArgumentException(e);
-    }
-  }
-
-  @Override
   public void expressVote(String electorUsername, long sessionId, List<Vote> votes) {
     try {
       log.info("Votes: {}", votes);
