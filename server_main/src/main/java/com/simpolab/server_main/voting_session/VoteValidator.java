@@ -99,7 +99,7 @@ public class VoteValidator {
     var indexes = votes.stream().sorted().map(Vote::getOrderIndex).toList();
     var fstIdx = indexes.get(0);
     var lstIdx = indexes.get(votesSize - 1);
-    if (fstIdx != 1 || lstIdx - fstIdx != optionsSize) return false;
+    if (fstIdx != 1 || lstIdx  != optionsSize) return false;
 
     // the given votes have to be valid options
     var optionsIds = options.stream().map(SessionDAS.Touple::id).collect(Collectors.toSet());
