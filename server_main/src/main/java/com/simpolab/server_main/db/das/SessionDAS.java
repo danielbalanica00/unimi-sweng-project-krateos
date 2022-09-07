@@ -245,7 +245,7 @@ public class SessionDAS implements SessionDAO {
     throws SQLException {
     try {
       String sql =
-        "INSERT INTO session_participation (elector_id, voting_session_id, has_voted) VALUES (?, ?, ?)";
+        "INSERT IGNORE INTO session_participation (elector_id, voting_session_id, has_voted) VALUES (?, ?, ?)";
       jdbcTemplate.batchUpdate(
         sql,
         new BatchPreparedStatementSetter() {

@@ -16,7 +16,7 @@ public class App extends Application {
 
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login/login.fxml"));
     Scene scene = new Scene(fxmlLoader.load());
-    primaryStage.setTitle("Krateos Manager");
+    primaryStage.setTitle("Krateos Elector");
     primaryStage.setScene(scene);
     primaryStage.setHeight(600);
     primaryStage.setWidth(800);
