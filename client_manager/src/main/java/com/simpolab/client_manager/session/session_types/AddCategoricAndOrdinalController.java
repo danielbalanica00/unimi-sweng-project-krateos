@@ -63,7 +63,7 @@ public class AddCategoricAndOrdinalController implements Initializable {
     String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
     List<Option> options = JsonUtils.parseJsonArray(optionsJson, Option.class);
 
-    if(options.isEmpty()) return;
+    if (options.isEmpty()) return;
 
     lvOptions.getItems().clear();
     lvOptions.getItems().addAll(options);

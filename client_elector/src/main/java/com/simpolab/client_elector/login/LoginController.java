@@ -34,8 +34,7 @@ public class LoginController {
     }
   }
 
-  public void onSignUpClicked(MouseEvent mouseEvent) {
-  }
+  public void onSignUpClicked(MouseEvent mouseEvent) {}
   //  @FXML
   //  void onLoginClick(ActionEvent e) {
   //    String username = txtUsername.getText();

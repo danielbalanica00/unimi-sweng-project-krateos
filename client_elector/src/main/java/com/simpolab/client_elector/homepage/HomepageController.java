@@ -5,6 +5,9 @@ import com.simpolab.client_elector.session.SessionController;
 import com.simpolab.client_elector.utils.HttpUtils;
 import com.simpolab.client_elector.utils.JsonUtils;
 import com.simpolab.client_elector.utils.SceneUtils;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,18 +22,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-
 public class HomepageController implements Initializable {
+
   @FXML
   private Text lblWelcome;
+
   @FXML
   private ListView<Session> lvSessions;
 
   @FXML
-  private void onBtnOpenClicked(ActionEvent event) throws Exception{
+  private void onBtnOpenClicked(ActionEvent event) throws Exception {
     Session session = lvSessions.getSelectionModel().getSelectedItem();
     SessionController.init(session);
     SceneUtils.switchTo("session/session.fxml");
@@ -47,6 +48,13 @@ public class HomepageController implements Initializable {
     String sessionsJson = HttpUtils.get("/api/v1/session");
     List<Session> sessions = JsonUtils.parseJsonArray(sessionsJson, Session.class);
 
-    lvSessions.getItems().addAll(sessions.stream().filter(session -> session.getState().equals(Session.State.ACTIVE)).toList());
+    lvSessions
+      .getItems()
+      .addAll(
+        sessions
+          .stream()
+          .filter(session -> session.getState().equals(Session.State.ACTIVE))
+          .toList()
+      );
   }
 }

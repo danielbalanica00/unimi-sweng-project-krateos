@@ -9,6 +9,7 @@ import com.simpolab.server_main.voting_session.VoteValidator;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
+import com.simpolab.server_main.voting_session.domain.VotingSession.Type;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -105,14 +106,21 @@ public class SessionServiceImpl implements SessionService {
 
   public void setState(long sessionId, VotingSession.State newState) {
     try {
-      // todo check if session is a referendum, if it is add the yes and no options
+      var session = getSession(sessionId);
+      var options = getOptions(sessionId);
+      if (options.isEmpty()) throw new IllegalStateException(
+        "Cannot start a session without options"
+      );
 
-      // todo get the state and check if possible
-      sessionDAO.setState(sessionId, newState);
-
-      if (newState == VotingSession.State.ACTIVE) {
-        //        sessionDAO.populateSessionParticipants(sessionId);
+      // add yes and no options in case of referendum session
+      if (session.getType() == Type.REFERENDUM) {
+        var parentOptionId = options.get(0).getId();
+        newOption(sessionId, "Yes", parentOptionId);
+        newOption(sessionId, "No", parentOptionId);
       }
+
+      if (newState == VotingSession.State.ACTIVE) sessionDAO.populateSessionParticipants(sessionId);
+      sessionDAO.setState(sessionId, newState);
     } catch (Exception e) {
       throw new IllegalArgumentException(e);
     }

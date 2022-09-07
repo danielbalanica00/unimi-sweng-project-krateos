@@ -2,28 +2,32 @@ package com.simpolab.client_elector.session;
 
 import com.simpolab.client_elector.domain.Session;
 import com.simpolab.client_elector.utils.SceneUtils;
+import java.net.URL;
+import java.util.Date;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.ResourceBundle;
-
 public class SessionController implements Initializable {
+
   private static Session session;
+
   @FXML
   private Text lblSessionName;
+
   @FXML
   private Text lblRemainingTime;
+
   @FXML
   private Text lblDescription;
+
   @FXML
   private Button btnVote;
 
-  public static void init(Session initSession){
+  public static void init(Session initSession) {
     session = initSession;
   }
 
@@ -36,7 +40,7 @@ public class SessionController implements Initializable {
         CategoricVoteController.init(session);
         SceneUtils.switchTo("session/categoric_vote.fxml");
       }
-      case ORDINAL ->{
+      case ORDINAL -> {
         OrdinalVoteController.init(session);
         SceneUtils.switchTo("session/ordinal_vote.fxml");
       }
@@ -49,7 +53,6 @@ public class SessionController implements Initializable {
         SceneUtils.switchTo("session/referendum_vote.fxml");
       }
     }
-
   }
 
   @FXML

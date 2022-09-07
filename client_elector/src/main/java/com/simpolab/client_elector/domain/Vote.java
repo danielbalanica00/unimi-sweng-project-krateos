@@ -6,27 +6,26 @@ import lombok.Getter;
 
 @Getter
 public class Vote {
-    private Integer optionId;
-    private Integer orderIndex;
 
-    @JsonCreator
-    public Vote(
-            @JsonProperty("optionId") Integer optionId,
-            @JsonProperty("orderIndex") Integer orderIndex) {
-        this.optionId = optionId;
-        this.orderIndex = orderIndex;
-    }
+  private Integer optionId;
+  private Integer orderIndex;
 
-    public Vote(Integer optionId) {
-        this.optionId = optionId;
-        this.orderIndex = 1;
-    }
+  @JsonCreator
+  public Vote(
+    @JsonProperty("optionId") Integer optionId,
+    @JsonProperty("orderIndex") Integer orderIndex
+  ) {
+    this.optionId = optionId;
+    this.orderIndex = orderIndex;
+  }
 
-    @Override
-    public String toString() {
-        return "Vote{" +
-                "optionId=" + optionId +
-                ", orderIndex=" + orderIndex +
-                '}';
-    }
+  public Vote(Integer optionId) {
+    this.optionId = optionId;
+    this.orderIndex = 1;
+  }
+
+  @Override
+  public String toString() {
+    return "Vote{" + "optionId=" + optionId + ", orderIndex=" + orderIndex + '}';
+  }
 }

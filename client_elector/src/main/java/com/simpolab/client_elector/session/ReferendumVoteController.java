@@ -6,6 +6,8 @@ import com.simpolab.client_elector.utils.AlertUtils;
 import com.simpolab.client_elector.utils.HttpUtils;
 import com.simpolab.client_elector.utils.JsonUtils;
 import com.simpolab.client_elector.utils.SceneUtils;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,28 +16,29 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.text.Text;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 public class ReferendumVoteController implements Initializable {
+
   private static Session session;
 
   @FXML
   private Text lblSessionName;
+
   @FXML
   private Text lblPrompt;
+
   @FXML
   private CheckBox cbAgree;
+
   @FXML
   private CheckBox cbNotAgree;
 
-  public static void init(Session initSession){
+  public static void init(Session initSession) {
     session = initSession;
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    String promptJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/option");
+    String promptJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/option");
     Option prompt = JsonUtils.parseJsonArray(promptJson, Option.class).get(0);
 
     lblSessionName.setText(session.getName());
@@ -48,27 +51,27 @@ public class ReferendumVoteController implements Initializable {
   }
 
   @FXML
-  private void onCbAgreeClicked(ActionEvent event){
+  private void onCbAgreeClicked(ActionEvent event) {
     cbAgree.setSelected(true);
     cbNotAgree.setSelected(false);
   }
 
   @FXML
-  private void onCbNotAgreeClicked(ActionEvent event){
+  private void onCbNotAgreeClicked(ActionEvent event) {
     cbAgree.setSelected(false);
     cbNotAgree.setSelected(true);
   }
 
   @FXML
-  private void onBtnVoteClicked(ActionEvent event) throws Exception{
-    if(!(cbNotAgree.isSelected() ^ cbAgree.isSelected())){
+  private void onBtnVoteClicked(ActionEvent event) throws Exception {
+    if (!(cbNotAgree.isSelected() ^ cbAgree.isSelected())) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Select one option");
       return;
     }
 
     //retrieve yes/no options
 
-    if(cbAgree.isSelected()){
+    if (cbAgree.isSelected()) {
       //vote
     } else {
       //vote
