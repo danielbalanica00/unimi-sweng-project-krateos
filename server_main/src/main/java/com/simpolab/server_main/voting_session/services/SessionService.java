@@ -38,15 +38,6 @@ public interface SessionService {
   void setState(long sessionId, VotingSession.State newState);
 
   /*
-    Manage session lifecycle
-   */
-  void startSession(long sessionId);
-
-  void endSession(long sessionId);
-
-  void cancelSession(long sessionId);
-
-  /*
     Handle the actual voting
    */
   void expressVote(String electorUsername, long sessionId, List<Vote> votes);

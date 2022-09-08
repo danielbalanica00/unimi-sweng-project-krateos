@@ -10,11 +10,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.session.session_types.AddCategoricPreferencesController">
+<VBox alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.session.session_types.AddCategoricPreferencesController">
    <children>
       <AnchorPane prefHeight="35.0" prefWidth="560.0">
          <children>
-            <Text layoutX="197.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add electors">
+            <Text layoutX="241.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add Options" textAlignment="CENTER" wrappingWidth="278.4423828125">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="23.0" />
                </font>
@@ -27,18 +27,20 @@
          </children>
       </AnchorPane>
       <TextField fx:id="txtPrompt" promptText="new option/suboption" />
-      <HBox prefHeight="247.0" prefWidth="560.0" spacing="15.0">
+      <HBox prefHeight="403.0" prefWidth="760.0" spacing="15.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="btnAddOption" mnemonicParsing="false" onAction="#onBtnAddOptionClicked" text="Add as option" />
-                  <ListView fx:id="lvOptions" onMouseClicked="#onLvOptionsClicked" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="lvOptions" onMouseClicked="#onLvOptionsClicked" prefHeight="310.0" prefWidth="372.0" />
+                  <Button fx:id="btnDeleteOption" mnemonicParsing="false" onAction="#onBtnDeleteOptionClicked" text="Delete option" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="btnAddSuboption" mnemonicParsing="false" onAction="#onBtnAddSuboptionClicked" text="Add as suboption" />
-                  <ListView fx:id="lvSuboptions" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="lvSuboptions" prefHeight="310.0" prefWidth="200.0" />
+                  <Button fx:id="btnDeleteSuboption" mnemonicParsing="false" onAction="#onBtnDeleteSuboptionClicked" text="Delete suboption" />
                </children>
             </VBox>
          </children>

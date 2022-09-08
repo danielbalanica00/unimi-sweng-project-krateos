@@ -29,7 +29,7 @@ public class AddCategoricAndOrdinalController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    lvOptions.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    lvOptions.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
     refreshLists();
   }
@@ -54,6 +54,14 @@ public class AddCategoricAndOrdinalController implements Initializable {
     AddGroupsController.init(sessionId, "session/add_categoric.fxml");
     SceneUtils.switchTo("session/add_groups.fxml");
   }
+
+  @FXML
+  private void onBtnDeleteOptionClicked(ActionEvent event){
+    Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
+    HttpUtils.delete("/api/v1/session/option/"+selectedOption.getId());
+    refreshLists();
+  }
+
 
   public static void init(long initSessionId) {
     sessionId = initSessionId;

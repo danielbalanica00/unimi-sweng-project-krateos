@@ -9,11 +9,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.session.session_types.AddCategoricAndOrdinalController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.session.session_types.AddCategoricAndOrdinalController">
    <children>
       <AnchorPane prefHeight="35.0" prefWidth="560.0">
          <children>
-            <Text layoutX="197.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add options">
+            <Text layoutX="304.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add options" textAlignment="CENTER">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="23.0" />
                </font>
@@ -26,13 +26,14 @@
          </children>
       </AnchorPane>
       <TextField fx:id="txtOption" promptText="new option" />
-      <Button fx:id="btnAddOption" mnemonicParsing="false" onAction="#onBtnAddOptionClicked" text="Add option" />
-      <ListView fx:id="lvOptions" prefHeight="200.0" prefWidth="200.0" />
-      <VBox alignment="TOP_RIGHT" prefHeight="38.0" prefWidth="560.0">
+      <Button fx:id="btnAddOption" mnemonicParsing="false" onAction="#onBtnAddOptionClicked" prefHeight="35.0" text="Add option" />
+      <ListView fx:id="lvOptions" prefHeight="309.0" prefWidth="760.0" />
+      <AnchorPane prefHeight="53.0" prefWidth="760.0">
          <children>
-            <Button fx:id="btnNext" mnemonicParsing="false" onAction="#onBtnNextClicked" prefHeight="35.0" prefWidth="72.0" text="Next" />
+            <Button fx:id="btnNext" layoutX="688.0" layoutY="9.0" mnemonicParsing="false" onAction="#onBtnNextClicked" prefHeight="35.0" prefWidth="75.0" text="Next" />
+            <Button fx:id="btnDeleteOption" layoutY="9.0" mnemonicParsing="false" onAction="#onBtnDeleteOptionClicked" prefHeight="35.0" prefWidth="90.0" text="Delete option" />
          </children>
-      </VBox>
+      </AnchorPane>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
