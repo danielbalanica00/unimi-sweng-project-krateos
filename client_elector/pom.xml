@@ -14,7 +14,7 @@
     <artifactId>client_elector</artifactId>
 
     <properties>
-        <log4j2.version>2.15.0</log4j2.version>
+        <log4j2.version>2.18.0</log4j2.version>
     </properties>
 
     <dependencies>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
+            <version>23.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

@@ -6,6 +6,7 @@ import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface SessionDAO {
@@ -30,11 +31,6 @@ public interface SessionDAO {
 
   List<SessionDAS.Touple> getOptionsForSession(long sessionId);
 
-  void setActive(long sessionId) throws SQLException;
-
-  void setCancelled(long sessionId) throws SQLException;
-  void setEnded(long sessionId) throws SQLException;
-
   void setState(long sessionId, VotingSession.State newState) throws SQLException;
 
   void populateSessionParticipants(long sessionId) throws SQLException;
@@ -44,4 +40,6 @@ public interface SessionDAO {
   void addVotes(long sessionId, List<Vote> votes) throws SQLException;
 
   void setHasVoted(long sessionId, long electorId) throws SQLException;
+
+  Map<Long, Integer> getVotesPerOption(VotingSession.Type sessionType, long sessionId);
 }

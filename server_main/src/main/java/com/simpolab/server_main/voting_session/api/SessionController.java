@@ -7,6 +7,7 @@ import com.simpolab.server_main.voting_session.domain.VotingOptionRequest;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.services.SessionService;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class SessionController {
   @GetMapping(path = "{session_id}")
   public ResponseEntity<VotingSession> getSession(@PathVariable("session_id") long sessionId) {
     try {
+      //      sessionService.determineWinner(sessionId);
       log.debug("[Get Session] - get session {}", sessionId);
       return ResponseEntity.ok(sessionService.getSession(sessionId));
     } catch (Exception e) {
@@ -64,6 +66,14 @@ public class SessionController {
   public ResponseEntity<List<VotingSession>> getAllSessions() {
     log.debug("[Get All Sessions] - getting all the sessions");
     return ResponseEntity.ok(sessionService.getAllSessions());
+  }
+
+  @GetMapping(path = "{sessionId}/result/option")
+  public ResponseEntity<Map<Long, Integer>> getOptionCount(
+    @PathVariable("sessionId") long sessionId
+  ) {
+    log.debug("[Get Option Count] - getting the option count");
+    return ResponseEntity.ok(sessionService.votesPerOption(sessionId));
   }
 
   @DeleteMapping(path = "{session_id}")
@@ -116,9 +126,7 @@ public class SessionController {
   }
 
   @DeleteMapping(path = "option/{optionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> removeOption(
-      @PathVariable Long optionId
-  ) {
+  public ResponseEntity<Void> removeOption(@PathVariable Long optionId) {
     log.debug("[remove option] - remove option {}", optionId);
 
     sessionService.removeOption(optionId);
@@ -177,6 +185,7 @@ public class SessionController {
       var newState = VotingSession.State.valueOf(newStateString.trim().toUpperCase());
       log.debug("[Set State] - setting session {} state to {}", sessionId, newStateString);
       sessionService.setState(sessionId, newState);
+      log.debug("[Set State] - state set successfully");
     } catch (IllegalArgumentException iae) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     } catch (Exception e) {

@@ -1,6 +1,5 @@
 package com.simpolab.client_elector.login;
 
-import com.simpolab.client_elector.data_access.TestApi;
 import com.simpolab.client_elector.utils.AlertUtils;
 import com.simpolab.client_elector.utils.AuthHandler;
 import com.simpolab.client_elector.utils.SceneUtils;

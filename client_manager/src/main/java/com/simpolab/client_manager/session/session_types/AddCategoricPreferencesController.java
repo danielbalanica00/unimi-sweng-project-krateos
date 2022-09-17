@@ -82,21 +82,19 @@ public class AddCategoricPreferencesController implements Initializable {
   }
 
   @FXML
-  private void onBtnDeleteOptionClicked(ActionEvent event){
+  private void onBtnDeleteOptionClicked(ActionEvent event) {
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
-    HttpUtils.delete("/api/v1/session/option/"+selectedOption.getId());
+    HttpUtils.delete("/api/v1/session/option/" + selectedOption.getId());
     refreshOptions();
     refreshSuboptions();
   }
 
-
   @FXML
-  private void onBtnDeleteSuboptionClicked(ActionEvent event){
+  private void onBtnDeleteSuboptionClicked(ActionEvent event) {
     Option selectedOption = lvSuboptions.getSelectionModel().getSelectedItem();
-    HttpUtils.delete("/api/v1/session/option/"+selectedOption.getId());
+    HttpUtils.delete("/api/v1/session/option/" + selectedOption.getId());
     refreshSuboptions();
   }
-
 
   @FXML
   private void onBtnBackClicked(ActionEvent event) throws Exception {

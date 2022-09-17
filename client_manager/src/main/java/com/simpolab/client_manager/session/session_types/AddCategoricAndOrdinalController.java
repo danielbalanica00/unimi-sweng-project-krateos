@@ -56,12 +56,11 @@ public class AddCategoricAndOrdinalController implements Initializable {
   }
 
   @FXML
-  private void onBtnDeleteOptionClicked(ActionEvent event){
+  private void onBtnDeleteOptionClicked(ActionEvent event) {
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
-    HttpUtils.delete("/api/v1/session/option/"+selectedOption.getId());
+    HttpUtils.delete("/api/v1/session/option/" + selectedOption.getId());
     refreshLists();
   }
-
 
   public static void init(long initSessionId) {
     sessionId = initSessionId;

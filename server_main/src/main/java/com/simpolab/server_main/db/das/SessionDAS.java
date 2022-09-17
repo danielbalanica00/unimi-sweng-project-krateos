@@ -9,10 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -182,42 +179,6 @@ public class SessionDAS implements SessionDAO {
     }
   }
 
-  @Override
-  public void setActive(long sessionId) throws SQLException {
-    try {
-      String query = "UPDATE voting_session SET is_active = 1 WHERE id = ?";
-      jdbcTemplate.update(query, sessionId);
-    } catch (Exception e) {
-      log.error("Failed to set session {} to active", sessionId);
-      throw new SQLException("Failed set session to active", e);
-    }
-    log.info("Session {} is now active", sessionId);
-  }
-
-  @Override
-  public void setCancelled(long sessionId) throws SQLException {
-    try {
-      String query = "UPDATE voting_session SET is_cancelled = 1 WHERE id = ?";
-      jdbcTemplate.update(query, sessionId);
-    } catch (Exception e) {
-      log.error("Failed to cancel session {}", sessionId);
-      throw new SQLException("Failed to cancel session", e);
-    }
-    log.info("Session {} is now cancelled", sessionId);
-  }
-
-  @Override
-  public void setEnded(long sessionId) throws SQLException {
-    try {
-      String query = "UPDATE voting_session SET has_ended = 1 WHERE id = ?";
-      jdbcTemplate.update(query, sessionId);
-    } catch (Exception e) {
-      log.error("Failed to end session {}", sessionId);
-      throw new SQLException("Failed to end session", e);
-    }
-    log.info("Session {} is now ended", sessionId);
-  }
-
   public void setState(long sessionId, VotingSession.State newState) throws SQLException {
     try {
       String query = "UPDATE voting_session SET state = ? WHERE id = ?";
@@ -366,6 +327,33 @@ public class SessionDAS implements SessionDAO {
     } catch (Exception e) {
       log.warn(e.getMessage());
       return new ArrayList<>();
+    }
+  }
+
+  @Override
+  public Map<Long, Integer> getVotesPerOption(VotingSession.Type sessionType, long sessionId) {
+    try {
+      Map<Long, Integer> map = new HashMap<>();
+
+      RowMapper<Void> mapper = (rs, _ignore) -> {
+        map.put(rs.getLong("id"), rs.getInt("count"));
+        return null;
+      };
+
+      String query;
+      if (sessionType == VotingSession.Type.ORDINAL) {
+        query =
+          "with t as (select v.id, min(order_idx) as order_idx from vote as v where voting_option_id group by v.id) select voting_option_id as id, count(*) as count from vote, t, voting_option as vo where vote.order_idx = t.order_idx and vote.id = t.id and vo.id = vote.voting_option_id and vo.voting_session_id = ? group by voting_option_id";
+      } else {
+        query =
+          "select voting_option_id as id, count(*) as count from voting_option, vote where vote.voting_option_id = voting_option.id and voting_option.voting_session_id = ? group by voting_option_id";
+      }
+
+      jdbcTemplate.query(query, mapper, sessionId);
+      return map;
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return Map.of();
     }
   }
 }

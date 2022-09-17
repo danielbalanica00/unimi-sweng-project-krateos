@@ -10,13 +10,17 @@ import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.domain.VotingSession.Type;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -113,15 +117,31 @@ public class SessionServiceImpl implements SessionService {
       );
 
       // add yes and no options in case of referendum session
-      if (session.getType() == Type.REFERENDUM) {
+      if (session.getType() == Type.REFERENDUM && newState == VotingSession.State.ACTIVE) {
+        log.debug("[Set State] - session is referendum, adding yes and no options");
         var parentOptionId = options.get(0).getId();
         newOption(sessionId, "Yes", parentOptionId);
         newOption(sessionId, "No", parentOptionId);
+        log.debug("[Set State] - session is referendum, options added successfully");
       }
 
-      if (newState == VotingSession.State.ACTIVE) sessionDAO.populateSessionParticipants(sessionId);
+      if (newState == VotingSession.State.ACTIVE) {
+        log.debug("[Set State] - session is being activated, adding participants");
+        sessionDAO.populateSessionParticipants(sessionId);
+        log.debug("[Set State] - participants added successfully");
+      }
+
+      if (newState == VotingSession.State.ENDED) {
+        // determine winner
+        log.debug("[Set State] - session is being activated, adding participants");
+        sessionDAO.populateSessionParticipants(sessionId);
+        log.debug("[Set State] - participants added successfully");
+      }
+
+      log.debug("[Set State] - setting state");
       sessionDAO.setState(sessionId, newState);
     } catch (Exception e) {
+      log.error("[Set State] - FAILED: {}", e.getMessage());
       throw new IllegalArgumentException(e);
     }
   }
@@ -178,5 +198,69 @@ public class SessionServiceImpl implements SessionService {
   @Override
   public List<VotingSession> getAllSessions() {
     return sessionDAO.getAll();
+  }
+
+  public Map<Long, Integer> votesPerOption(long sessionId) {
+    // per voto ordinale e' il numero di volte che e' stato messo al primo posto
+    // per gli altri il conteggio va bene
+    val session = sessionDAO.get(sessionId).get();
+    val options = sessionDAO.getOptions(sessionId);
+
+    Map<Long, Integer> votes = sessionDAO.getVotesPerOption(session.getType(), sessionId);
+
+    var optsIdsSet = options.stream().map(VotingOption::getId).collect(Collectors.toSet());
+    optsIdsSet.removeAll(votes.keySet());
+    optsIdsSet.forEach(id -> votes.put(id, 0));
+
+    return votes;
+  }
+
+  @Override
+  public void determineWinner(VotingSession session, List<VotingOption> options) {
+    Map<Long, Integer> votes = sessionDAO.getVotesPerOption(session.getType(), session.getId());
+    log.debug("All VOTES: {}", votes);
+
+    var winner = votes
+      .entrySet()
+      .stream()
+      .reduce((e, acc) -> e.getValue() > acc.getValue() ? e : acc);
+    if (winner.isEmpty()) {
+      throw new IllegalStateException("No winner found");
+    }
+
+    var optsIdsSet = options.stream().map(VotingOption::getId).collect(Collectors.toSet());
+    optsIdsSet.removeAll(votes.keySet());
+    optsIdsSet.forEach(id -> votes.put(id, 0));
+    log.debug("Non voted options: {}", optsIdsSet);
+    log.debug("All Options with votes: {}", votes);
+
+    log.debug("Winner: {}", winner);
+
+    switch (session.getType()) {
+      case REFERENDUM -> {
+        log.debug("REFERENDUM");
+      }
+      case CATEGORIC -> {
+        log.debug("CATEGORIC");
+      }
+      case ORDINAL -> {
+        log.debug("ORDINAL");
+      }
+      case CATEGORIC_WITH_PREFERENCES -> {
+        log.debug("CATEGORIC_WITH_PREFERENCES");
+      }
+    }
+    // CHECK if quorum is present and if then if it is set
+
+    // REFERENDUM
+    // vince si o no in base al numero di voti
+
+    // CATEGORICO && CATEGORICO con PREFERENZE
+    // vince quello con piu voti
+
+    // ORDINALE
+    // vince quello messo piu volte al primo posto
+
+    // check se e' settata la maggioranza assoluta.
   }
 }

@@ -47,6 +47,16 @@
             <groupId>no.oms.maven</groupId>
             <artifactId>pre-commit-maven-plugin</artifactId>
             <version>0.2.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

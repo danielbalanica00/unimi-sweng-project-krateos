@@ -5,6 +5,7 @@ import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.util.List;
+import java.util.Map;
 
 public interface SessionService {
   VotingSession newSession(VotingSession newSession);
@@ -14,6 +15,10 @@ public interface SessionService {
   VotingSession getSession(long sessionId);
 
   List<VotingSession> getAllSessions();
+
+  Map<Long, Integer> votesPerOption(long sessionId);
+
+  void determineWinner(VotingSession session, List<VotingOption> options);
 
   /*
     Handle Voting Groups

@@ -25,10 +25,13 @@ public class ReferendumVoteController implements Initializable {
 
   @FXML
   private Text lblSessionName;
+
   @FXML
   private Text lblPrompt;
+
   @FXML
   private CheckBox cbAgree;
+
   @FXML
   private CheckBox cbNotAgree;
 
@@ -70,13 +73,41 @@ public class ReferendumVoteController implements Initializable {
     }
 
     //retrieve yes/no options
-    String optJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/option");
-    List<Option> options = JsonUtils.parseJsonArray(optJson, Option.class).stream().filter(opt -> opt.getParentOptionId() != null).toList();
+    String optJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/option");
+    List<Option> options = JsonUtils
+      .parseJsonArray(optJson, Option.class)
+      .stream()
+      .filter(opt -> opt.getParentOptionId() != null)
+      .toList();
 
     if (cbAgree.isSelected()) {
-      HttpUtils.postJson("/api/v1/session/"+session.getId()+"/vote", List.of(new Vote(options.stream().filter(opt -> opt.getValue().toLowerCase().equals("yes")).findFirst().get().getId())));
+      HttpUtils.postJson(
+        "/api/v1/session/" + session.getId() + "/vote",
+        List.of(
+          new Vote(
+            options
+              .stream()
+              .filter(opt -> opt.getValue().toLowerCase().equals("yes"))
+              .findFirst()
+              .get()
+              .getId()
+          )
+        )
+      );
     } else {
-      HttpUtils.postJson("/api/v1/session/"+session.getId()+"/vote", List.of(new Vote(options.stream().filter(opt -> opt.getValue().toLowerCase().equals("no")).findFirst().get().getId())));
+      HttpUtils.postJson(
+        "/api/v1/session/" + session.getId() + "/vote",
+        List.of(
+          new Vote(
+            options
+              .stream()
+              .filter(opt -> opt.getValue().toLowerCase().equals("no"))
+              .findFirst()
+              .get()
+              .getId()
+          )
+        )
+      );
     }
 
     SceneUtils.switchToHomepage();
