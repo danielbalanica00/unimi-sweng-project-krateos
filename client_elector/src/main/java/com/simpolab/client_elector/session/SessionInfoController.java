@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class SessionInfoController implements Initializable {
@@ -30,6 +31,9 @@ public class SessionInfoController implements Initializable {
   @FXML
   private Text lblWinner;
 
+  @FXML
+  private VBox vboxContainer;
+
   public static void init(Session initSession) {
     session = initSession;
   }
@@ -44,6 +48,12 @@ public class SessionInfoController implements Initializable {
     lblSessionName.setText(session.getName());
     lblEndsOn.setText("Ends on: " + new Date(session.getEndsOn() * 1000).toString());
     lblState.setText(session.getState().toString());
+    if (
+      session.getState().equals(Session.State.ACTIVE) ||
+      session.getState().equals(Session.State.INACTIVE)
+    ) {
+      vboxContainer.getChildren().remove(lblWinner);
+    }
 
     // check for errors
     if (session.getState().equals(Session.State.ENDED)) {
