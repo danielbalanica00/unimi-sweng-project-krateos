@@ -3,6 +3,7 @@ package com.simpolab.client_manager.session;
 import com.google.gson.Gson;
 import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.domain.Session;
+import com.simpolab.client_manager.utils.ErrorBody;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
@@ -121,8 +122,32 @@ public class SessionController implements Initializable {
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
 
     // set winner text
-    String winnerJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/result/winner");
-    List<Integer> winnerId = JsonUtils.parseJsonArray(winnerJson, Integer.class);
+    var winnerResponse = HttpUtils.getWithCode(
+      "/api/v1/session/" + session.getId() + "/result/winner",
+      null
+    );
+
+    if (winnerResponse.code() == 403) {
+      ErrorBody errorBody = JsonUtils.parseJson(winnerResponse.body(), ErrorBody.class);
+
+      switch (errorBody.getCode()) {
+        case 0 -> lblWinner.setText("Ballot");
+        case 1 -> {
+          Option winOption = options
+            .stream()
+            .filter(opt -> opt.getId().equals(errorBody.getWinningTopOption()))
+            .findFirst()
+            .get();
+          lblWinner.setText("Candidate ballot, winning option: " + winOption.getValue());
+        }
+        case 2 -> lblWinner.setText("Quorum has not been reached");
+        case 3 -> lblWinner.setText("Absolute majority has not been reached");
+        default -> lblWinner.setText("wtf");
+      }
+      return;
+    }
+
+    List<Integer> winnerId = JsonUtils.parseJsonArray(winnerResponse.body(), Integer.class);
     Option winnerOption = options
       .stream()
       .filter(opt -> opt.getId().equals(winnerId.get(0)))

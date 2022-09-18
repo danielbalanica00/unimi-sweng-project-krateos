@@ -66,11 +66,6 @@ public class HomepageController implements Initializable {
     SceneUtils.switchTo("electors/new_elector.fxml");
   }
 
-  /**
-   *
-   * @param event
-   * @throws Exception
-   */
   @FXML
   private void onBtnManageElectorsClicked(ActionEvent event) throws Exception {
     SceneUtils.switchTo("electors/electors.fxml");
@@ -78,8 +73,6 @@ public class HomepageController implements Initializable {
 
   /**
    * Switches to create_session.fxml view
-   * @param event
-   * @throws Exception
    */
   @FXML
   private void onBtnNewSessionClicked(ActionEvent event) throws Exception {
@@ -88,8 +81,6 @@ public class HomepageController implements Initializable {
 
   /**
    * Switches to sessions.fxml view
-   * @param event
-   * @throws Exception
    */
   @FXML
   private void onBtnManageSessionClicked(ActionEvent event) throws Exception {
@@ -98,8 +89,6 @@ public class HomepageController implements Initializable {
 
   /**
    * Switches to create_group.fxml view
-   * @param event
-   * @throws Exception
    */
   @FXML
   private void onBtnNewGroupClicked(ActionEvent event) throws Exception {
@@ -108,8 +97,6 @@ public class HomepageController implements Initializable {
 
   /**
    * Switches to groups.fxml view
-   * @param event
-   * @throws Exception
    */
   @FXML
   private void onBtnManageGroupClicked(ActionEvent event) throws Exception {

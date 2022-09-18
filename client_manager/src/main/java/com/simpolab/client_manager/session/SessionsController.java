@@ -26,7 +26,9 @@ public class SessionsController implements Initializable {
   private Button btnOpenSession;
 
   @FXML
-  private void onBtnCreateSessionClicked(ActionEvent event) throws Exception {}
+  private void onBtnCreateSessionClicked(ActionEvent event) throws Exception {
+    SceneUtils.switchTo("session/new_session.fxml");
+  }
 
   @FXML
   private void onBtnOpenSessionClicked(ActionEvent event) throws Exception {

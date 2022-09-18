@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 @Slf4j
 public final class HttpUtils {
 
+  public record Reponse(String body, int code) {}
+
   private HttpUtils() {}
 
   private static final String baseUrl = "http://127.0.0.1:8080";
@@ -39,6 +41,14 @@ public final class HttpUtils {
     if (headers != null) headers.forEach(request::setHeader);
 
     return makeRequest(request);
+  }
+
+  public static Reponse getWithCode(String path, @Nullable Map<String, String> headers) {
+    var request = new HttpGet(baseUrl + path);
+
+    if (headers != null) headers.forEach(request::setHeader);
+
+    return makeRequestWithCode(request);
   }
 
   public static void delete(String path) {
@@ -151,6 +161,36 @@ public final class HttpUtils {
         result.isBlank() ? "<empty>" : result
       );
       return result;
+    } catch (ParseException e) {
+      log.error("[Http Request] - Parsing Error", e);
+      throw new IllegalStateException("Parsing Error", e);
+    } catch (IOException e) {
+      log.error("[Http Request] - Network Error", e);
+      throw new IllegalStateException("Network Error", e);
+    }
+  }
+
+  private static Reponse makeRequestWithCode(ClassicHttpRequest request) {
+    try {
+      if (
+        request.getHeader(HttpHeaders.AUTHORIZATION) == null && accessToken != null
+      ) request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+    } catch (ProtocolException ignore) {}
+
+    try (
+      CloseableHttpClient httpClient = HttpClients.createDefault();
+      CloseableHttpResponse res = httpClient.execute(request)
+    ) {
+      var result = EntityUtils.toString(res.getEntity());
+      log.debug(
+        "{} {} - Response [{}] {}",
+        request.getMethod(),
+        request.getPath(),
+        res.getCode(),
+        result.isBlank() ? "<empty>" : result
+      );
+
+      return new Reponse(result, res.getCode());
     } catch (ParseException e) {
       log.error("[Http Request] - Parsing Error", e);
       throw new IllegalStateException("Parsing Error", e);

@@ -28,6 +28,17 @@ public class ElectorsController implements Initializable {
   @FXML
   private ListView<Elector> lvElectors;
 
+  /**
+   * retrieves and displays every user
+   *
+   * @param location
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resources
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     lvElectors.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -45,6 +56,9 @@ public class ElectorsController implements Initializable {
     }
   }
 
+  /**
+   * Revokes credentials to the selected user
+   */
   @FXML
   private void onBtnRevokeSelectedClicked(ActionEvent event) throws Exception {
     ObservableList<Elector> selectedElectors = lvElectors.getSelectionModel().getSelectedItems();

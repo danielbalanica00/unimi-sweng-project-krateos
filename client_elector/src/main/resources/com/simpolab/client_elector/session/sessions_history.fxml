@@ -16,7 +16,7 @@
    <children>
       <AnchorPane prefHeight="36.0" prefWidth="540.0">
          <children>
-            <Text layoutX="260.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Past sesisons">
+            <Text layoutX="260.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Past sessions">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="28.0" />
                </font>

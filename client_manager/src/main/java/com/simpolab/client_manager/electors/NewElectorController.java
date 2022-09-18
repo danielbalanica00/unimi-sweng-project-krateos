@@ -37,6 +37,13 @@ public class NewElectorController {
   @FXML
   private PasswordField txtPasswordReEntered;
 
+  /**
+   * Creates a user given the information inserted in the text fields.
+   * If fields are not properly filled the user is not created and a pop message
+   * warns of such event.
+   * @param event
+   * @throws Exception
+   */
   @FXML
   private void onBtnCreateClicked(ActionEvent event) throws Exception {
     String username = txtUsername.getText();
@@ -48,7 +55,19 @@ public class NewElectorController {
 
     Alert alert;
 
-    if (!password.equals(passwordReEntered)) {
+    if (
+      username.isBlank() ||
+      firstName.isBlank() ||
+      lastName.isBlank() ||
+      email.isBlank() ||
+      password.isBlank()
+    ) {
+      alert = new Alert(Alert.AlertType.ERROR);
+      alert.setContentText("Please fill every field");
+      txtPassword.clear();
+      txtPasswordReEntered.clear();
+      return;
+    } else if (!password.equals(passwordReEntered)) {
       alert = new Alert(Alert.AlertType.ERROR);
       alert.setContentText("Passwords do not match");
       txtPassword.clear();
