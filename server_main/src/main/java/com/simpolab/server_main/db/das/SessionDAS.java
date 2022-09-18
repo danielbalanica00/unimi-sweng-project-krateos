@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -331,7 +332,7 @@ public class SessionDAS implements SessionDAO {
   }
 
   @Override
-  public Map<Long, Integer> getVotesPerOption(VotingSession.Type sessionType, long sessionId) {
+  public Map<Long, Integer> getVotesPerOption(long sessionId) {
     try {
       Map<Long, Integer> map = new HashMap<>();
 
@@ -340,16 +341,40 @@ public class SessionDAS implements SessionDAO {
         return null;
       };
 
-      String query;
-      if (sessionType == VotingSession.Type.ORDINAL) {
-        query =
-          "with t as (select v.id, min(order_idx) as order_idx from vote as v where voting_option_id group by v.id) select voting_option_id as id, count(*) as count from vote, t, voting_option as vo where vote.order_idx = t.order_idx and vote.id = t.id and vo.id = vote.voting_option_id and vo.voting_session_id = ? group by voting_option_id";
-      } else {
-        query =
-          "select voting_option_id as id, count(*) as count from voting_option, vote where vote.voting_option_id = voting_option.id and voting_option.voting_session_id = ? group by voting_option_id";
-      }
-
+      val query =
+        "select voting_option_id as id, count(*) as count from voting_option, vote where vote.voting_option_id = voting_option.id and voting_option.voting_session_id = ? group by voting_option_id";
       jdbcTemplate.query(query, mapper, sessionId);
+
+      return map;
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return Map.of();
+    }
+  }
+
+  @Override
+  public Map<Long, Integer> getVotesPerOptionOrdinal(long sessionId, List<Integer> excludedIds) {
+    try {
+      Map<Long, Integer> map = new HashMap<>();
+
+      RowMapper<Void> mapper = (rs, _ignore) -> {
+        map.put(rs.getLong("id"), rs.getInt("count"));
+        return null;
+      };
+
+      List<Integer> params = new ArrayList<>(excludedIds);
+      params.add(0);
+      params.add((int) sessionId);
+
+      String inSql = String.join(",", Collections.nCopies(excludedIds.size() + 1, "?"));
+      String query = String.format(
+        "with t as (select v.id, min(order_idx) as order_idx from vote as v where voting_option_id not in (%s) group by v.id) select voting_option_id as id, count(*) as count from vote, t, voting_option as vo where vote.order_idx = t.order_idx and vote.id = t.id and vo.id = vote.voting_option_id and vo.voting_session_id = ? group by voting_option_id",
+        inSql
+      );
+
+      jdbcTemplate.query(query, mapper, params.toArray());
+
+      log.debug("Got: {}", map);
       return map;
     } catch (Exception e) {
       log.warn(e.getMessage());

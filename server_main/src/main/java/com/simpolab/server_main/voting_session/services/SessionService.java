@@ -18,7 +18,7 @@ public interface SessionService {
 
   Map<Long, Integer> votesPerOption(long sessionId);
 
-  void determineWinner(VotingSession session, List<VotingOption> options);
+  List<Long> getWinner(long sessionId);
 
   /*
     Handle Voting Groups

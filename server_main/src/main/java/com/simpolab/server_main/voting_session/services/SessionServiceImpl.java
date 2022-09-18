@@ -10,17 +10,14 @@ import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.domain.VotingSession.Type;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -206,7 +203,10 @@ public class SessionServiceImpl implements SessionService {
     val session = sessionDAO.get(sessionId).get();
     val options = sessionDAO.getOptions(sessionId);
 
-    Map<Long, Integer> votes = sessionDAO.getVotesPerOption(session.getType(), sessionId);
+    Map<Long, Integer> votes;
+    if (session.getType() == Type.ORDINAL) votes =
+      sessionDAO.getVotesPerOptionOrdinal(sessionId, List.of()); else votes =
+      sessionDAO.getVotesPerOption(sessionId);
 
     var optsIdsSet = options.stream().map(VotingOption::getId).collect(Collectors.toSet());
     optsIdsSet.removeAll(votes.keySet());
@@ -216,51 +216,147 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public void determineWinner(VotingSession session, List<VotingOption> options) {
-    Map<Long, Integer> votes = sessionDAO.getVotesPerOption(session.getType(), session.getId());
-    log.debug("All VOTES: {}", votes);
+  public List<Long> getWinner(long sessionId) {
+    val session = sessionDAO.get(sessionId).get();
 
-    var winner = votes
-      .entrySet()
-      .stream()
-      .reduce((e, acc) -> e.getValue() > acc.getValue() ? e : acc);
-    if (winner.isEmpty()) {
-      throw new IllegalStateException("No winner found");
+    // controllo quorum
+    if (session.isHasQuorum()) {
+      // get participants count per session
+      // get received votes per sessione
+
+      // limite = #participants / 2 + 1
+      // if (# received votes < limite) then EXPLODE else CONTINUE
     }
 
-    var optsIdsSet = options.stream().map(VotingOption::getId).collect(Collectors.toSet());
-    optsIdsSet.removeAll(votes.keySet());
-    optsIdsSet.forEach(id -> votes.put(id, 0));
-    log.debug("Non voted options: {}", optsIdsSet);
-    log.debug("All Options with votes: {}", votes);
-
-    log.debug("Winner: {}", winner);
-
     switch (session.getType()) {
-      case REFERENDUM -> {
-        log.debug("REFERENDUM");
-      }
-      case CATEGORIC -> {
-        log.debug("CATEGORIC");
+      case REFERENDUM, CATEGORIC -> {
+        log.debug("REFERENDUM | CATEGORIC");
+
+        Map<Long, Integer> votes = sessionDAO.getVotesPerOption(sessionId);
+        if (votes.isEmpty()) throw new IllegalStateException("No votes found");
+
+        log.debug("All VOTES: {}", votes);
+
+        val mostVotedOptionId = getMostVotesOption(votes);
+        val countMostVotedOption = countVotesForOption(votes, mostVotedOptionId);
+
+        if (countMostVotedOption > 1) {
+          log.debug("Ballottaggio, non c'e' vincitore");
+          return List.of();
+        }
+
+        log.debug("Winner: {}", mostVotedOptionId);
+        return List.of(mostVotedOptionId);
       }
       case ORDINAL -> {
         log.debug("ORDINAL");
+
+        List<Integer> excludedOptions = new ArrayList<>();
+        while (true) {
+          Map<Long, Integer> votes = sessionDAO.getVotesPerOptionOrdinal(
+            sessionId,
+            excludedOptions
+          );
+          if (votes.isEmpty()) throw new IllegalStateException("No votes found");
+
+          log.debug("All VOTES: {}", votes);
+          val mostVotedOptionId = getMostVotesOption(votes);
+          val countMostVotedOption = countVotesForOption(votes, mostVotedOptionId);
+
+          if (countMostVotedOption > 1) {
+            log.debug("Ballottaggio ordinale");
+
+            // get id of option with the lowest amount of votes
+            val leastVotedOptionId = getLeastVotesOption(votes);
+
+            // exclude it
+            excludedOptions.add((int) leastVotedOptionId);
+
+            // try again
+            continue;
+          }
+
+          log.debug("Winner: {}", mostVotedOptionId);
+          return List.of(mostVotedOptionId);
+        }
       }
       case CATEGORIC_WITH_PREFERENCES -> {
         log.debug("CATEGORIC_WITH_PREFERENCES");
+
+        // ** 1 dividi opzioni ottieni top level options
+        val options2 = sessionDAO.getOptionsForSession(sessionId);
+        var topLevelOptions = new HashSet<Long>();
+
+        options2.forEach(opt -> {
+          if (opt.parentId() == 0) topLevelOptions.add(opt.id());
+        });
+        // ** 1
+
+        // ** 2 ottieni tutti i voti per la sessione
+        Map<Long, Integer> votes = sessionDAO.getVotesPerOption(sessionId);
+        if (votes.isEmpty()) throw new IllegalStateException("No votes found");
+
+        Map<Long, Integer> topLevelVotes = new HashMap<>();
+        Map<Long, Integer> lowLevelVotes = new HashMap<>();
+
+        votes.forEach((k, v) -> {
+          if (topLevelOptions.contains(k)) topLevelVotes.put(k, v); else lowLevelVotes.put(k, v);
+        });
+        // ** 2
+
+        // ** 3 identifica top level con maggior numero di voti
+        val topMostVotedOptionId = getMostVotesOption(topLevelVotes);
+        val topCountMostVotedOption = countVotesForOption(topLevelVotes, topMostVotedOptionId);
+
+        if (topCountMostVotedOption > 1) {
+          log.debug("Ballottaggio TOP level, non c'e' vincitore");
+          return List.of();
+        }
+        // ** 3
+
+        // ** 4 identifica low level con maggior numero di voti
+        val lowMostVotedOptionId = getMostVotesOption(lowLevelVotes);
+        val lowCountMostVotedOption = countVotesForOption(lowLevelVotes, lowMostVotedOptionId);
+
+        if (lowCountMostVotedOption > 1) {
+          log.debug("Ballottaggio LOW level, non c'e' vincitore");
+          return List.of();
+        }
+        // ** 4
+
+        log.debug("Winners:  TOP - {}, LOW - {}", topMostVotedOptionId, lowMostVotedOptionId);
+        return List.of(topMostVotedOptionId, lowMostVotedOptionId);
       }
     }
-    // CHECK if quorum is present and if then if it is set
 
-    // REFERENDUM
-    // vince si o no in base al numero di voti
+    // check se è settata la maggioranza assoluta.
+    // ha senso per referendum e ordinale, per altri defer
+    if (session.isNeedAbsoluteMajority()) {
+      log.debug("Need to check absolute majority");
+    }
 
-    // CATEGORICO && CATEGORICO con PREFERENZE
-    // vince quello con piu voti
+    return null;
+  }
 
-    // ORDINALE
-    // vince quello messo piu volte al primo posto
+  private long getLeastVotesOption(Map<Long, Integer> votes) {
+    return votes
+      .entrySet()
+      .stream()
+      .reduce((entry, acc) -> entry.getValue() <= acc.getValue() ? entry : acc)
+      .get()
+      .getKey();
+  }
 
-    // check se e' settata la maggioranza assoluta.
+  private long getMostVotesOption(Map<Long, Integer> votes) {
+    return votes
+      .entrySet()
+      .stream()
+      .reduce((e, acc) -> e.getValue() >= acc.getValue() ? e : acc)
+      .get()
+      .getKey();
+  }
+
+  private int countVotesForOption(Map<Long, Integer> votes, long optionId) {
+    return (int) votes.values().stream().filter(v -> v == optionId).count();
   }
 }

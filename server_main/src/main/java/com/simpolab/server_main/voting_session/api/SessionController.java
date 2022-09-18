@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,7 +54,7 @@ public class SessionController {
   @GetMapping(path = "{session_id}")
   public ResponseEntity<VotingSession> getSession(@PathVariable("session_id") long sessionId) {
     try {
-      //      sessionService.determineWinner(sessionId);
+      //      sessionService.getWinner(sessionId);
       log.debug("[Get Session] - get session {}", sessionId);
       return ResponseEntity.ok(sessionService.getSession(sessionId));
     } catch (Exception e) {
@@ -74,6 +75,16 @@ public class SessionController {
   ) {
     log.debug("[Get Option Count] - getting the option count");
     return ResponseEntity.ok(sessionService.votesPerOption(sessionId));
+  }
+
+  @GetMapping(path = "{sessionId}/result/winner")
+  public ResponseEntity<List<Long>> getWinningOption(@PathVariable("sessionId") long sessionId) {
+    log.debug("[Get Winning Option] - start");
+
+    val winningOptionId = sessionService.getWinner(sessionId);
+
+    log.debug("[Get Winning Option] - result : {}", winningOptionId);
+    return ResponseEntity.ok(winningOptionId);
   }
 
   @DeleteMapping(path = "{session_id}")

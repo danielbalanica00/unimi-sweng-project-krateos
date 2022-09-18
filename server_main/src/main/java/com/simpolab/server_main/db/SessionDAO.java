@@ -41,5 +41,7 @@ public interface SessionDAO {
 
   void setHasVoted(long sessionId, long electorId) throws SQLException;
 
-  Map<Long, Integer> getVotesPerOption(VotingSession.Type sessionType, long sessionId);
+  Map<Long, Integer> getVotesPerOption(long sessionId);
+
+  Map<Long, Integer> getVotesPerOptionOrdinal(long sessionId, List<Integer> excludedIds);
 }
