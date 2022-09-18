@@ -7,7 +7,6 @@ import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +14,11 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class SessionController implements Initializable {
 
@@ -40,7 +38,11 @@ public class SessionController implements Initializable {
   @FXML
   private Button btnStart;
   @FXML
-  private BarChart<Option, Integer> barChart;
+  private BarChart<Option, Integer> barChartVotes;
+  @FXML
+  private Text lblWinner;
+  @FXML
+  private VBox vboxContainer;
 
   public static void init(Session initSession) {
     session = initSession;
@@ -95,21 +97,44 @@ public class SessionController implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     refreshSessionInfo();
 
+    // do not look for results until the session has ended
+    if(session.getState().equals(Session.State.ACTIVE) || session.getState().equals(Session.State.INACTIVE)){
+      System.out.println("I'm here");
+      vboxContainer.getChildren().remove(barChartVotes);
+      vboxContainer.getChildren().remove(lblWinner);
+      return;
+    }
+
+    // retrieve options
     String optionsJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/option");
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
 
+    // set winner text
+    String winnerJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/result/winner");
+    List<Integer> winnerId = JsonUtils.parseJsonArray(winnerJson, Integer.class);
+    Option winnerOption = options.stream().filter(opt -> opt.getId().equals(winnerId.get(0))).findFirst().get();
+    lblWinner.setText("Winner: " + winnerOption.getValue());
+
+    // retrieve votes
     String votesJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/result/option");
     Map map = new Gson().fromJson(votesJson, Map.class);
 
     XYChart.Series dataSeries = new XYChart.Series();
     dataSeries.setName("Options results");
 
-    for(var key : map.keySet()){
-      System.out.println(options.stream().filter(opt -> opt.getId().equals(Integer.parseInt((String)key))).findFirst().get().getValue() + ": " + map.get(key));
-      dataSeries.getData().add(new XYChart.Data(options.stream().filter(opt -> opt.getId().equals(Integer.parseInt((String)key))).findFirst().get().getValue(), map.get(key)));
-    }
+    for(var key : map.keySet())
+      dataSeries.getData().add(
+              new XYChart.Data(
+                      options
+                              .stream()
+                              .filter
+                                      (opt -> opt.getId().equals(Integer.parseInt((String)key)))
+                              .findFirst()
+                              .get()
+                              .getValue()
+                      , map.get(key)));
 
-    barChart.getData().add(dataSeries);
+    barChartVotes.getData().add(dataSeries);
   }
 
   private void refreshSession() throws Exception {

@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.session.SessionController">
+<VBox fx:id="vboxContainer" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.session.SessionController">
    <children>
       <AnchorPane prefHeight="43.0" prefWidth="560.0">
          <children>
@@ -52,7 +52,12 @@
             </Button>
          </children>
       </HBox>
-      <BarChart fx:id="barChart" prefHeight="196.0" prefWidth="560.0">
+      <Text fx:id="lblWinner" strokeType="OUTSIDE" strokeWidth="0.0" text="Winner: ">
+         <font>
+            <Font name="Lucida Sans Typewriter Regular" size="14.0" />
+         </font>
+      </Text>
+      <BarChart fx:id="barChartVotes" prefHeight="196.0" prefWidth="560.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>

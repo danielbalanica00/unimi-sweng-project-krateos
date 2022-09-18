@@ -133,16 +133,12 @@ public class SessionCategoricPreferenceController implements Initializable {
         String optionsJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/option");
         options = JsonUtils.parseJsonArray(optionsJson, Option.class);
 
-        String votesJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/result/option");
-        Map map = new Gson().fromJson(votesJson, Map.class);
-
-        XYChart.Series dataSeries = new XYChart.Series();
-        dataSeries.setName("Options results");
-
-        for(var key : map.keySet()){
-            System.out.println(options.stream().filter(opt -> opt.getId().equals(Integer.parseInt((String)key))).findFirst().get().getValue() + ": " + map.get(key));
-            dataSeries.getData().add(new XYChart.Data(options.stream().filter(opt -> opt.getId().equals(Integer.parseInt((String)key))).findFirst().get().getValue(), map.get(key)));
-        }
+        // set winner text
+        String winnerJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/result/winner");
+        List<Integer> winnerId = JsonUtils.parseJsonArray(winnerJson, Integer.class);
+        Option winnerOption = options.stream().filter(opt -> opt.getId().equals(winnerId.get(0))).findFirst().get();
+        Option winnerSuboption = options.stream().filter(opt -> opt.getId().equals(winnerId.get(1))).findFirst().get();
+        lblWinner.setText("Winner: " + winnerOption.getValue() + "\nCandidate: " + winnerSuboption.getValue());
     }
 
     private void refreshSession() throws Exception {
