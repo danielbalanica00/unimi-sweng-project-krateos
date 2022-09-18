@@ -32,9 +32,16 @@ public class SessionsController implements Initializable {
   private void onBtnOpenSessionClicked(ActionEvent event) throws Exception {
     Session selectedSession = lvSessions.getSelectionModel().getSelectedItem();
 
-    SessionController.init(selectedSession);
-
-    SceneUtils.switchTo("session/session.fxml");
+    switch(selectedSession.getType()){
+      case CATEGORIC, ORDINAL, REFERENDUM -> {
+        SessionController.init(selectedSession);
+        SceneUtils.switchTo("session/session.fxml");
+      }
+      case CATEGORIC_WITH_PREFERENCES -> {
+        SessionCategoricPreferenceController.init(selectedSession);
+        SceneUtils.switchTo("session/session_categoric_preference.fxml");
+      }
+    }
   }
 
   @FXML
