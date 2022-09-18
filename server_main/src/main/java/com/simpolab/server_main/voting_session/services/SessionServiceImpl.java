@@ -235,9 +235,10 @@ public class SessionServiceImpl implements SessionService {
     if (optSession.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
     val session = optSession.get();
-    if (session.getState() != VotingSession.State.ENDED) throw new ResponseStatusException(
-      HttpStatus.FORBIDDEN
-    );
+    if (
+      session.getState() == VotingSession.State.INACTIVE ||
+      session.getState() == VotingSession.State.ACTIVE
+    ) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
     val stats = sessionDAO.getParticipationStats(sessionId);
 
@@ -424,7 +425,9 @@ public class SessionServiceImpl implements SessionService {
   }
 
   private int countVotesForOption(Map<Long, Integer> votes, long optionId) {
-    return (int) votes.values().stream().filter(v -> v == optionId).count();
+    val n = votes.get(optionId).intValue();
+
+    return (int) votes.values().stream().filter(v -> v == n).count();
   }
 
   private boolean hasReachedAbsoluteMajority(int votersCount, int obtainedVotes) {
