@@ -10,12 +10,14 @@ public class Option {
   @Getter
   private Integer id;
 
-  @Getter  @Setter
+  @Getter
+  @Setter
   private String value;
 
   private Integer parentOptionId;
 
-  @Getter @Setter
+  @Getter
+  @Setter
   private Integer votes;
 
   public Option(String value) {

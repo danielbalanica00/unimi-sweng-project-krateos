@@ -1,4 +1,4 @@
-package com.simpolab.server_main.voting_session;
+package com.simpolab.server_main.voting_session.domain;
 
 import com.simpolab.server_main.db.das.SessionDAS;
 import com.simpolab.server_main.voting_session.domain.Vote;

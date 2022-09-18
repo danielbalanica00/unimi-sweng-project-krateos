@@ -1,6 +1,7 @@
 package com.simpolab.server_main.db.das;
 
 import com.simpolab.server_main.db.SessionDAO;
+import com.simpolab.server_main.voting_session.domain.ParticipationStats;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
@@ -263,6 +264,37 @@ public class SessionDAS implements SessionDAO {
     }
   }
 
+  @Override
+  public List<VotingSession> getAll(long electorId) {
+    try {
+      val query =
+        """
+          (select vs.*
+          from elector as e,
+               elector_group as eg,
+               session_group as sg,
+               voting_session as vs
+          where e.id = eg.elector_id
+              and eg.voting_group_id = sg.voting_group_id
+              and sg.voting_session_id = vs.id
+              and e.id = ?)
+          UNION DISTINCT
+          (select vs.*
+          from elector as e,
+               session_participation as sp,
+               voting_session as vs
+          where e.id = sp.elector_id
+              and sp.voting_session_id = vs.id
+              and e.id = ?)
+          """;
+
+      return jdbcTemplate.query(query, votingSessionRowMapper, electorId, electorId);
+    } catch (Exception e) {
+      log.warn(e.getMessage());
+      return List.of();
+    }
+  }
+
   public Optional<Boolean> getParticipationStatus(long sessionId, long electorId) {
     try {
       var query =
@@ -353,7 +385,7 @@ public class SessionDAS implements SessionDAO {
   }
 
   @Override
-  public Map<Long, Integer> getVotesPerOptionOrdinal(long sessionId, List<Integer> excludedIds) {
+  public Map<Long, Integer> getVotesPerOptionOrdinal(long sessionId, List<Long> excludedIds) {
     try {
       Map<Long, Integer> map = new HashMap<>();
 
@@ -362,9 +394,9 @@ public class SessionDAS implements SessionDAO {
         return null;
       };
 
-      List<Integer> params = new ArrayList<>(excludedIds);
-      params.add(0);
-      params.add((int) sessionId);
+      List<Long> params = new ArrayList<>(excludedIds);
+      params.add(0L);
+      params.add(sessionId);
 
       String inSql = String.join(",", Collections.nCopies(excludedIds.size() + 1, "?"));
       String query = String.format(
@@ -379,6 +411,31 @@ public class SessionDAS implements SessionDAO {
     } catch (Exception e) {
       log.warn(e.getMessage());
       return Map.of();
+    }
+  }
+
+  @Override
+  public ParticipationStats getParticipationStats(long sessionId) {
+    try {
+      val res = new ParticipationStats();
+      val query =
+        "select has_voted, count(*) as count from session_participation where voting_session_id = ? group by has_voted";
+
+      jdbcTemplate.query(
+        query,
+        (rs, _ignore) -> {
+          if (rs.getBoolean("has_voted")) res.setVotersCount(
+            rs.getInt("count")
+          ); else res.setNonVotersCount(rs.getInt("count"));
+          return null;
+        },
+        sessionId
+      );
+
+      return res;
+    } catch (Exception e) {
+      log.error("Error: {}", e.getMessage());
+      return null;
     }
   }
 }

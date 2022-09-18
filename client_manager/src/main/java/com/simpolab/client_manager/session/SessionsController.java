@@ -32,7 +32,7 @@ public class SessionsController implements Initializable {
   private void onBtnOpenSessionClicked(ActionEvent event) throws Exception {
     Session selectedSession = lvSessions.getSelectionModel().getSelectedItem();
 
-    switch(selectedSession.getType()){
+    switch (selectedSession.getType()) {
       case CATEGORIC, ORDINAL, REFERENDUM -> {
         SessionController.init(selectedSession);
         SceneUtils.switchTo("session/session.fxml");

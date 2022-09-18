@@ -37,8 +37,6 @@ public class HomepageController implements Initializable {
       .filter(s -> s.getState().equals(Session.State.ACTIVE))
       .toList();
 
-
-
     lvSessions.getItems().addAll(activeSessions);
   }
 
@@ -46,8 +44,7 @@ public class HomepageController implements Initializable {
   private void onBtnOpenSessionClicked(ActionEvent event) throws Exception {
     Session session = lvSessions.getSelectionModel().getSelectedItem();
 
-
-    switch(session.getType()){
+    switch (session.getType()) {
       case CATEGORIC, ORDINAL, REFERENDUM -> {
         SessionController.init(session);
         SceneUtils.switchTo("session/session.fxml");

@@ -1,6 +1,7 @@
 package com.simpolab.server_main.db;
 
 import com.simpolab.server_main.db.das.SessionDAS;
+import com.simpolab.server_main.voting_session.domain.ParticipationStats;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
@@ -16,6 +17,7 @@ public interface SessionDAO {
   Optional<VotingSession> get(long id);
 
   List<VotingSession> getAll();
+  List<VotingSession> getAll(long electorId);
 
   void addGroup(long sessionId, long groupId) throws SQLException;
   void removeGroup(long sessionId, long groupId);
@@ -43,5 +45,7 @@ public interface SessionDAO {
 
   Map<Long, Integer> getVotesPerOption(long sessionId);
 
-  Map<Long, Integer> getVotesPerOptionOrdinal(long sessionId, List<Integer> excludedIds);
+  Map<Long, Integer> getVotesPerOptionOrdinal(long sessionId, List<Long> excludedIds);
+
+  ParticipationStats getParticipationStats(long sessionId);
 }

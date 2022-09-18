@@ -27,16 +27,22 @@ public class SessionController implements Initializable {
 
   @FXML
   private Text lblSessionName;
+
   @FXML
   private Text lblEndsOn;
+
   @FXML
   private Text lblState;
+
   @FXML
   private Button btnStop;
+
   @FXML
   private Button btnAbort;
+
   @FXML
   private Button btnStart;
+
   @FXML
   private BarChart<Option, Integer> barChartVotes;
   @FXML
