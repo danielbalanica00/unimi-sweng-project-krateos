@@ -1,6 +1,5 @@
 package com.simpolab.client_manager.session.session_types;
 
-import com.google.gson.Gson;
 import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.session.AddGroupsController;
 import com.simpolab.client_manager.session.NewSessionController;

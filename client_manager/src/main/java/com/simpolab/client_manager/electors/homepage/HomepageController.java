@@ -1,6 +1,7 @@
-package com.simpolab.client_manager.homepage;
+package com.simpolab.client_manager.electors.homepage;
 
 import com.simpolab.client_manager.domain.Session;
+import com.simpolab.client_manager.session.SessionCategoricPreferenceController;
 import com.simpolab.client_manager.session.SessionController;
 import com.simpolab.client_manager.utils.AuthHandler;
 import com.simpolab.client_manager.utils.HttpUtils;
@@ -36,6 +37,8 @@ public class HomepageController implements Initializable {
       .filter(s -> s.getState().equals(Session.State.ACTIVE))
       .toList();
 
+
+
     lvSessions.getItems().addAll(activeSessions);
   }
 
@@ -43,9 +46,17 @@ public class HomepageController implements Initializable {
   private void onBtnOpenSessionClicked(ActionEvent event) throws Exception {
     Session session = lvSessions.getSelectionModel().getSelectedItem();
 
-    SessionController.init(session);
 
-    SceneUtils.switchTo("session/session.fxml");
+    switch(session.getType()){
+      case CATEGORIC, ORDINAL, REFERENDUM -> {
+        SessionController.init(session);
+        SceneUtils.switchTo("session/session.fxml");
+      }
+      case CATEGORIC_WITH_PREFERENCES -> {
+        SessionCategoricPreferenceController.init(session);
+        SceneUtils.switchTo("session/session_categoric_preference.fxml");
+      }
+    }
   }
 
   /**
