@@ -1,6 +1,7 @@
 package com.simpolab.server_main.voting_session.services;
 
 import com.simpolab.server_main.group.domain.Group;
+import com.simpolab.server_main.voting_session.domain.NoWinnerException;
 import com.simpolab.server_main.voting_session.domain.Vote;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
@@ -20,7 +21,7 @@ public interface SessionService {
 
   Map<Long, Integer> votesPerOption(long sessionId);
 
-  List<Long> getWinner(long sessionId);
+  List<Long> getWinner(long sessionId) throws NoWinnerException;
 
   /*
     Handle Voting Groups

@@ -29,16 +29,22 @@ public class SessionController implements Initializable {
 
   @FXML
   private Text lblSessionName;
+
   @FXML
   private Text lblEndsOn;
+
   @FXML
   private Text lblState;
+
   @FXML
   private Button btnStop;
+
   @FXML
   private Button btnAbort;
+
   @FXML
   private Button btnStart;
+
   @FXML
   private BarChart<Option, Integer> barChart;
 
@@ -98,15 +104,36 @@ public class SessionController implements Initializable {
     String optionsJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/option");
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
 
-    String votesJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/result/option");
+    String votesJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/result/option");
     Map map = new Gson().fromJson(votesJson, Map.class);
 
     XYChart.Series dataSeries = new XYChart.Series();
     dataSeries.setName("Options results");
 
-    for(var key : map.keySet()){
-      System.out.println(options.stream().filter(opt -> opt.getId().equals(Integer.parseInt((String)key))).findFirst().get().getValue() + ": " + map.get(key));
-      dataSeries.getData().add(new XYChart.Data(options.stream().filter(opt -> opt.getId().equals(Integer.parseInt((String)key))).findFirst().get().getValue(), map.get(key)));
+    for (var key : map.keySet()) {
+      System.out.println(
+        options
+          .stream()
+          .filter(opt -> opt.getId().equals(Integer.parseInt((String) key)))
+          .findFirst()
+          .get()
+          .getValue() +
+        ": " +
+        map.get(key)
+      );
+      dataSeries
+        .getData()
+        .add(
+          new XYChart.Data(
+            options
+              .stream()
+              .filter(opt -> opt.getId().equals(Integer.parseInt((String) key)))
+              .findFirst()
+              .get()
+              .getValue(),
+            map.get(key)
+          )
+        );
     }
 
     barChart.getData().add(dataSeries);

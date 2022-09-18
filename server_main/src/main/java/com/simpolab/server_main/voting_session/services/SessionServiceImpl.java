@@ -5,10 +5,7 @@ import com.simpolab.server_main.db.SessionDAO;
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
 import com.simpolab.server_main.group.domain.Group;
-import com.simpolab.server_main.voting_session.domain.Vote;
-import com.simpolab.server_main.voting_session.domain.VoteValidator;
-import com.simpolab.server_main.voting_session.domain.VotingOption;
-import com.simpolab.server_main.voting_session.domain.VotingSession;
+import com.simpolab.server_main.voting_session.domain.*;
 import com.simpolab.server_main.voting_session.domain.VotingSession.Type;
 import java.sql.SQLException;
 import java.util.*;
@@ -226,7 +223,7 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public List<Long> getWinner(long sessionId) {
+  public List<Long> getWinner(long sessionId) throws NoWinnerException {
     val optSession = sessionDAO.get(sessionId);
     if (optSession.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
@@ -235,19 +232,12 @@ public class SessionServiceImpl implements SessionService {
       HttpStatus.FORBIDDEN
     );
 
+    val stats = sessionDAO.getParticipationStats(sessionId);
+
     // ** Quorum Check
-    if (session.isHasQuorum()) {
-      val stats = sessionDAO.getParticipationStats(sessionId);
-
-      // crasha se la sessione e' stata avviata senza alcun voter
-      val totalVoters = stats.getVotersCount() + stats.getNonVotersCount();
-
-      val threashold = totalVoters / 2;
-
-      if (stats.getVotersCount() <= threashold) {
-        log.warn("Quorum not met for session: {}", sessionId);
-        return List.of();
-      }
+    if (session.isHasQuorum() && !hasReachedQuorum(stats)) {
+      log.warn("Quorum not met for session: {}", sessionId);
+      throw new NoWinnerException(NoWinnerException.QUORUM_NOT_REACHED);
     }
     // ****
 
@@ -263,10 +253,17 @@ public class SessionServiceImpl implements SessionService {
         val mostVotedOptionId = getMostVotesOption(votes);
         val countMostVotedOption = countVotesForOption(votes, mostVotedOptionId);
 
+        // check ballottaggio
         if (countMostVotedOption > 1) {
           log.debug("Ballottaggio, non c'e' vincitore");
-          return List.of();
+          throw new NoWinnerException(NoWinnerException.BALLOTTAGGIO);
         }
+
+        // check absolute majority
+        if (
+          session.isNeedAbsoluteMajority() &&
+          !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(mostVotedOptionId))
+        ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
 
         log.debug("Winner: {}", mostVotedOptionId);
         return List.of(mostVotedOptionId);
@@ -298,6 +295,12 @@ public class SessionServiceImpl implements SessionService {
             // try again
             continue;
           }
+
+          // check absolute majority
+          if (
+            session.isNeedAbsoluteMajority() &&
+            !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(mostVotedOptionId))
+          ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
 
           log.debug("Winner: {}", mostVotedOptionId);
           return List.of(mostVotedOptionId);
@@ -331,9 +334,16 @@ public class SessionServiceImpl implements SessionService {
         val topMostVotedOptionId = getMostVotesOption(topLevelVotes);
         val topCountMostVotedOption = countVotesForOption(topLevelVotes, topMostVotedOptionId);
 
+        // check absolute majority
+        if (
+          session.isNeedAbsoluteMajority() &&
+          !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(topMostVotedOptionId))
+        ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+
+        // check ballottaggio
         if (topCountMostVotedOption > 1) {
           log.debug("Ballottaggio TOP level, non c'e' vincitore");
-          return List.of();
+          throw new NoWinnerException(NoWinnerException.BALLOTTAGGIO);
         }
         // **** 3
 
@@ -341,9 +351,19 @@ public class SessionServiceImpl implements SessionService {
         val lowMostVotedOptionId = getMostVotesOption(lowLevelVotes);
         val lowCountMostVotedOption = countVotesForOption(lowLevelVotes, lowMostVotedOptionId);
 
+        // check absolute majority
+        if (
+          session.isNeedAbsoluteMajority() &&
+          !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(lowMostVotedOptionId))
+        ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+
+        // check ballottaggio
         if (lowCountMostVotedOption > 1) {
           log.debug("Ballottaggio LOW level, non c'e' vincitore");
-          return List.of();
+          throw new NoWinnerException(
+            NoWinnerException.BALLOTTAGGIO_CATEGORICO_PREFERENZE,
+            topMostVotedOptionId
+          );
         }
         // **** 4
 
@@ -352,13 +372,7 @@ public class SessionServiceImpl implements SessionService {
       }
     }
 
-    // check se è settata la maggioranza assoluta.
-    // ha senso per referendum e ordinale, per altri defer
-    if (session.isNeedAbsoluteMajority()) {
-      log.debug("Need to check absolute majority");
-    }
-
-    return null;
+    throw new IllegalStateException("Should never be here");
   }
 
   private long getLeastVotesOption(Map<Long, Integer> votes) {
@@ -385,5 +399,18 @@ public class SessionServiceImpl implements SessionService {
 
   private int countVotesForOption(Map<Long, Integer> votes, long optionId) {
     return (int) votes.values().stream().filter(v -> v == optionId).count();
+  }
+
+  private boolean hasReachedAbsoluteMajority(int votersCount, int obtainedVotes) {
+    val threshold = votersCount / 2 + 1;
+
+    return obtainedVotes >= threshold;
+  }
+
+  private boolean hasReachedQuorum(ParticipationStats participationStats) {
+    val totalVoters = participationStats.getVotersCount() + participationStats.getNonVotersCount();
+    val threshold = totalVoters / 2 + 1;
+
+    return participationStats.getVotersCount() >= threshold;
   }
 }

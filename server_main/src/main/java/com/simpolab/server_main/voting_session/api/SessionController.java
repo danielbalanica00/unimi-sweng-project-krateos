@@ -1,10 +1,7 @@
 package com.simpolab.server_main.voting_session.api;
 
 import com.simpolab.server_main.group.domain.Group;
-import com.simpolab.server_main.voting_session.domain.Vote;
-import com.simpolab.server_main.voting_session.domain.VotingOption;
-import com.simpolab.server_main.voting_session.domain.VotingOptionRequest;
-import com.simpolab.server_main.voting_session.domain.VotingSession;
+import com.simpolab.server_main.voting_session.domain.*;
 import com.simpolab.server_main.voting_session.services.SessionService;
 import java.util.List;
 import java.util.Map;
@@ -86,13 +83,17 @@ public class SessionController {
   }
 
   @GetMapping(path = "{sessionId}/result/winner")
-  public ResponseEntity<List<Long>> getWinningOption(@PathVariable("sessionId") long sessionId) {
+  public ResponseEntity getWinningOption(@PathVariable("sessionId") long sessionId) {
     log.debug("[Get Winning Option] - start");
 
-    val winningOptionId = sessionService.getWinner(sessionId);
+    try {
+      val winningOptionId = sessionService.getWinner(sessionId);
 
-    log.debug("[Get Winning Option] - result : {}", winningOptionId);
-    return ResponseEntity.ok(winningOptionId);
+      log.debug("[Get Winning Option] - result : {}", winningOptionId);
+      return ResponseEntity.ok(winningOptionId);
+    } catch (NoWinnerException nwe) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(nwe);
+    }
   }
 
   @DeleteMapping(path = "{session_id}")
