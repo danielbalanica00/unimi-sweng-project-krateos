@@ -17,7 +17,7 @@ public interface SessionService {
 
   List<VotingSession> getAllSessions();
 
-  List<VotingSession> getAllSessions(long electorId);
+  List<VotingSession> getAllSessions(String electorUsername);
 
   Map<Long, Integer> votesPerOption(long sessionId);
 

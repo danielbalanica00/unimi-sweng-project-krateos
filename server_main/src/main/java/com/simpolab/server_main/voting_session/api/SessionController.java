@@ -61,17 +61,21 @@ public class SessionController {
   }
 
   @GetMapping
-  public ResponseEntity<List<VotingSession>> getAllSessions() {
-    log.debug("[Get All Sessions] - getting all the sessions");
-    return ResponseEntity.ok(sessionService.getAllSessions());
-  }
+  public ResponseEntity<List<VotingSession>> getAllSessions(Authentication authentication) {
+    boolean isManager = authentication
+      .getAuthorities()
+      .stream()
+      .anyMatch(r -> r.getAuthority().equals("MANAGER"));
 
-  @GetMapping(path = "/elector/{electorId}")
-  public ResponseEntity<List<VotingSession>> getAllSessionsForElector(
-    @PathVariable("electorId") long electorId
-  ) {
-    log.debug("[Get All Sessions] - getting all the sessions for elector {}", electorId);
-    return ResponseEntity.ok(sessionService.getAllSessions(electorId));
+    if (isManager) {
+      log.debug("[Get All Sessions - MANAGER] - getting all the sessions");
+      return ResponseEntity.ok(sessionService.getAllSessions());
+    }
+
+    log.debug("[Get All Sessions] - getting all the sessions for elector");
+    val electorUsername = (String) authentication.getPrincipal();
+
+    return ResponseEntity.ok(sessionService.getAllSessions(electorUsername));
   }
 
   @GetMapping(path = "{sessionId}/result/option")

@@ -192,7 +192,14 @@ public class SessionServiceImpl implements SessionService {
   }
 
   @Override
-  public List<VotingSession> getAllSessions(long electorId) {
+  public List<VotingSession> getAllSessions(String electorUsername) {
+    Optional<Elector> optElectorId = electorService.getElectorByUsername(electorUsername);
+    if (optElectorId.isEmpty()) throw new IllegalArgumentException(
+      "The given elector doesn't exist"
+    );
+
+    var electorId = optElectorId.get().getUser().getId();
+
     return sessionDAO.getAll(electorId);
   }
 
