@@ -45,8 +45,10 @@ public class SessionController implements Initializable {
 
   @FXML
   private BarChart<Option, Integer> barChartVotes;
+
   @FXML
   private Text lblWinner;
+
   @FXML
   private VBox vboxContainer;
 
@@ -104,7 +106,10 @@ public class SessionController implements Initializable {
     refreshSessionInfo();
 
     // do not look for results until the session has ended
-    if(session.getState().equals(Session.State.ACTIVE) || session.getState().equals(Session.State.INACTIVE)){
+    if (
+      session.getState().equals(Session.State.ACTIVE) ||
+      session.getState().equals(Session.State.INACTIVE)
+    ) {
       System.out.println("I'm here");
       vboxContainer.getChildren().remove(barChartVotes);
       vboxContainer.getChildren().remove(lblWinner);
@@ -116,29 +121,35 @@ public class SessionController implements Initializable {
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
 
     // set winner text
-    String winnerJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/result/winner");
+    String winnerJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/result/winner");
     List<Integer> winnerId = JsonUtils.parseJsonArray(winnerJson, Integer.class);
-    Option winnerOption = options.stream().filter(opt -> opt.getId().equals(winnerId.get(0))).findFirst().get();
+    Option winnerOption = options
+      .stream()
+      .filter(opt -> opt.getId().equals(winnerId.get(0)))
+      .findFirst()
+      .get();
     lblWinner.setText("Winner: " + winnerOption.getValue());
 
     // retrieve votes
-    String votesJson = HttpUtils.get("/api/v1/session/"+session.getId()+"/result/option");
+    String votesJson = HttpUtils.get("/api/v1/session/" + session.getId() + "/result/option");
     Map map = new Gson().fromJson(votesJson, Map.class);
 
     XYChart.Series dataSeries = new XYChart.Series();
     dataSeries.setName("Options results");
 
-    for(var key : map.keySet())
-      dataSeries.getData().add(
-              new XYChart.Data(
-                      options
-                              .stream()
-                              .filter
-                                      (opt -> opt.getId().equals(Integer.parseInt((String)key)))
-                              .findFirst()
-                              .get()
-                              .getValue()
-                      , map.get(key)));
+    for (var key : map.keySet()) dataSeries
+      .getData()
+      .add(
+        new XYChart.Data(
+          options
+            .stream()
+            .filter(opt -> opt.getId().equals(Integer.parseInt((String) key)))
+            .findFirst()
+            .get()
+            .getValue(),
+          map.get(key)
+        )
+      );
 
     barChartVotes.getData().add(dataSeries);
   }
