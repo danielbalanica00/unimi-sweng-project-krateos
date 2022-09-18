@@ -16,6 +16,8 @@ public interface SessionService {
 
   List<VotingSession> getAllSessions();
 
+  List<VotingSession> getAllSessions(long electorId);
+
   Map<Long, Integer> votesPerOption(long sessionId);
 
   List<Long> getWinner(long sessionId);

@@ -69,6 +69,14 @@ public class SessionController {
     return ResponseEntity.ok(sessionService.getAllSessions());
   }
 
+  @GetMapping(path = "/elector/{electorId}")
+  public ResponseEntity<List<VotingSession>> getAllSessionsForElector(
+    @PathVariable("electorId") long electorId
+  ) {
+    log.debug("[Get All Sessions] - getting all the sessions for elector {}", electorId);
+    return ResponseEntity.ok(sessionService.getAllSessions(electorId));
+  }
+
   @GetMapping(path = "{sessionId}/result/option")
   public ResponseEntity<Map<Long, Integer>> getOptionCount(
     @PathVariable("sessionId") long sessionId

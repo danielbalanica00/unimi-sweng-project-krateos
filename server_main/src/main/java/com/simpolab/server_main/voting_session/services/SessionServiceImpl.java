@@ -5,8 +5,8 @@ import com.simpolab.server_main.db.SessionDAO;
 import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
 import com.simpolab.server_main.group.domain.Group;
-import com.simpolab.server_main.voting_session.VoteValidator;
 import com.simpolab.server_main.voting_session.domain.Vote;
+import com.simpolab.server_main.voting_session.domain.VoteValidator;
 import com.simpolab.server_main.voting_session.domain.VotingOption;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import com.simpolab.server_main.voting_session.domain.VotingSession.Type;
@@ -17,20 +17,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
 
-  //  @Autowired
   private final SessionDAO sessionDAO;
-
-  //  @Autowired
   private final GroupDAO groupDAO;
-
-  //  @Autowired
   private final ElectorService electorService;
 
   @Override
@@ -197,10 +194,23 @@ public class SessionServiceImpl implements SessionService {
     return sessionDAO.getAll();
   }
 
+  @Override
+  public List<VotingSession> getAllSessions(long electorId) {
+    return sessionDAO.getAll(electorId);
+  }
+
+  @Override
   public Map<Long, Integer> votesPerOption(long sessionId) {
     // per voto ordinale e' il numero di volte che e' stato messo al primo posto
     // per gli altri il conteggio va bene
-    val session = sessionDAO.get(sessionId).get();
+    val optSession = sessionDAO.get(sessionId);
+    if (optSession.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+    val session = optSession.get();
+    if (session.getState() != VotingSession.State.ENDED) throw new ResponseStatusException(
+      HttpStatus.FORBIDDEN
+    );
+
     val options = sessionDAO.getOptions(sessionId);
 
     Map<Long, Integer> votes;
@@ -217,16 +227,29 @@ public class SessionServiceImpl implements SessionService {
 
   @Override
   public List<Long> getWinner(long sessionId) {
-    val session = sessionDAO.get(sessionId).get();
+    val optSession = sessionDAO.get(sessionId);
+    if (optSession.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
-    // controllo quorum
+    val session = optSession.get();
+    if (session.getState() != VotingSession.State.ENDED) throw new ResponseStatusException(
+      HttpStatus.FORBIDDEN
+    );
+
+    // ** Quorum Check
     if (session.isHasQuorum()) {
-      // get participants count per session
-      // get received votes per sessione
+      val stats = sessionDAO.getParticipationStats(sessionId);
 
-      // limite = #participants / 2 + 1
-      // if (# received votes < limite) then EXPLODE else CONTINUE
+      // crasha se la sessione e' stata avviata senza alcun voter
+      val totalVoters = stats.getVotersCount() + stats.getNonVotersCount();
+
+      val threashold = totalVoters / 2;
+
+      if (stats.getVotersCount() <= threashold) {
+        log.warn("Quorum not met for session: {}", sessionId);
+        return List.of();
+      }
     }
+    // ****
 
     switch (session.getType()) {
       case REFERENDUM, CATEGORIC -> {
@@ -251,7 +274,7 @@ public class SessionServiceImpl implements SessionService {
       case ORDINAL -> {
         log.debug("ORDINAL");
 
-        List<Integer> excludedOptions = new ArrayList<>();
+        List<Long> excludedOptions = new ArrayList<>();
         while (true) {
           Map<Long, Integer> votes = sessionDAO.getVotesPerOptionOrdinal(
             sessionId,
@@ -270,7 +293,7 @@ public class SessionServiceImpl implements SessionService {
             val leastVotedOptionId = getLeastVotesOption(votes);
 
             // exclude it
-            excludedOptions.add((int) leastVotedOptionId);
+            excludedOptions.add(leastVotedOptionId);
 
             // try again
             continue;
@@ -290,7 +313,7 @@ public class SessionServiceImpl implements SessionService {
         options2.forEach(opt -> {
           if (opt.parentId() == 0) topLevelOptions.add(opt.id());
         });
-        // ** 1
+        // **** 1
 
         // ** 2 ottieni tutti i voti per la sessione
         Map<Long, Integer> votes = sessionDAO.getVotesPerOption(sessionId);
@@ -302,7 +325,7 @@ public class SessionServiceImpl implements SessionService {
         votes.forEach((k, v) -> {
           if (topLevelOptions.contains(k)) topLevelVotes.put(k, v); else lowLevelVotes.put(k, v);
         });
-        // ** 2
+        // **** 2
 
         // ** 3 identifica top level con maggior numero di voti
         val topMostVotedOptionId = getMostVotesOption(topLevelVotes);
@@ -312,7 +335,7 @@ public class SessionServiceImpl implements SessionService {
           log.debug("Ballottaggio TOP level, non c'e' vincitore");
           return List.of();
         }
-        // ** 3
+        // **** 3
 
         // ** 4 identifica low level con maggior numero di voti
         val lowMostVotedOptionId = getMostVotesOption(lowLevelVotes);
@@ -322,7 +345,7 @@ public class SessionServiceImpl implements SessionService {
           log.debug("Ballottaggio LOW level, non c'e' vincitore");
           return List.of();
         }
-        // ** 4
+        // **** 4
 
         log.debug("Winners:  TOP - {}, LOW - {}", topMostVotedOptionId, lowMostVotedOptionId);
         return List.of(topMostVotedOptionId, lowMostVotedOptionId);
@@ -339,21 +362,25 @@ public class SessionServiceImpl implements SessionService {
   }
 
   private long getLeastVotesOption(Map<Long, Integer> votes) {
-    return votes
+    val optRes = votes
       .entrySet()
       .stream()
-      .reduce((entry, acc) -> entry.getValue() <= acc.getValue() ? entry : acc)
-      .get()
-      .getKey();
+      .reduce((entry, acc) -> entry.getValue() <= acc.getValue() ? entry : acc);
+
+    if (optRes.isEmpty()) throw new IllegalStateException("No minimum found");
+
+    return optRes.get().getKey();
   }
 
   private long getMostVotesOption(Map<Long, Integer> votes) {
-    return votes
+    val optRes = votes
       .entrySet()
       .stream()
-      .reduce((e, acc) -> e.getValue() >= acc.getValue() ? e : acc)
-      .get()
-      .getKey();
+      .reduce((e, acc) -> e.getValue() >= acc.getValue() ? e : acc);
+
+    if (optRes.isEmpty()) throw new IllegalStateException("No maximum found");
+
+    return optRes.get().getKey();
   }
 
   private int countVotesForOption(Map<Long, Integer> votes, long optionId) {
