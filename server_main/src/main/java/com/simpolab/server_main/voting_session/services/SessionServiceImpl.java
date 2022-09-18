@@ -103,9 +103,9 @@ public class SessionServiceImpl implements SessionService {
     try {
       var session = getSession(sessionId);
       var options = getOptions(sessionId);
-      if (options.isEmpty()) throw new IllegalStateException(
-        "Cannot start a session without options"
-      );
+      if (
+        options.isEmpty() && newState == VotingSession.State.ACTIVE
+      ) throw new IllegalStateException("Cannot start a session without options");
 
       // add yes and no options in case of referendum session
       if (session.getType() == Type.REFERENDUM && newState == VotingSession.State.ACTIVE) {
@@ -236,7 +236,8 @@ public class SessionServiceImpl implements SessionService {
 
     // ** Quorum Check
     if (session.isHasQuorum() && !hasReachedQuorum(stats)) {
-      log.warn("Quorum not met for session: {}", sessionId);
+      log.warn("Quorum not met for session {}, cancelling it", sessionId);
+      setState(sessionId, VotingSession.State.CANCELLED);
       throw new NoWinnerException(NoWinnerException.QUORUM_NOT_REACHED);
     }
     // ****
@@ -256,6 +257,7 @@ public class SessionServiceImpl implements SessionService {
         // check ballottaggio
         if (countMostVotedOption > 1) {
           log.debug("Ballottaggio, non c'e' vincitore");
+          setState(sessionId, VotingSession.State.CANCELLED);
           throw new NoWinnerException(NoWinnerException.BALLOTTAGGIO);
         }
 
@@ -263,7 +265,11 @@ public class SessionServiceImpl implements SessionService {
         if (
           session.isNeedAbsoluteMajority() &&
           !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(mostVotedOptionId))
-        ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+        ) {
+          log.warn("Absolute majority not met for session {}, cancelling it", sessionId);
+          setState(sessionId, VotingSession.State.CANCELLED);
+          throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+        }
 
         log.debug("Winner: {}", mostVotedOptionId);
         return List.of(mostVotedOptionId);
@@ -300,7 +306,11 @@ public class SessionServiceImpl implements SessionService {
           if (
             session.isNeedAbsoluteMajority() &&
             !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(mostVotedOptionId))
-          ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+          ) {
+            log.warn("Absolute majority not met for session {}, cancelling it", sessionId);
+            setState(sessionId, VotingSession.State.CANCELLED);
+            throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+          }
 
           log.debug("Winner: {}", mostVotedOptionId);
           return List.of(mostVotedOptionId);
@@ -338,11 +348,16 @@ public class SessionServiceImpl implements SessionService {
         if (
           session.isNeedAbsoluteMajority() &&
           !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(topMostVotedOptionId))
-        ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+        ) {
+          log.warn("Absolute majority not met for session {}, cancelling it", sessionId);
+          setState(sessionId, VotingSession.State.CANCELLED);
+          throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+        }
 
         // check ballottaggio
         if (topCountMostVotedOption > 1) {
           log.debug("Ballottaggio TOP level, non c'e' vincitore");
+          setState(sessionId, VotingSession.State.CANCELLED);
           throw new NoWinnerException(NoWinnerException.BALLOTTAGGIO);
         }
         // **** 3
@@ -355,7 +370,11 @@ public class SessionServiceImpl implements SessionService {
         if (
           session.isNeedAbsoluteMajority() &&
           !hasReachedAbsoluteMajority(stats.getVotersCount(), votes.get(lowMostVotedOptionId))
-        ) throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+        ) {
+          log.warn("Absolute majority not met for session {}, cancelling it", sessionId);
+          setState(sessionId, VotingSession.State.CANCELLED);
+          throw new NoWinnerException(NoWinnerException.NO_ABSOLUTE_MAJORITY);
+        }
 
         // check ballottaggio
         if (lowCountMostVotedOption > 1) {
