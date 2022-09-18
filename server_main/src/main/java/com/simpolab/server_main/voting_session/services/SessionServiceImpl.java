@@ -211,9 +211,10 @@ public class SessionServiceImpl implements SessionService {
     if (optSession.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
     val session = optSession.get();
-    if (session.getState() != VotingSession.State.ENDED) throw new ResponseStatusException(
-      HttpStatus.FORBIDDEN
-    );
+    if (
+      session.getState() == VotingSession.State.INACTIVE ||
+      session.getState() == VotingSession.State.ACTIVE
+    ) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
     val options = sessionDAO.getOptions(sessionId);
 
