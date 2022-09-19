@@ -128,6 +128,7 @@ public class SessionController implements Initializable {
     );
 
     if (winnerResponse.code() == 403) {
+      // TODO: BUG: empty error body, on session 67: categoric, cancelled, no quorum, no abs maj
       ErrorBody errorBody = JsonUtils.parseJson(winnerResponse.body(), ErrorBody.class);
 
       switch (errorBody.getCode()) {

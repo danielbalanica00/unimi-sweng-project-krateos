@@ -20,7 +20,8 @@ public class Session {
     INACTIVE("INACTIVE"),
     ACTIVE("ACTIVE"),
     CANCELLED("CANCELLED"),
-    ENDED("ENDED");
+    ENDED("ENDED"),
+    INVALID("INVALID");
 
     private final String name;
 
