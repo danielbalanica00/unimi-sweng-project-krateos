@@ -35,7 +35,7 @@ public class AddReferendumController {
   @FXML
   private void onBtnNextClicked() throws Exception {
     String prompt = txtPrompt.getText();
-    if(prompt.isBlank()){
+    if (prompt.isBlank()) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Please insert a prompt first");
       return;
     }

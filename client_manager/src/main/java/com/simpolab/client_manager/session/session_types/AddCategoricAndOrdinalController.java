@@ -38,9 +38,9 @@ public class AddCategoricAndOrdinalController implements Initializable {
    * @param event
    */
   @FXML
-  private void onBtnAddOptionClicked(ActionEvent event){
+  private void onBtnAddOptionClicked(ActionEvent event) {
     String prompt = txtOption.getText();
-    if(prompt.isBlank()) return;
+    if (prompt.isBlank()) return;
 
     Option option = new Option(txtOption.getText());
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", option);

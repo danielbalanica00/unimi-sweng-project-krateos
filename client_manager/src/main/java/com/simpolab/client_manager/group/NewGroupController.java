@@ -3,7 +3,6 @@ package com.simpolab.client_manager.group;
 import com.simpolab.client_manager.domain.Elector;
 import com.simpolab.client_manager.domain.Group;
 import com.simpolab.client_manager.utils.*;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,11 +45,11 @@ public class NewGroupController implements Initializable {
   private void onBtnCreateGroupClicked(ActionEvent event) throws Exception {
     // check if name and electors inserted
     String groupName = txtGroupName.getText();
-    if(groupName.isBlank()){
+    if (groupName.isBlank()) {
       AlertUtils.alert(Alert.AlertType.ERROR, "The group's name cannot be blank");
       return;
     }
-    if(requiredElectors.isEmpty()){
+    if (requiredElectors.isEmpty()) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Insert at least one elector");
       return;
     }
