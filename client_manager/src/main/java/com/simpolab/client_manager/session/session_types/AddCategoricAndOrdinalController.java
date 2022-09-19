@@ -33,8 +33,15 @@ public class AddCategoricAndOrdinalController implements Initializable {
     refreshLists();
   }
 
+  /**
+   * Adds an option with txtOption's as value if not blank
+   * @param event
+   */
   @FXML
-  private void onBtnAddOptionClicked(ActionEvent event) throws Exception {
+  private void onBtnAddOptionClicked(ActionEvent event){
+    String prompt = txtOption.getText();
+    if(prompt.isBlank()) return;
+
     Option option = new Option(txtOption.getText());
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", option);
 
@@ -54,6 +61,10 @@ public class AddCategoricAndOrdinalController implements Initializable {
     SceneUtils.switchTo("session/add_groups.fxml");
   }
 
+  /**
+   * Deletes the selected option
+   * @param event
+   */
   @FXML
   private void onBtnDeleteOptionClicked(ActionEvent event) {
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
@@ -65,6 +76,9 @@ public class AddCategoricAndOrdinalController implements Initializable {
     sessionId = initSessionId;
   }
 
+  /**
+   * Loads the current session's options and displays them in the option list view
+   */
   private void refreshLists() {
     String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
     List<Option> options = JsonUtils.parseJsonArray(optionsJson, Option.class);

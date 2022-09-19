@@ -49,7 +49,11 @@ public class AddCategoricPreferencesController implements Initializable {
 
   @FXML
   private void onBtnAddOptionClicked(ActionEvent event) throws Exception {
-    Option option = new Option(txtPrompt.getText());
+    String prompt = txtPrompt.getText();
+    if (prompt.isBlank()) {
+      return;
+    }
+    Option option = new Option(prompt);
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", option);
 
     txtPrompt.clear();
@@ -58,6 +62,7 @@ public class AddCategoricPreferencesController implements Initializable {
 
   @FXML
   private void onBtnAddSuboptionClicked(ActionEvent event) throws Exception {
+    // end if there is no option available
     if (lvOptions.getItems().isEmpty()) {
       AlertUtils.alert(
         Alert.AlertType.ERROR,
@@ -65,12 +70,21 @@ public class AddCategoricPreferencesController implements Initializable {
       );
       return;
     }
+
+    // if no option is selected then select the first one
     if (lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions
       .getSelectionModel()
       .select(0);
 
+    // end if the prompt is empty
+    String prompt = txtPrompt.getText();
+    if (prompt.isBlank()) {
+      return;
+    }
+
+    //create suboption
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
-    Option suboption = new Option(txtPrompt.getText());
+    Option suboption = new Option(prompt);
 
     HttpUtils.put(
       "/api/v1/session/" + sessionId + "/option/" + selectedOption.getId() + "/suboption",
@@ -81,6 +95,10 @@ public class AddCategoricPreferencesController implements Initializable {
     refreshSuboptions();
   }
 
+  /**
+   * Deletes the selected entry on the option list view
+   * @param event
+   */
   @FXML
   private void onBtnDeleteOptionClicked(ActionEvent event) {
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
@@ -89,6 +107,10 @@ public class AddCategoricPreferencesController implements Initializable {
     refreshSuboptions();
   }
 
+  /**
+   * Deletes the selected entry on the suboption view
+   * @param event
+   */
   @FXML
   private void onBtnDeleteSuboptionClicked(ActionEvent event) {
     Option selectedOption = lvSuboptions.getSelectionModel().getSelectedItem();
@@ -107,6 +129,9 @@ public class AddCategoricPreferencesController implements Initializable {
     SceneUtils.switchTo("session/add_groups.fxml");
   }
 
+  /**
+   * Loads the session's options and displays only the parent options on the option's list view
+   */
   private void refreshOptions() {
     int lastIndex = lvOptions.getSelectionModel().getSelectedIndex();
     lvOptions.getItems().clear();
@@ -123,6 +148,11 @@ public class AddCategoricPreferencesController implements Initializable {
       .select(0); else lvOptions.getSelectionModel().select(lastIndex);
   }
 
+  /**
+   * If no option is available for the current session ends,
+   * loads the session's options and displays only the children of the option selected on the option list view in the
+   * suboption list view otherwise
+   */
   private void refreshSuboptions() {
     lvSuboptions.getItems().clear();
 
@@ -130,6 +160,11 @@ public class AddCategoricPreferencesController implements Initializable {
     options = JsonUtils.parseJsonArray(optionsJson, Option.class);
     if (options.isEmpty()) return;
 
+    // selects the first option if none is selected
+    if (lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions
+      .getSelectionModel()
+      .select(0);
+    // filters only the selected option's children
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
     List<Option> suboptions = options
       .stream()

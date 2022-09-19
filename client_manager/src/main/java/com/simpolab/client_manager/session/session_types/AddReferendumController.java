@@ -3,10 +3,12 @@ package com.simpolab.client_manager.session.session_types;
 import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.session.AddGroupsController;
 import com.simpolab.client_manager.session.NewSessionController;
+import com.simpolab.client_manager.utils.AlertUtils;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
@@ -32,6 +34,12 @@ public class AddReferendumController {
 
   @FXML
   private void onBtnNextClicked() throws Exception {
+    String prompt = txtPrompt.getText();
+    if(prompt.isBlank()){
+      AlertUtils.alert(Alert.AlertType.ERROR, "Please insert a prompt first");
+      return;
+    }
+
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", new Option(txtPrompt.getText()));
 
     AddGroupsController.init(sessionId, "session/new_session.fxml");
