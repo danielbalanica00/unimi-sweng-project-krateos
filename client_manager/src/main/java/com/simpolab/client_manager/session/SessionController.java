@@ -109,9 +109,9 @@ public class SessionController implements Initializable {
     // do not look for results until the session has ended
     if (
       session.getState().equals(Session.State.ACTIVE) ||
-      session.getState().equals(Session.State.INACTIVE)
+      session.getState().equals(Session.State.INACTIVE) ||
+      session.getState().equals(Session.State.CANCELLED)
     ) {
-      System.out.println("I'm here");
       vboxContainer.getChildren().remove(barChartVotes);
       vboxContainer.getChildren().remove(lblWinner);
       return;
@@ -128,7 +128,6 @@ public class SessionController implements Initializable {
     );
 
     if (winnerResponse.code() == 403) {
-      // TODO: BUG: empty error body, on session 67: categoric, cancelled, no quorum, no abs maj
       ErrorBody errorBody = JsonUtils.parseJson(winnerResponse.body(), ErrorBody.class);
 
       switch (errorBody.getCode()) {
@@ -200,6 +199,9 @@ public class SessionController implements Initializable {
 
     if (!session.getState().equals(Session.State.ACTIVE)) {
       btnStop.setDisable(true);
+    }
+
+    if (session.getState().equals(Session.State.INVALID)) {
       btnAbort.setDisable(true);
     }
   }

@@ -51,7 +51,8 @@ public class SessionInfoController implements Initializable {
     lblState.setText(session.getState().toString());
     if (
       session.getState().equals(Session.State.ACTIVE) ||
-      session.getState().equals(Session.State.INACTIVE)
+      session.getState().equals(Session.State.INACTIVE) ||
+      session.getState().equals(Session.State.CANCELLED)
     ) {
       vboxContainer.getChildren().remove(lblWinner);
     }

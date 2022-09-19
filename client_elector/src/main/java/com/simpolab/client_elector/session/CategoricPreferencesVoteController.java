@@ -67,9 +67,14 @@ public class CategoricPreferencesVoteController implements Initializable {
     }
 
     // confirmation
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Send vote?", ButtonType.YES, ButtonType.NO);
+    Alert alert = new Alert(
+      Alert.AlertType.CONFIRMATION,
+      "Send vote?",
+      ButtonType.YES,
+      ButtonType.NO
+    );
     alert.showAndWait();
-    if(alert.getResult() == ButtonType.NO){
+    if (alert.getResult() == ButtonType.NO) {
       return;
     }
 
