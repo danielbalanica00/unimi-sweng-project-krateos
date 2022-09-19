@@ -1,6 +1,6 @@
 package com.simpolab.server_main.group.services;
 
-import com.simpolab.server_main.elector.domain.NewElector;
+import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.group.domain.Group;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface GroupService {
    * @param id the id of the group
    * @return the list of electors in the given group
    */
-  List<NewElector> getElectorsInGroup(Long id);
+  List<Elector> getElectorsInGroup(Long id);
 
   /**
    * Deletes the group with the given id

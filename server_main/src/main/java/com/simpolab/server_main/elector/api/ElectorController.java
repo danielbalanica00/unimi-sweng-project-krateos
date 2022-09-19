@@ -1,7 +1,7 @@
 package com.simpolab.server_main.elector.api;
 
 import com.simpolab.server_main.auth.authorizers.IsManager;
-import com.simpolab.server_main.elector.domain.NewElector;
+import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
 import java.util.List;
 import javax.validation.Valid;
@@ -24,7 +24,7 @@ public class ElectorController {
   private final ElectorService electorService;
 
   @GetMapping(path = "{elector_id}")
-  public ResponseEntity<NewElector> getElector(@PathVariable("elector_id") long electorId) {
+  public ResponseEntity<Elector> getElector(@PathVariable("elector_id") long electorId) {
     var elector = electorService.getElector(electorId);
 
     if (elector == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -32,7 +32,7 @@ public class ElectorController {
   }
 
   @GetMapping
-  public ResponseEntity<List<NewElector>> getElectors() {
+  public ResponseEntity<List<Elector>> getElectors() {
     var electors = electorService.getElectors();
     return ResponseEntity.ok(electors);
   }
@@ -50,7 +50,7 @@ public class ElectorController {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> newElector(
-    @Valid @RequestBody NewElector elector,
+    @Valid @RequestBody Elector elector,
     BindingResult bindingResult
   ) {
     if (bindingResult.hasErrors()) {

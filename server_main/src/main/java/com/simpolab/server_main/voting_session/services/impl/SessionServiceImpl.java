@@ -2,7 +2,7 @@ package com.simpolab.server_main.voting_session.services.impl;
 
 import com.simpolab.server_main.db.GroupDAO;
 import com.simpolab.server_main.db.SessionDAO;
-import com.simpolab.server_main.elector.domain.NewElector;
+import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.services.ElectorService;
 import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.voting_session.domain.NoWinnerException;
@@ -69,7 +69,7 @@ public class SessionServiceImpl implements SessionService {
 
   @Override
   public List<VotingSession> getAllSessions(String electorUsername) {
-    Optional<NewElector> optElectorId = electorService.getElectorByUsername(electorUsername);
+    Optional<Elector> optElectorId = electorService.getElectorByUsername(electorUsername);
     if (optElectorId.isEmpty()) throw new IllegalArgumentException(
       "The given elector doesn't exist"
     );
@@ -201,7 +201,7 @@ public class SessionServiceImpl implements SessionService {
       log.info("Votes: {}", votes);
 
       // get the id of the elector startin from the username
-      Optional<NewElector> optElectorId = electorService.getElectorByUsername(electorUsername);
+      Optional<Elector> optElectorId = electorService.getElectorByUsername(electorUsername);
       if (optElectorId.isEmpty()) throw new IllegalArgumentException(
         "The given elector doesn't exist"
       );

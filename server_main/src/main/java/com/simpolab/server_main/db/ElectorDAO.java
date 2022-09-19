@@ -1,20 +1,20 @@
 package com.simpolab.server_main.db;
 
-import com.simpolab.server_main.elector.domain.NewElector;
+import com.simpolab.server_main.elector.domain.Elector;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public interface ElectorDAO {
-  void create(NewElector newElector) throws SQLException;
+  void create(Elector elector) throws SQLException;
 
   void delete(Long id) throws SQLException;
 
-  Optional<NewElector> get(long id);
+  Optional<Elector> get(long id);
 
-  Optional<NewElector> getByUsername(String username);
+  Optional<Elector> getByUsername(String username);
 
-  List<NewElector> getAll();
+  List<Elector> getAll();
 
-  List<NewElector> getAllInGroup(Long groupId);
+  List<Elector> getAllInGroup(Long groupId);
 }

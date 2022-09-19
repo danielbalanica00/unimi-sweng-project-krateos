@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class NewElector {
+public class Elector {
 
   @Min(0)
   private Long id;
@@ -39,7 +39,7 @@ public class NewElector {
   @JsonIgnore
   private String role;
 
-  public NewElector() {
+  public Elector() {
     this.role = "elector";
   }
 }

@@ -1,7 +1,7 @@
 package com.simpolab.server_main.group.api;
 
 import com.simpolab.server_main.auth.authorizers.IsManager;
-import com.simpolab.server_main.elector.domain.NewElector;
+import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.group.services.GroupService;
 import java.util.List;
@@ -40,9 +40,7 @@ public class GroupController {
   }
 
   @GetMapping(path = "{groupId}/elector", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<NewElector>> getElectorsInGroup(
-    @PathVariable("groupId") Long groupId
-  ) {
+  public ResponseEntity<List<Elector>> getElectorsInGroup(@PathVariable("groupId") Long groupId) {
     var electors = groupService.getElectorsInGroup(groupId);
     return ResponseEntity.ok(electors);
   }
