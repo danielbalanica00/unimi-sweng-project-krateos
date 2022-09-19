@@ -1,9 +1,9 @@
-package com.simpolab.server_main.user_authentication.filters;
+package com.simpolab.server_main.auth.filters;
 
-import static com.simpolab.server_main.user_authentication.utils.JWTUtils.JWTDecodedToken;
-import static com.simpolab.server_main.user_authentication.utils.JWTUtils.instance;
+import static com.simpolab.server_main.auth.utils.JWTUtils.instance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simpolab.server_main.auth.domain.JWTDecodedToken;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.FilterChain;

@@ -1,15 +1,10 @@
-package com.simpolab.server_main.user_authentication.filters;
+package com.simpolab.server_main.auth.filters;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simpolab.server_main.user_authentication.utils.JWTUtils;
+import com.simpolab.server_main.auth.domain.JWTTokens;
+import com.simpolab.server_main.auth.utils.JWTUtils;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -59,7 +53,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   ) throws IOException {
     User user = (User) authResult.getPrincipal();
 
-    JWTUtils.JWTTokens tokens = JWTUtils.instance.createTokens(
+    JWTTokens tokens = JWTUtils.instance.createTokens(
       user.getUsername(),
       request.getRequestURL().toString(),
       user.getAuthorities()

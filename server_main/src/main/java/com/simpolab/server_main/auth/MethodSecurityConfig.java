@@ -1,4 +1,4 @@
-package com.simpolab.server_main.user_authentication;
+package com.simpolab.server_main.auth;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface SessionService {
+  /*
+    Handle Sessions
+   */
   VotingSession newSession(VotingSession newSession);
 
   void deleteSession(long sessionId);
@@ -18,6 +21,8 @@ public interface SessionService {
   List<VotingSession> getAllSessions();
 
   List<VotingSession> getAllSessions(String electorUsername);
+
+  void setState(long sessionId, VotingSession.State newState);
 
   Map<Long, Integer> votesPerOption(long sessionId);
 
@@ -42,8 +47,6 @@ public interface SessionService {
   void removeOption(long optionId);
 
   List<VotingOption> getOptions(long sessionId);
-
-  void setState(long sessionId, VotingSession.State newState);
 
   /*
     Handle the actual voting

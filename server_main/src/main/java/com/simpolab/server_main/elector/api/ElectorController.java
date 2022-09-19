@@ -1,11 +1,12 @@
 package com.simpolab.server_main.elector.api;
 
+import com.simpolab.server_main.auth.authorizers.IsManager;
 import com.simpolab.server_main.elector.domain.NewElector;
 import com.simpolab.server_main.elector.services.ElectorService;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-@RestController
-@RequestMapping("/api/v1/elector")
 @Slf4j
+@RequiredArgsConstructor
+@RestController
+@IsManager
+@RequestMapping("/api/v1/elector")
 public class ElectorController {
 
-  @Autowired
-  private ElectorService electorService;
+  private final ElectorService electorService;
 
   @GetMapping(path = "{elector_id}")
   public ResponseEntity<NewElector> getElector(@PathVariable("elector_id") long electorId) {
@@ -36,17 +38,16 @@ public class ElectorController {
   }
 
   @DeleteMapping(path = "{elector_id}")
-  public ResponseEntity<Void> deleteElector(@PathVariable("elector_id") long id) {
+  public ResponseEntity<Void> deleteElector(@PathVariable("elector_id") long electorId) {
     try {
-      electorService.deleteElector(id);
+      electorService.deleteElector(electorId);
     } catch (Exception e) {
-      log.error("Elector {} not found", id, e);
+      log.error("Elector {} not found", electorId, e);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
     return ResponseEntity.ok().build();
   }
 
-  // https://reflectoring.io/bean-validation-with-spring-boot/
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> newElector(
     @Valid @RequestBody NewElector elector,

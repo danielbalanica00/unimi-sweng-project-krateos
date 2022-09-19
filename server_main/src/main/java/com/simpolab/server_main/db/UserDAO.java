@@ -1,6 +1,6 @@
 package com.simpolab.server_main.db;
 
-import com.simpolab.server_main.user_authentication.domain.AppUser;
+import com.simpolab.server_main.auth.domain.AppUser;
 import java.sql.SQLException;
 import java.util.Optional;
 

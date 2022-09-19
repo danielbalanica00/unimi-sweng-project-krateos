@@ -1,7 +1,7 @@
-package com.simpolab.server_main.user_authentication.services;
+package com.simpolab.server_main.auth.services;
 
+import com.simpolab.server_main.auth.domain.AppUser;
 import com.simpolab.server_main.db.UserDAO;
-import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.util.Collection;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -36,17 +36,4 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     log.info("User: {}", appUser);
     return new User(appUser.getUsername(), appUser.getPassword(), authorities);
   }
-  //  private Collection<? extends GrantedAuthority> getAuthorities(
-  //      Collection<Role> roles) {
-  //    List<GrantedAuthority> authorities
-  //        = new ArrayList<>();
-  //    for (Role role : roles) {
-  //      authorities.add(new SimpleGrantedAuthority(role.getName()));
-  //      role.getPrivileges().stream()
-  //          .map(p -> new SimpleGrantedAuthority(p.getName()))
-  //          .forEach(authorities::add);
-  //    }
-  //
-  //    return authorities;
-  //  }
 }

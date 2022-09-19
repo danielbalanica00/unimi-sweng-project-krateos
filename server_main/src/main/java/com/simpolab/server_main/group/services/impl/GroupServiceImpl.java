@@ -1,9 +1,10 @@
-package com.simpolab.server_main.group.services;
+package com.simpolab.server_main.group.services.impl;
 
 import com.simpolab.server_main.db.ElectorDAO;
 import com.simpolab.server_main.db.GroupDAO;
 import com.simpolab.server_main.elector.domain.NewElector;
 import com.simpolab.server_main.group.domain.Group;
+import com.simpolab.server_main.group.services.GroupService;
 import java.sql.SQLException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

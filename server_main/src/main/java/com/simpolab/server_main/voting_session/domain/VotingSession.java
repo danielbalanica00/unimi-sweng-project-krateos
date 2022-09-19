@@ -2,19 +2,23 @@ package com.simpolab.server_main.voting_session.domain;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.Instant;
 import java.util.Date;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Validated
 @Builder
 @Slf4j
@@ -35,24 +39,21 @@ public class VotingSession {
   }
 
   @Min(0)
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;
 
   @NotBlank
   private String name;
 
+  @Future
   private Date endsOn;
 
-  private boolean needAbsoluteMajority;
-  private boolean hasQuorum;
+  private boolean needAbsoluteMajority = false;
+  private boolean hasQuorum = false;
+
   private Type type;
 
-  private State state;
-
-  public VotingSession() {
-    this.state = State.INACTIVE;
-    this.needAbsoluteMajority = false;
-    this.hasQuorum = false;
-  }
+  private State state = State.INACTIVE;
 
   @JsonIgnore
   public Date getEndsOn() {

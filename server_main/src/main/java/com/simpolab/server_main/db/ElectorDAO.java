@@ -1,6 +1,5 @@
 package com.simpolab.server_main.db;
 
-import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.elector.domain.NewElector;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +12,7 @@ public interface ElectorDAO {
 
   Optional<NewElector> get(long id);
 
-  Elector getByUsername(String username);
+  Optional<NewElector> getByUsername(String username);
 
   List<NewElector> getAll();
 
