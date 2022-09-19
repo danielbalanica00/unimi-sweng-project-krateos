@@ -3,6 +3,7 @@ package com.simpolab.client_manager.session.session_types;
 import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.session.AddGroupsController;
 import com.simpolab.client_manager.session.NewSessionController;
+import com.simpolab.client_manager.utils.AlertUtils;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.JsonUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
@@ -12,6 +13,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
@@ -19,6 +21,7 @@ import javafx.scene.control.TextField;
 public class AddCategoricAndOrdinalController implements Initializable {
 
   private static long sessionId;
+  private List<Option> options;
 
   @FXML
   private TextField txtOption;
@@ -41,6 +44,13 @@ public class AddCategoricAndOrdinalController implements Initializable {
   private void onBtnAddOptionClicked(ActionEvent event) {
     String prompt = txtOption.getText();
     if (prompt.isBlank()) return;
+
+    if (
+      options.stream().anyMatch(opt -> opt.getValue().toLowerCase().equals(prompt.toLowerCase()))
+    ) {
+      AlertUtils.alert(Alert.AlertType.ERROR, "Cannot insert duplicate options");
+      return;
+    }
 
     Option option = new Option(txtOption.getText());
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", option);
@@ -81,7 +91,7 @@ public class AddCategoricAndOrdinalController implements Initializable {
    */
   private void refreshLists() {
     String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
-    List<Option> options = JsonUtils.parseJsonArray(optionsJson, Option.class);
+    options = JsonUtils.parseJsonArray(optionsJson, Option.class);
 
     if (options.isEmpty()) return;
 

@@ -21,7 +21,10 @@ import javafx.scene.input.MouseEvent;
 public class AddCategoricPreferencesController implements Initializable {
 
   private static long sessionId;
+
+  private List<Option> allOptions;
   private List<Option> options;
+  private List<Option> suboptions;
 
   @FXML
   private TextField txtPrompt;
@@ -53,6 +56,14 @@ public class AddCategoricPreferencesController implements Initializable {
     if (prompt.isBlank()) {
       return;
     }
+
+    if (
+      options.stream().anyMatch(opt -> opt.getValue().toLowerCase().equals(prompt.toLowerCase()))
+    ) {
+      AlertUtils.alert(Alert.AlertType.ERROR, "Cannot insert duplicate option");
+      return;
+    }
+
     Option option = new Option(prompt);
     HttpUtils.put("/api/v1/session/" + sessionId + "/option", option);
 
@@ -79,6 +90,13 @@ public class AddCategoricPreferencesController implements Initializable {
     // end if the prompt is empty
     String prompt = txtPrompt.getText();
     if (prompt.isBlank()) {
+      return;
+    }
+
+    if (
+      suboptions.stream().anyMatch(opt -> opt.getValue().toLowerCase().equals(prompt.toLowerCase()))
+    ) {
+      AlertUtils.alert(Alert.AlertType.ERROR, "Cannot insert duplicate suboption");
       return;
     }
 
@@ -137,12 +155,11 @@ public class AddCategoricPreferencesController implements Initializable {
     lvOptions.getItems().clear();
 
     String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
-    options = JsonUtils.parseJsonArray(optionsJson, Option.class);
-    if (options.isEmpty()) return;
+    allOptions = JsonUtils.parseJsonArray(optionsJson, Option.class);
+    if (allOptions.isEmpty()) return;
 
-    lvOptions
-      .getItems()
-      .addAll(options.stream().filter(opt -> opt.getParentOptionId() < 0).toList());
+    options = allOptions.stream().filter(opt -> opt.getParentOptionId() < 0).toList();
+    lvOptions.getItems().addAll(options);
     if (lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions
       .getSelectionModel()
       .select(0); else lvOptions.getSelectionModel().select(lastIndex);
@@ -157,8 +174,8 @@ public class AddCategoricPreferencesController implements Initializable {
     lvSuboptions.getItems().clear();
 
     String optionsJson = HttpUtils.get("/api/v1/session/" + sessionId + "/option");
-    options = JsonUtils.parseJsonArray(optionsJson, Option.class);
-    if (options.isEmpty()) return;
+    allOptions = JsonUtils.parseJsonArray(optionsJson, Option.class);
+    if (allOptions.isEmpty()) return;
 
     // selects the first option if none is selected
     if (lvOptions.getSelectionModel().getSelectedIndex() < 0) lvOptions
@@ -166,10 +183,11 @@ public class AddCategoricPreferencesController implements Initializable {
       .select(0);
     // filters only the selected option's children
     Option selectedOption = lvOptions.getSelectionModel().getSelectedItem();
-    List<Option> suboptions = options
-      .stream()
-      .filter(opt -> opt.getParentOptionId().intValue() == selectedOption.getId())
-      .toList();
+    suboptions =
+      allOptions
+        .stream()
+        .filter(opt -> opt.getParentOptionId().intValue() == selectedOption.getId())
+        .toList();
 
     lvSuboptions.getItems().addAll(suboptions);
   }
