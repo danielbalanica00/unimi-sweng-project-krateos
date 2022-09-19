@@ -1,14 +1,16 @@
 package com.simpolab.server_main.voting_session.api;
 
+import com.simpolab.server_main.auth.authorizers.IsElector;
+import com.simpolab.server_main.auth.authorizers.IsManager;
 import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.voting_session.domain.*;
 import com.simpolab.server_main.voting_session.services.SessionService;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +19,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/session")
-@Slf4j
 public class SessionController {
 
-  @Autowired
-  private SessionService sessionService;
+  private final SessionService sessionService;
 
+  @IsManager
   @PostMapping(
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE
@@ -48,8 +51,9 @@ public class SessionController {
     }
   }
 
-  @GetMapping(path = "{session_id}")
-  public ResponseEntity<VotingSession> getSession(@PathVariable("session_id") long sessionId) {
+  @IsManager
+  @GetMapping(path = "{sessionId}")
+  public ResponseEntity<VotingSession> getSession(@PathVariable("sessionId") long sessionId) {
     try {
       //      sessionService.getWinner(sessionId);
       log.debug("[Get Session] - get session {}", sessionId);
@@ -78,6 +82,7 @@ public class SessionController {
     return ResponseEntity.ok(sessionService.getAllSessions(electorUsername));
   }
 
+  @IsManager
   @GetMapping(path = "{sessionId}/result/option")
   public ResponseEntity<Map<Long, Integer>> getOptionCount(
     @PathVariable("sessionId") long sessionId
@@ -86,8 +91,9 @@ public class SessionController {
     return ResponseEntity.ok(sessionService.votesPerOption(sessionId));
   }
 
+  @IsManager
   @GetMapping(path = "{sessionId}/result/winner")
-  public ResponseEntity getWinningOption(@PathVariable("sessionId") long sessionId) {
+  public ResponseEntity<?> getWinningOption(@PathVariable("sessionId") long sessionId) {
     log.debug("[Get Winning Option] - start");
 
     try {
@@ -100,8 +106,9 @@ public class SessionController {
     }
   }
 
-  @DeleteMapping(path = "{session_id}")
-  public ResponseEntity<Void> deleteElector(@PathVariable("session_id") Long sessionId) {
+  @IsManager
+  @DeleteMapping(path = "{sessionId}")
+  public ResponseEntity<Void> deleteElector(@PathVariable("sessionId") long sessionId) {
     try {
       log.debug("[Delete Session] - delete session {}", sessionId);
       sessionService.deleteSession(sessionId);
@@ -112,10 +119,11 @@ public class SessionController {
     return ResponseEntity.ok().build();
   }
 
+  @IsManager
   @PutMapping(path = "{sessionId}/group/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> addGroupToSession(
-    @PathVariable Long sessionId,
-    @PathVariable Long groupId
+    @PathVariable long sessionId,
+    @PathVariable long groupId
   ) {
     // todo could fail if group doesnt exist
     log.debug("[Add Group to Session] - adding group {} to session {}", groupId, sessionId);
@@ -123,12 +131,12 @@ public class SessionController {
     return ResponseEntity.ok().build();
   }
 
+  @IsManager
   @DeleteMapping(path = "{sessionId}/group/{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> removeGroupFromSession(
-    @PathVariable Long sessionId,
-    @PathVariable Long groupId
+    @PathVariable long sessionId,
+    @PathVariable long groupId
   ) {
-    // todo could fail if group or session dont exist
     log.debug(
       "[Remove Group from Session] - removing group {} from session {}",
       groupId,
@@ -138,10 +146,11 @@ public class SessionController {
     return ResponseEntity.ok().build();
   }
 
+  @IsManager
   @PutMapping(path = "{sessionId}/option", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> addOption(
-    @PathVariable Long sessionId,
-    @RequestBody VotingOptionRequest vor
+    @PathVariable long sessionId,
+    @RequestBody @Valid VotingOptionRequest vor
   ) {
     log.debug("[Add Option] - session {} new option {}", sessionId, vor.getValue());
 
@@ -149,8 +158,9 @@ public class SessionController {
     return null;
   }
 
+  @IsManager
   @DeleteMapping(path = "option/{optionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> removeOption(@PathVariable Long optionId) {
+  public ResponseEntity<Void> removeOption(@PathVariable long optionId) {
     log.debug("[remove option] - remove option {}", optionId);
 
     sessionService.removeOption(optionId);
@@ -159,7 +169,7 @@ public class SessionController {
   }
 
   @GetMapping(path = "{sessionId}/option", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<VotingOption>> getOptions(@PathVariable Long sessionId) {
+  public ResponseEntity<List<VotingOption>> getOptions(@PathVariable long sessionId) {
     log.debug("[Get Options] - session {}", sessionId);
 
     var votingOptions = sessionService.getOptions(sessionId);
@@ -167,8 +177,9 @@ public class SessionController {
     return ResponseEntity.ok(votingOptions);
   }
 
+  @IsManager
   @GetMapping(path = "{sessionId}/group", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<Group>> getGroups(@PathVariable Long sessionId) {
+  public ResponseEntity<List<Group>> getGroups(@PathVariable long sessionId) {
     log.debug("[Get Groups] - session {}", sessionId);
 
     var groups = sessionService.getGroups(sessionId);
@@ -176,14 +187,15 @@ public class SessionController {
     return ResponseEntity.ok(groups);
   }
 
+  @IsManager
   @PutMapping(
     path = "{sessionId}/option/{optionId}/suboption",
     produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Void> insertSubOptionInVotingSession(
-    @PathVariable Long sessionId,
-    @PathVariable Long optionId,
-    @RequestBody VotingOptionRequest vor
+    @PathVariable long sessionId,
+    @PathVariable long optionId,
+    @RequestBody @Valid VotingOptionRequest vor
   ) {
     log.debug(
       "[Add Suboption] - session {}, option {}, new suboption {}",
@@ -193,15 +205,16 @@ public class SessionController {
     );
 
     sessionService.newOption(sessionId, vor.getValue(), optionId);
-    return null;
+    return ResponseEntity.ok().build();
   }
 
+  @IsManager
   @PatchMapping(
     path = "{sessionId}/state/{newStateString}",
     produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Void> setState(
-    @PathVariable Long sessionId,
+    @PathVariable long sessionId,
     @PathVariable String newStateString
   ) {
     try {
@@ -220,6 +233,7 @@ public class SessionController {
     return ResponseEntity.ok().build();
   }
 
+  @IsElector
   @PostMapping(
     path = "{sessionId}/vote",
     consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -227,7 +241,7 @@ public class SessionController {
   )
   public ResponseEntity<Void> newVote(
     Authentication authentication,
-    @PathVariable Long sessionId,
+    @PathVariable long sessionId,
     @RequestBody List<Vote> votes
   ) {
     try {

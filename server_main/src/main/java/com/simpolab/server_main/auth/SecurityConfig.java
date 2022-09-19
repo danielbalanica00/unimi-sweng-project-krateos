@@ -1,7 +1,7 @@
-package com.simpolab.server_main.user_authentication;
+package com.simpolab.server_main.auth;
 
-import com.simpolab.server_main.user_authentication.filters.JwtAuthenticationFilter;
-import com.simpolab.server_main.user_authentication.filters.JwtAuthorizationFilter;
+import com.simpolab.server_main.auth.filters.JwtAuthenticationFilter;
+import com.simpolab.server_main.auth.filters.JwtAuthorizationFilter;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,17 +60,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         )
       );
 
-    //Set permissions on endpoints
-    http
-      .authorizeRequests()
-      //Public APIs
-      .antMatchers("/api/v1/login", "/api/v1/token/refresh")
-      .permitAll()
-      //Private APIs
-      .antMatchers("/api/v1/elector/*")
-      .hasAuthority("MANAGER")
-      .anyRequest()
-      .authenticated();
+    // Set permissions on endpoints
+    // Public APIs
+    http.authorizeRequests().antMatchers("/api/v1/login", "/api/v1/token/refresh").permitAll();
+
+    // All other APIs require authentication
+    http.authorizeRequests().anyRequest().authenticated();
 
     //Add filters to the chain
     http.addFilter(authFilter);

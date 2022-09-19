@@ -1,24 +1,22 @@
-package com.simpolab.server_main.user_authentication.utils;
+package com.simpolab.server_main.auth.utils;
 
 import static java.util.Arrays.stream;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.simpolab.server_main.auth.domain.JWTDecodedToken;
+import com.simpolab.server_main.auth.domain.JWTTokens;
 import java.util.Collection;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
+@Component
 // https://www.baeldung.com/spring-boot-yaml-vs-properties
 public class JWTUtils {
-
-  @Value("${auth.secret}")
-  private static String secret;
 
   private static Algorithm algorithm;
 
@@ -36,7 +34,7 @@ public class JWTUtils {
     String accessToken = JWT
       .create()
       .withSubject(username)
-      .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) //10 mins
+      .withExpiresAt(new Date(System.currentTimeMillis() + 20 * 60 * 1000)) //20 mins
       .withIssuer(issuer)
       .withClaim("roles", authorities.stream().map(GrantedAuthority::getAuthority).toList())
       .sign(algorithm);
@@ -44,7 +42,7 @@ public class JWTUtils {
     String refreshToken = JWT
       .create()
       .withSubject(username)
-      .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) //30 mins
+      .withExpiresAt(new Date(System.currentTimeMillis() + 40 * 60 * 1000)) //40 mins
       .withIssuer(issuer)
       .withClaim("roles", authorities.stream().map(GrantedAuthority::getAuthority).toList())
       .sign(algorithm);
@@ -64,21 +62,5 @@ public class JWTUtils {
       .toList();
 
     return new JWTDecodedToken(username, authorities);
-  }
-
-  @Getter
-  @AllArgsConstructor
-  public static class JWTDecodedToken {
-
-    private final String username;
-    private final Collection<SimpleGrantedAuthority> authorities;
-  }
-
-  @Getter
-  @AllArgsConstructor
-  public static class JWTTokens {
-
-    private final String accessToken;
-    private final String refreshToken;
   }
 }

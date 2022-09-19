@@ -1,15 +1,15 @@
 package com.simpolab.server_main.db.das;
 
+import com.simpolab.server_main.auth.domain.AppUser;
 import com.simpolab.server_main.db.ElectorDAO;
 import com.simpolab.server_main.db.UserDAO;
 import com.simpolab.server_main.elector.domain.Elector;
-import com.simpolab.server_main.elector.domain.NewElector;
-import com.simpolab.server_main.user_authentication.domain.AppUser;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,24 +22,8 @@ public class ElectorDAS implements ElectorDAO {
 
   private final JdbcTemplate jdbcTemplate;
 
-  private final RowMapper<Elector> electorRowMapper = (rs, rowNum) -> {
-    var appUser = new AppUser(
-      rs.getLong("id"),
-      rs.getString("username"),
-      rs.getString("password"),
-      rs.getString("role")
-    );
-
-    return new Elector(
-      appUser,
-      rs.getString("first_name"),
-      rs.getString("last_name"),
-      rs.getString("email")
-    );
-  };
-
-  private final RowMapper<NewElector> newElectorRowMapper = (rs, rowNum) ->
-    NewElector
+  private final RowMapper<Elector> newElectorRowMapper = (rs, rowNum) ->
+    Elector
       .builder()
       .id(rs.getLong("id"))
       .username(rs.getString("username"))
@@ -54,12 +38,12 @@ public class ElectorDAS implements ElectorDAO {
   private UserDAO userRepo;
 
   @Override
-  public void create(NewElector newElector) throws SQLException {
-    newElector.setRole("elector");
+  public void create(Elector elector) throws SQLException {
+    elector.setRole("elector");
 
     try {
-      userRepo.newUser(AppUser.from(newElector));
-      Optional<AppUser> user = userRepo.findByUsername2(newElector.getUsername());
+      userRepo.newUser(AppUser.from(elector));
+      Optional<AppUser> user = userRepo.findByUsername2(elector.getUsername());
       if (user.isEmpty()) throw new IllegalStateException(
         "[XXX] - Couldn't find the user that was just created"
       );
@@ -69,9 +53,9 @@ public class ElectorDAS implements ElectorDAO {
       var rows = jdbcTemplate.update(
         createElector,
         user.get().getId(),
-        newElector.getEmail(),
-        newElector.getFirstName(),
-        newElector.getLastName()
+        elector.getEmail(),
+        elector.getFirstName(),
+        elector.getLastName()
       );
       log.debug("affected rows: " + rows);
     } catch (Exception e) {
@@ -94,11 +78,11 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
-  public Optional<NewElector> get(long id) {
+  public Optional<Elector> get(long id) {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id AND elector.id = ?";
     try {
-      NewElector newElector = jdbcTemplate.queryForObject(query, newElectorRowMapper, id);
-      return Optional.ofNullable(newElector);
+      Elector elector = jdbcTemplate.queryForObject(query, newElectorRowMapper, id);
+      return Optional.ofNullable(elector);
     } catch (Exception e) {
       log.error(e.getMessage());
       return Optional.empty();
@@ -106,19 +90,20 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
-  public Elector getByUsername(String username) {
+  public Optional<Elector> getByUsername(String username) {
     String query =
       "SELECT * FROM elector JOIN user WHERE elector.id = user.id AND user.username = ?";
     try {
-      return jdbcTemplate.queryForObject(query, electorRowMapper, username);
+      val elector = jdbcTemplate.queryForObject(query, newElectorRowMapper, username);
+      return Optional.ofNullable(elector);
     } catch (Exception e) {
       log.warn(e.getMessage());
-      return null;
+      return Optional.empty();
     }
   }
 
   @Override
-  public List<NewElector> getAll() {
+  public List<Elector> getAll() {
     String query = "SELECT * FROM elector JOIN user WHERE elector.id = user.id";
     try {
       return jdbcTemplate.query(query, newElectorRowMapper);
@@ -129,7 +114,7 @@ public class ElectorDAS implements ElectorDAO {
   }
 
   @Override
-  public List<NewElector> getAllInGroup(Long groupId) {
+  public List<Elector> getAllInGroup(Long groupId) {
     String query =
       "SELECT * FROM elector_group AS eg, elector, user WHERE elector.id = user.id AND eg.elector_id = elector.id AND eg.voting_group_id = ?";
     try {

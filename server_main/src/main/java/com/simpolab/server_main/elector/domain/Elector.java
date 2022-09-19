@@ -1,24 +1,29 @@
 package com.simpolab.server_main.elector.domain;
 
-import com.simpolab.server_main.user_authentication.domain.AppUser;
-import java.util.Map;
-import java.util.TreeMap;
-import javax.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
 @Data
+@Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Validated
 public class Elector {
 
-  @Valid
-  private AppUser user;
+  @Min(0)
+  private Long id;
+
+  @NotBlank
+  private String username;
+
+  @NotBlank
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  private String password;
 
   @NotBlank
   private String firstName;
@@ -29,13 +34,12 @@ public class Elector {
   @Email
   private String email;
 
-  public Map<String, String> toFlatMap() {
-    Map<String, String> map = new TreeMap<>();
-    map.put("id", user.getId().toString());
-    map.put("username", user.getUsername());
-    map.put("firstName", firstName);
-    map.put("lastName", lastName);
-    map.put("email", email);
-    return map;
+  @NotBlank
+  @Pattern(regexp = "(?i)manager|elector")
+  @JsonIgnore
+  private String role;
+
+  public Elector() {
+    this.role = "elector";
   }
 }

@@ -6,19 +6,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Vote implements Comparable {
+public class Vote implements Comparable<Vote> {
 
   private Long optionId;
   private Long orderIndex;
-
-  @Override
-  public int compareTo(Object o) {
-    if (this == o) return 0;
-    if (o == null || getClass() != o.getClass()) return -1;
-
-    Vote other = (Vote) o;
-    return Long.compare(this.getOrderIndex(), other.getOrderIndex());
-  }
 
   @Override
   public boolean equals(Object o) {
@@ -31,5 +22,10 @@ public class Vote implements Comparable {
   @Override
   public int hashCode() {
     return Objects.hash(optionId);
+  }
+
+  @Override
+  public int compareTo(Vote other) {
+    return Long.compare(this.orderIndex, other.orderIndex);
   }
 }

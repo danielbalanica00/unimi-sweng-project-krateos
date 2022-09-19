@@ -1,12 +1,13 @@
 package com.simpolab.server_main.group.api;
 
-import com.simpolab.server_main.elector.domain.NewElector;
+import com.simpolab.server_main.auth.authorizers.IsManager;
+import com.simpolab.server_main.elector.domain.Elector;
 import com.simpolab.server_main.group.domain.Group;
 import com.simpolab.server_main.group.services.GroupService;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,13 +16,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/group")
-@Slf4j
+@IsManager
 public class GroupController {
 
-  @Autowired
-  private GroupService groupService;
+  private final GroupService groupService;
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Group>> getGroups() {
@@ -29,16 +31,17 @@ public class GroupController {
     return ResponseEntity.ok(groups);
   }
 
-  @GetMapping(path = "{group_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Group> getGroup(@PathVariable("group_id") Long id) {
-    var group = groupService.getGroup(id);
+  @GetMapping(path = "{groupId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Group> getGroup(@PathVariable("groupId") Long groupId) {
+    var group = groupService.getGroup(groupId);
+
     if (group == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     return ResponseEntity.ok(group);
   }
 
-  @GetMapping(path = "{group_id}/elector", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<NewElector>> getElectorsInGroup(@PathVariable("group_id") Long id) {
-    var electors = groupService.getElectorsInGroup(id);
+  @GetMapping(path = "{groupId}/elector", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<Elector>> getElectorsInGroup(@PathVariable("groupId") Long groupId) {
+    var electors = groupService.getElectorsInGroup(groupId);
     return ResponseEntity.ok(electors);
   }
 
@@ -49,7 +52,7 @@ public class GroupController {
   ) {
     groupService.addElector(groupId, electorId);
 
-    return null;
+    return ResponseEntity.ok().build();
   }
 
   @DeleteMapping(
@@ -62,13 +65,14 @@ public class GroupController {
   ) {
     groupService.removeElector(groupId, electorId);
 
-    return null;
+    return ResponseEntity.ok().build();
   }
 
-  @DeleteMapping(path = "{group_id}")
-  public ResponseEntity<Void> deleteGroup(@PathVariable("group_id") Long id) {
-    groupService.deleteGroup(id);
-    return null;
+  @DeleteMapping(path = "{groupId}")
+  public ResponseEntity<Void> deleteGroup(@PathVariable("groupId") Long groupId) {
+    groupService.deleteGroup(groupId);
+
+    return ResponseEntity.ok().build();
   }
 
   @PostMapping(

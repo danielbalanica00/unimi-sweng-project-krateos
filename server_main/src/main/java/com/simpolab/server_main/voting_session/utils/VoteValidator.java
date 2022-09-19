@@ -1,4 +1,4 @@
-package com.simpolab.server_main.voting_session.domain;
+package com.simpolab.server_main.voting_session.utils;
 
 import com.simpolab.server_main.db.das.SessionDAS;
 import com.simpolab.server_main.voting_session.domain.Vote;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class VoteValidator {
+public final class VoteValidator {
 
   private VoteValidator() {}
 

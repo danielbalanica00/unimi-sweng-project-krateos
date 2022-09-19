@@ -1,7 +1,6 @@
-package com.simpolab.server_main.user_authentication.domain;
+package com.simpolab.server_main.auth.domain;
 
-import com.simpolab.server_main.elector.domain.NewElector;
-import javax.validation.Valid;
+import com.simpolab.server_main.elector.domain.Elector;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -38,7 +37,7 @@ public class AppUser {
     this.role = null;
   }
 
-  public static AppUser from(NewElector elector) {
+  public static AppUser from(Elector elector) {
     return new AppUser(
       elector.getId(),
       elector.getUsername(),
