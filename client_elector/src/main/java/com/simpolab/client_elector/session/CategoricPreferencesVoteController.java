@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.input.MouseEvent;
@@ -62,6 +63,13 @@ public class CategoricPreferencesVoteController implements Initializable {
 
     if (lvSuboptions.getSelectionModel().getSelectedIndex() < 0) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Select at least one suboption");
+      return;
+    }
+
+    // confirmation
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Send vote?", ButtonType.YES, ButtonType.NO);
+    alert.showAndWait();
+    if(alert.getResult() == ButtonType.NO){
       return;
     }
 

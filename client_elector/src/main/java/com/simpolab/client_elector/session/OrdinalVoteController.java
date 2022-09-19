@@ -15,9 +15,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 public class OrdinalVoteController implements Initializable {
@@ -69,6 +67,13 @@ public class OrdinalVoteController implements Initializable {
 
   @FXML
   private void onBtnVoteClicked(ActionEvent event) throws Exception {
+    // confirmation
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Send vote?", ButtonType.YES, ButtonType.NO);
+    alert.showAndWait();
+    if(alert.getResult() == ButtonType.NO){
+      return;
+    }
+
     List<Option> options = lvOptions.getItems().stream().toList();
 
     List<Vote> votes = new ArrayList<>();

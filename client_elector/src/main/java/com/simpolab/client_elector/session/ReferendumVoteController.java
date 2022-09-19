@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.text.Text;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -69,6 +70,13 @@ public class ReferendumVoteController implements Initializable {
   private void onBtnVoteClicked(ActionEvent event) throws Exception {
     if (!(cbNotAgree.isSelected() ^ cbAgree.isSelected())) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Select one option");
+      return;
+    }
+
+    // confirmation
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Send vote?", ButtonType.YES, ButtonType.NO);
+    alert.showAndWait();
+    if(alert.getResult() == ButtonType.NO){
       return;
     }
 

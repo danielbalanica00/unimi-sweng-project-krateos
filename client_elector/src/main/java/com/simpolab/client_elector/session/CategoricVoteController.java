@@ -15,10 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 public class CategoricVoteController implements Initializable {
@@ -41,6 +38,13 @@ public class CategoricVoteController implements Initializable {
     // ensure option selection
     if (lvOptions.getSelectionModel().getSelectedIndex() < 0) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Select an option");
+      return;
+    }
+
+    // confirmation
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Send vote?", ButtonType.YES, ButtonType.NO);
+    alert.showAndWait();
+    if(alert.getResult() == ButtonType.NO){
       return;
     }
 
