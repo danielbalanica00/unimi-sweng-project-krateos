@@ -1,10 +1,6 @@
 package com.simpolab.server_main.db;
 
-import com.simpolab.server_main.db.das.SessionDAS;
-import com.simpolab.server_main.voting_session.domain.ParticipationStats;
-import com.simpolab.server_main.voting_session.domain.Vote;
-import com.simpolab.server_main.voting_session.domain.VotingOption;
-import com.simpolab.server_main.voting_session.domain.VotingSession;
+import com.simpolab.server_main.voting_session.domain.*;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +27,7 @@ public interface SessionDAO {
 
   List<VotingOption> getOptions(long votingSessionId);
 
-  List<SessionDAS.Touple> getOptionsForSession(long sessionId);
+  List<VotingOptionId> getOptionsForSession(long sessionId);
 
   void setState(long sessionId, VotingSession.State newState) throws SQLException;
 

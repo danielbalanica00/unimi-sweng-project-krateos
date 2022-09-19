@@ -1,10 +1,7 @@
 package com.simpolab.server_main.db.das;
 
 import com.simpolab.server_main.db.SessionDAO;
-import com.simpolab.server_main.voting_session.domain.ParticipationStats;
-import com.simpolab.server_main.voting_session.domain.Vote;
-import com.simpolab.server_main.voting_session.domain.VotingOption;
-import com.simpolab.server_main.voting_session.domain.VotingSession;
+import com.simpolab.server_main.voting_session.domain.*;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -52,25 +49,14 @@ public class SessionDAS implements SessionDAO {
       .parentOptionId(rs.getLong("parent_option_id"))
       .build();
 
-  public record Touple(long id, Long parentId) {}
-
-  private final RowMapper<Touple> votingOptionMapper = (rs, _ignore) ->
-    new Touple(rs.getLong("id"), rs.getLong("parent_option_id"));
+  private final RowMapper<VotingOptionId> votingOptionIdRowMapper = (rs, _ignore) ->
+    new VotingOptionId(rs.getLong("id"), rs.getLong("parent_option_id"));
 
   @Override
   public long create(VotingSession newSession) throws SQLException {
     try {
       final String query =
         "INSERT INTO voting_session (name, type, ends_on, need_absolute_majority, has_quorum) VALUES (?, ?, ?, ?, ?)";
-
-      //      jdbcTemplate.update(
-      //        query,
-      //        newSession.getName(),
-      //        newSession.getType().name(),
-      //        newSession.getEndsOn(),
-      //        newSession.isNeedAbsoluteMajority(),
-      //        newSession.isHasQuorum()
-      //      );
 
       KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -352,11 +338,11 @@ public class SessionDAS implements SessionDAO {
   }
 
   @Override
-  public List<Touple> getOptionsForSession(long sessionId) {
+  public List<VotingOptionId> getOptionsForSession(long sessionId) {
     try {
       var query =
         "SELECT id, parent_option_id FROM voting_option AS vo  WHERE vo.voting_session_id = ?";
-      return jdbcTemplate.query(query, votingOptionMapper, sessionId);
+      return jdbcTemplate.query(query, votingOptionIdRowMapper, sessionId);
     } catch (Exception e) {
       log.warn(e.getMessage());
       return new ArrayList<>();

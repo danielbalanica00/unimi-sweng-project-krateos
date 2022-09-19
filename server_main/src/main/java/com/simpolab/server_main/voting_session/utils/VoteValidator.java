@@ -1,7 +1,7 @@
 package com.simpolab.server_main.voting_session.utils;
 
-import com.simpolab.server_main.db.das.SessionDAS;
 import com.simpolab.server_main.voting_session.domain.Vote;
+import com.simpolab.server_main.voting_session.domain.VotingOptionId;
 import com.simpolab.server_main.voting_session.domain.VotingSession;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +15,7 @@ public final class VoteValidator {
 
   @FunctionalInterface
   private interface Validator {
-    boolean validate(List<Vote> votes, List<SessionDAS.Touple> options);
+    boolean validate(List<Vote> votes, List<VotingOptionId> options);
   }
 
   private static final Validator categoricValidator = (votes, options) -> {
@@ -23,7 +23,7 @@ public final class VoteValidator {
     if (votes.size() != 1) return false;
 
     // allowed options ids
-    var optionsIds = options.stream().map(SessionDAS.Touple::id).collect(Collectors.toSet());
+    var optionsIds = options.stream().map(VotingOptionId::id).collect(Collectors.toSet());
 
     // check if the voted option is present in the list of allowed options ids
     var votedOption = votes.get(0).getOptionId();
@@ -35,8 +35,8 @@ public final class VoteValidator {
     if (votes.size() < 1) return false;
 
     // separate toplevel options from lower level options
-    var topLevelOptions = new HashSet<SessionDAS.Touple>();
-    var lowerLevelOptions = new HashSet<SessionDAS.Touple>();
+    var topLevelOptions = new HashSet<VotingOptionId>();
+    var lowerLevelOptions = new HashSet<VotingOptionId>();
 
     options.forEach(opt -> {
       if (opt.parentId() == 0) topLevelOptions.add(opt); else lowerLevelOptions.add(opt);
@@ -49,7 +49,7 @@ public final class VoteValidator {
     // check that one vote is for a top level option
     var topLevelOptionsIds = topLevelOptions
       .stream()
-      .map(SessionDAS.Touple::id)
+      .map(VotingOptionId::id)
       .collect(Collectors.toSet());
     var topLevelOptionsVotes = votes
       .stream()
@@ -66,7 +66,7 @@ public final class VoteValidator {
     var lowerLevelOptionsIds = lowerLevelOptions
       .stream()
       .filter(opt -> opt.parentId().equals(topLevelOptionVoteId.getOptionId()))
-      .map(SessionDAS.Touple::id)
+      .map(VotingOptionId::id)
       .collect(Collectors.toUnmodifiableSet());
     var remainingVotes = votes
       .stream()
@@ -102,7 +102,7 @@ public final class VoteValidator {
     if (fstIdx != 1 || lstIdx != optionsSize) return false;
 
     // the given votes have to be valid options
-    var optionsIds = options.stream().map(SessionDAS.Touple::id).collect(Collectors.toSet());
+    var optionsIds = options.stream().map(VotingOptionId::id).collect(Collectors.toSet());
     var votesOptionIds = votes.stream().map(Vote::getOptionId).collect(Collectors.toSet());
     return optionsIds.containsAll(votesOptionIds);
   };
@@ -110,7 +110,7 @@ public final class VoteValidator {
   public static boolean validateVotes(
     VotingSession.Type sessionType,
     List<Vote> votes,
-    List<SessionDAS.Touple> options
+    List<VotingOptionId> options
   ) {
     var validator =
       switch (sessionType) {
