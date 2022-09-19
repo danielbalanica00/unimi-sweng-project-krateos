@@ -231,7 +231,8 @@ public final class WinnerElection {
     val session = optSession.get();
     if (
       session.getState() == VotingSession.State.INACTIVE ||
-      session.getState() == VotingSession.State.ACTIVE
+      session.getState() == VotingSession.State.ACTIVE ||
+      session.getState() == VotingSession.State.CANCELLED
     ) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
     val stats = sessionDAO.getParticipationStats(sessionId);
@@ -239,7 +240,7 @@ public final class WinnerElection {
     // ** Quorum Check
     if (session.isHasQuorum() && !hasReachedQuorum(stats)) {
       log.warn("Quorum not met for session {}, cancelling it", sessionId);
-      sessionService.setState(sessionId, VotingSession.State.CANCELLED);
+      sessionService.setState(sessionId, VotingSession.State.INVALID);
       throw new NoWinnerException(NoWinnerException.QUORUM_NOT_REACHED);
     }
     // ****
@@ -256,7 +257,7 @@ public final class WinnerElection {
     } catch (NoWinnerException nwe) {
       if (nwe.getCode() == NoWinnerException.BALLOTTAGGIO_CATEGORICO_PREFERENZE) throw nwe;
 
-      sessionService.setState(sessionId, VotingSession.State.CANCELLED);
+      sessionService.setState(sessionId, VotingSession.State.INVALID);
       throw nwe;
     }
   }

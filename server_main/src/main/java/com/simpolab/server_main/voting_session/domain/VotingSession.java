@@ -36,6 +36,7 @@ public class VotingSession {
     ACTIVE,
     CANCELLED,
     ENDED,
+    INVALID,
   }
 
   @Min(0)

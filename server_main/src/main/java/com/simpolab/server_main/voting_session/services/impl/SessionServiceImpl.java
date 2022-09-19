@@ -103,13 +103,6 @@ public class SessionServiceImpl implements SessionService {
         log.debug("[Set State] - participants added successfully");
       }
 
-      if (newState == VotingSession.State.ENDED) {
-        // determine winner
-        log.debug("[Set State] - session is being activated, adding participants");
-        sessionDAO.populateSessionParticipants(sessionId);
-        log.debug("[Set State] - participants added successfully");
-      }
-
       log.debug("[Set State] - setting state");
       sessionDAO.setState(sessionId, newState);
     } catch (Exception e) {
@@ -128,7 +121,8 @@ public class SessionServiceImpl implements SessionService {
     val session = optSession.get();
     if (
       session.getState() == VotingSession.State.INACTIVE ||
-      session.getState() == VotingSession.State.ACTIVE
+      session.getState() == VotingSession.State.ACTIVE ||
+      session.getState() == VotingSession.State.CANCELLED
     ) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
     val options = sessionDAO.getOptions(sessionId);
