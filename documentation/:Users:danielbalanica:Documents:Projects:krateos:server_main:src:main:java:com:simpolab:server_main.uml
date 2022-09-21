@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/Users/danielbalanica/Documents/Projects/krateos/server_main/src/main/java/com/simpolab/server_main</OriginalElement>
+  <nodes>
+    <node x="3051.5" y="1829.0">com.simpolab.server_main.auth.authorizers.IsManager</node>
+    <node x="-478.5" y="5402.5">com.simpolab.server_main.voting_session.domain.VotingOption</node>
+    <node x="-454.5" y="3340.5">com.simpolab.server_main.auth.domain.AppUser</node>
+    <node x="2234.5" y="1227.5">com.simpolab.server_main.voting_session.services.impl.SessionServiceImpl</node>
+    <node x="2040.5" y="4264.5">com.simpolab.server_main.voting_session.domain.VotingSession.State</node>
+    <node x="970.0" y="5084.5">com.simpolab.server_main.auth.filters.JwtAuthenticationFilter</node>
+    <node x="-472.5" y="2037.5">com.simpolab.server_main.db.UserDAO</node>
+    <node x="361.5" y="3370.5">com.simpolab.server_main.elector.domain.Elector</node>
+    <node x="-457.0" y="1738.5">com.simpolab.server_main.auth.services.UserServiceImpl</node>
+    <node x="3331.0" y="5678.5">com.simpolab.server_main.Server</node>
+    <node x="2289.0" y="4028.5">com.simpolab.server_main.voting_session.domain.VotingSession</node>
+    <node x="887.5" y="3526.5">com.simpolab.server_main.elector.domain.Elector.ElectorBuilder</node>
+    <node x="562.0" y="5535.5">com.simpolab.server_main.auth.domain.JWTTokens</node>
+    <node x="1366.0" y="608.5">com.simpolab.server_main.group.services.GroupService</node>
+    <node x="429.0" y="5344.5">com.simpolab.server_main.auth.utils.JWTUtils</node>
+    <node x="2286.0" y="5086.5">com.simpolab.server_main.voting_session.domain.VotingOptionRequest</node>
+    <node x="1036.5" y="5270.5">com.simpolab.server_main.auth.SecurityConfig</node>
+    <node x="1537.5" y="5098.5">com.simpolab.server_main.voting_session.domain.Vote</node>
+    <node x="3798.0" y="5669.0">com.simpolab.server_main.auth.authorizers.IsElector</node>
+    <node x="1966.0" y="3778.5">com.simpolab.server_main.voting_session.domain.ParticipationStats</node>
+    <node x="1014.0" y="5498.5">com.simpolab.server_main.auth.filters.JwtAuthorizationFilter</node>
+    <node x="390.0" y="15.5">com.simpolab.server_main.elector.api.ElectorController</node>
+    <node x="3546.5" y="5673.5">com.simpolab.server_main.auth.MethodSecurityConfig</node>
+    <node x="417.5" y="616.5">com.simpolab.server_main.elector.services.ElectorService</node>
+    <node x="2225.0" y="2026.5">com.simpolab.server_main.db.SessionDAO</node>
+    <node x="-92.0" y="5228.5">com.simpolab.server_main.voting_session.utils.WinnerElection</node>
+    <node x="418.5" y="2907.5">com.simpolab.server_main.db.das.ElectorDAS</node>
+    <node x="441.0" y="5095.5">com.simpolab.server_main.auth.domain.JWTDecodedToken</node>
+    <node x="1828.5" y="5088.5">com.simpolab.server_main.voting_session.utils.VoteValidator.Validator</node>
+    <node x="2042.0" y="4424.5">com.simpolab.server_main.voting_session.domain.VotingSession.Type</node>
+    <node x="2994.5" y="5678.5">com.simpolab.server_main.auth.PasswordEncodingConfig</node>
+    <node x="2168.5" y="2.5">com.simpolab.server_main.voting_session.api.SessionController</node>
+    <node x="-472.5" y="2908.5">com.simpolab.server_main.db.das.UserDAS</node>
+    <node x="1383.5" y="2873.5">com.simpolab.server_main.db.das.GroupDAS</node>
+    <node x="2295.5" y="622.5">com.simpolab.server_main.voting_session.services.SessionService</node>
+    <node x="2360.0" y="3824.5">com.simpolab.server_main.voting_session.domain.VotingOptionId</node>
+    <node x="438.5" y="2022.5">com.simpolab.server_main.db.ElectorDAO</node>
+    <node x="-375.0" y="1569.0">com.simpolab.server_main.auth.services.UserService</node>
+    <node x="1299.0" y="13.5">com.simpolab.server_main.group.api.GroupController</node>
+    <node x="-135.5" y="5093.5">com.simpolab.server_main.voting_session.utils.WinnerElection.Elector</node>
+    <node x="-504.0" y="5102.5">com.simpolab.server_main.voting_session.domain.VotingOption.VotingOptionBuilder</node>
+    <node x="1352.0" y="1213.5">com.simpolab.server_main.group.services.impl.GroupServiceImpl</node>
+    <node x="417.5" y="1221.5">com.simpolab.server_main.elector.services.impl.ElectorServiceImpl</node>
+    <node x="2803.5" y="4226.5">com.simpolab.server_main.voting_session.domain.VotingSession.VotingSessionBuilder</node>
+    <node x="2245.0" y="2863.5">com.simpolab.server_main.db.das.SessionDAS</node>
+    <node x="1383.5" y="2028.5">com.simpolab.server_main.db.GroupDAO</node>
+    <node x="1386.0" y="3344.5">com.simpolab.server_main.group.domain.Group</node>
+    <node x="-9.0" y="5541.5">com.simpolab.server_main.voting_session.domain.NoWinnerException</node>
+    <node x="1793.0" y="5238.5">com.simpolab.server_main.voting_session.utils.VoteValidator</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.simpolab.server_main.group.api.GroupController" target="com.simpolab.server_main.auth.authorizers.IsManager" relationship="REALIZATION">
+      <point x="0.0" y="-129.5" />
+      <point x="1516.0" y="-14.0" />
+      <point x="3116.0" y="-14.0" />
+      <point x="0.0" y="-14.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.auth.utils.JWTUtils" target="com.simpolab.server_main.auth.domain.JWTDecodedToken" relationship="CREATE">
+      <point x="0.0" y="-58.5" />
+      <point x="0.0" y="87.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.ElectorDAS" target="com.simpolab.server_main.db.UserDAO" relationship="TO_ONE">
+      <point x="0.0" y="-115.5" />
+      <point x="-304.0" y="2907.5" />
+      <point x="0.0" y="-85.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.domain.VotingSession" target="com.simpolab.server_main.voting_session.domain.VotingSession.State" relationship="TO_ONE">
+      <point x="-227.0" y="-60.0" />
+      <point x="95.5" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.utils.WinnerElection" target="com.simpolab.server_main.voting_session.utils.WinnerElection.Elector" relationship="TO_ONE">
+      <point x="0.0" y="-114.5" />
+      <point x="0.0" y="29.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.auth.services.UserServiceImpl" target="com.simpolab.server_main.auth.services.UserService" relationship="REALIZATION">
+      <point x="0.0" y="-44.5" />
+      <point x="-304.0" y="2300.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.services.impl.SessionServiceImpl" target="com.simpolab.server_main.db.GroupDAO" relationship="TO_ONE">
+      <point x="-221.5" y="-15.0" />
+      <point x="1680.0" y="1468.0" />
+      <point x="1680.0" y="2143.0" />
+      <point x="152.5" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.services.impl.SessionServiceImpl" target="com.simpolab.server_main.elector.services.ElectorService" relationship="TO_ONE">
+      <point x="-221.5" y="0.0" />
+      <point x="1256.0" y="1483.0" />
+      <point x="1256.0" y="305.0" />
+      <point x="596.0" y="305.0" />
+      <point x="0.0" y="-86.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.elector.services.impl.ElectorServiceImpl" target="com.simpolab.server_main.db.ElectorDAO" relationship="TO_ONE">
+      <point x="0.0" y="101.5" />
+      <point x="596.0" y="1076.0" />
+      <point x="413.0" y="1076.0" />
+      <point x="413.0" y="2123.0" />
+      <point x="-157.5" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.elector.domain.Elector.ElectorBuilder" target="com.simpolab.server_main.elector.domain.Elector" relationship="INNER_CLASS">
+      <point x="-128.5" y="0.0" />
+      <point x="214.5" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.domain.VotingSession.State" target="com.simpolab.server_main.voting_session.domain.VotingSession" relationship="INNER_CLASS">
+      <point x="0.0" y="58.5" />
+      <point x="2136.0" y="4403.0" />
+      <point x="2261.0" y="4403.0" />
+      <point x="2261.0" y="4383.0" />
+      <point x="-227.0" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.group.services.impl.GroupServiceImpl" target="com.simpolab.server_main.db.ElectorDAO" relationship="TO_ONE">
+      <point x="-164.0" y="0.0" />
+      <point x="413.0" y="1343.0" />
+      <point x="413.0" y="2123.0" />
+      <point x="-157.5" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.SessionDAS" target="com.simpolab.server_main.voting_session.domain.ParticipationStats" relationship="CREATE">
+      <point x="-231.0" y="0.0" />
+      <point x="2076.0" y="3203.0" />
+      <point x="0.0" y="-144.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.services.impl.SessionServiceImpl" target="com.simpolab.server_main.voting_session.services.SessionService" relationship="REALIZATION">
+      <point x="0.0" y="-255.5" />
+      <point x="0.0" y="240.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.group.services.impl.GroupServiceImpl" target="com.simpolab.server_main.db.GroupDAO" relationship="TO_ONE">
+      <point x="0.0" y="129.5" />
+      <point x="1516.0" y="1448.0" />
+      <point x="1680.0" y="1448.0" />
+      <point x="1680.0" y="2143.0" />
+      <point x="152.5" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.GroupDAS" target="com.simpolab.server_main.group.domain.Group" relationship="CREATE">
+      <point x="0.0" y="129.5" />
+      <point x="1536.0" y="3260.0" />
+      <point x="1496.0" y="3260.0" />
+      <point x="0.0" y="-158.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.group.api.GroupController" target="com.simpolab.server_main.group.services.GroupService" relationship="TO_ONE">
+      <point x="0.0" y="129.5" />
+      <point x="0.0" y="-114.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.ElectorDAS" target="com.simpolab.server_main.db.ElectorDAO" relationship="REALIZATION">
+      <point x="20.0" y="-115.5" />
+      <point x="0.0" y="100.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.group.services.impl.GroupServiceImpl" target="com.simpolab.server_main.group.services.GroupService" relationship="REALIZATION">
+      <point x="0.0" y="-129.5" />
+      <point x="0.0" y="114.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.elector.api.ElectorController" target="com.simpolab.server_main.elector.services.ElectorService" relationship="TO_ONE">
+      <point x="0.0" y="87.5" />
+      <point x="0.0" y="-86.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.utils.WinnerElection.Elector" target="com.simpolab.server_main.voting_session.utils.WinnerElection" relationship="INNER_CLASS">
+      <point x="15.0" y="29.5" />
+      <point x="15.0" y="-114.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.auth.services.UserServiceImpl" target="com.simpolab.server_main.db.UserDAO" relationship="TO_ONE">
+      <point x="0.0" y="44.5" />
+      <point x="-304.0" y="2908.0" />
+      <point x="0.0" y="-85.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.auth.SecurityConfig" target="com.simpolab.server_main.auth.filters.JwtAuthenticationFilter" relationship="CREATE">
+      <point x="0.0" y="-72.5" />
+      <point x="0.0" y="58.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.elector.services.impl.ElectorServiceImpl" target="com.simpolab.server_main.elector.services.ElectorService" relationship="REALIZATION">
+      <point x="0.0" y="-101.5" />
+      <point x="0.0" y="86.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.auth.utils.JWTUtils" target="com.simpolab.server_main.auth.domain.JWTTokens" relationship="CREATE">
+      <point x="0.0" y="58.5" />
+      <point x="0.0" y="-87.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.domain.VotingSession.VotingSessionBuilder" target="com.simpolab.server_main.voting_session.domain.VotingSession" relationship="INNER_CLASS">
+      <point x="6.0" y="156.5" />
+      <point x="3002.0" y="4755.0" />
+      <point x="2261.0" y="4755.0" />
+      <point x="2261.0" y="4383.0" />
+      <point x="-227.0" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.utils.VoteValidator.Validator" target="com.simpolab.server_main.voting_session.utils.VoteValidator" relationship="INNER_CLASS">
+      <point x="15.0" y="34.5" />
+      <point x="15.0" y="-44.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.auth.SecurityConfig" target="com.simpolab.server_main.auth.filters.JwtAuthorizationFilter" relationship="CREATE">
+      <point x="0.0" y="72.5" />
+      <point x="0.0" y="-44.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.utils.VoteValidator" target="com.simpolab.server_main.voting_session.utils.VoteValidator.Validator" relationship="TO_ONE">
+      <point x="0.0" y="-44.5" />
+      <point x="0.0" y="34.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.elector.api.ElectorController" target="com.simpolab.server_main.auth.authorizers.IsManager" relationship="REALIZATION">
+      <point x="0.0" y="-87.5" />
+      <point x="596.0" y="-14.0" />
+      <point x="3116.0" y="-14.0" />
+      <point x="0.0" y="-14.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.UserDAS" target="com.simpolab.server_main.auth.domain.AppUser" relationship="CREATE">
+      <point x="20.0" y="114.5" />
+      <point x="-284.0" y="3580.0" />
+      <point x="-304.0" y="3580.0" />
+      <point x="0.0" y="-242.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.SessionDAS" target="com.simpolab.server_main.db.SessionDAO" relationship="REALIZATION">
+      <point x="-20.0" y="-339.5" />
+      <point x="0.0" y="296.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.utils.WinnerElection" target="com.simpolab.server_main.voting_session.domain.NoWinnerException" relationship="CREATE">
+      <point x="0.0" y="114.5" />
+      <point x="0.0" y="-101.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.domain.VotingSession" target="com.simpolab.server_main.voting_session.domain.VotingSession.Type" relationship="TO_ONE">
+      <point x="-227.0" y="100.0" />
+      <point x="94.0" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.domain.VotingOption.VotingOptionBuilder" target="com.simpolab.server_main.voting_session.domain.VotingOption" relationship="INNER_CLASS">
+      <point x="0.0" y="100.5" />
+      <point x="0.0" y="-200.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.services.impl.SessionServiceImpl" target="com.simpolab.server_main.db.SessionDAO" relationship="TO_ONE">
+      <point x="0.0" y="255.5" />
+      <point x="0.0" y="-296.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.UserDAS" target="com.simpolab.server_main.db.UserDAO" relationship="REALIZATION">
+      <point x="0.0" y="-114.5" />
+      <point x="-304.0" y="3220.0" />
+      <point x="0.0" y="85.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.domain.VotingSession.Type" target="com.simpolab.server_main.voting_session.domain.VotingSession" relationship="INNER_CLASS">
+      <point x="0.0" y="-58.5" />
+      <point x="2136.0" y="4403.0" />
+      <point x="2261.0" y="4403.0" />
+      <point x="2261.0" y="4383.0" />
+      <point x="-227.0" y="0.0" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.SessionDAS" target="com.simpolab.server_main.voting_session.domain.VotingOptionId" relationship="CREATE">
+      <point x="0.0" y="339.5" />
+      <point x="0.0" y="-58.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.db.das.GroupDAS" target="com.simpolab.server_main.db.GroupDAO" relationship="REALIZATION">
+      <point x="0.0" y="-129.5" />
+      <point x="1536.0" y="2880.0" />
+      <point x="0.0" y="114.5" />
+    </edge>
+    <edge source="com.simpolab.server_main.voting_session.api.SessionController" target="com.simpolab.server_main.voting_session.services.SessionService" relationship="TO_ONE">
+      <point x="0.0" y="240.5" />
+      <point x="0.0" y="-240.5" />
+    </edge>
+  </edges>
+  <settings layout="Orthogonal Groups" zoom="0.5881615203691445" showDependencies="true" x="203.47463772532365" y="3474.0680243967845" />
+  <SelectedNodes>
+    <node>com.simpolab.server_main.elector.domain.Elector.ElectorBuilder</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
