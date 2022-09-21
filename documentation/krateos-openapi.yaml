@@ -1,0 +1,550 @@
+openapi: "3.0.3"
+info:
+  title: "krateos API"
+  description: "krateos API"
+  version: "1.0.0"
+servers:
+  - url: "https://krateos"
+paths:
+  /api/v1/elector:
+    get:
+      tags:
+        - Elector
+      summary: "GET api/v1/elector"
+      operationId: "getElectors"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    post:
+      tags:
+        - Elector
+      summary: "POST api/v1/elector"
+      operationId: "newElector"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/elector/{elector_id}:
+    get:
+      tags:
+        - Elector
+      summary: "GET api/v1/elector/{elector_id}"
+      operationId: "getElector"
+      parameters:
+        - name: "elector_id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Elector
+      summary: "DELETE api/v1/elector/{elector_id}"
+      operationId: "deleteElector"
+      parameters:
+        - name: "elector_id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/group:
+    get:
+      tags:
+        - Group
+      summary: "GET api/v1/group"
+      operationId: "getGroups"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+    post:
+      tags:
+        - Group
+      summary: "POST api/v1/group"
+      operationId: "newGroup"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/group/{groupId}:
+    get:
+      tags:
+        - Group
+      summary: "GET api/v1/group/{groupId}"
+      operationId: "getGroup"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Group
+      summary: "DELETE api/v1/group/{groupId}"
+      operationId: "deleteGroup"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/group/{groupId}/elector:
+    get:
+      tags:
+        - Group
+      summary: "GET api/v1/group/{groupId}/elector"
+      operationId: "getElectorsInGroup"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/group/{groupId}/elector/{electorId}:
+    put:
+      tags:
+        - Group
+      summary: "PUT api/v1/group/{groupId}/elector/{electorId}"
+      operationId: "insertElectorInGroup"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "electorId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Group
+      summary: "DELETE api/v1/group/{groupId}/elector/{electorId}"
+      operationId: "removeElectorFromGroup"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "electorId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session:
+    get:
+      tags:
+        - Session
+      summary: "GET api/v1/session"
+      operationId: "getAllSessions"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    post:
+      tags:
+        - Session
+      summary: "POST api/v1/session"
+      operationId: "newSession"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session/option/{optionId}:
+    delete:
+      tags:
+        - Session
+      summary: "DELETE api/v1/session/option/{optionId}"
+      operationId: "removeOption"
+      parameters:
+        - name: "optionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}:
+    get:
+      tags:
+        - Session
+      summary: "GET api/v1/session/{sessionId}"
+      operationId: "getSession"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Session
+      summary: "DELETE api/v1/session/{sessionId}"
+      operationId: "deleteElector"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/group:
+    get:
+      tags:
+        - Session
+      summary: "GET api/v1/session/{sessionId}/group"
+      operationId: "getGroups"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/group/{groupId}:
+    put:
+      tags:
+        - Session
+      summary: "PUT api/v1/session/{sessionId}/group/{groupId}"
+      operationId: "addGroupToSession"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "groupId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Session
+      summary: "DELETE api/v1/session/{sessionId}/group/{groupId}"
+      operationId: "removeGroupFromSession"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "groupId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/option:
+    get:
+      tags:
+        - Session
+      summary: "GET api/v1/session/{sessionId}/option"
+      operationId: "getOptions"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+    put:
+      tags:
+        - Session
+      summary: "PUT api/v1/session/{sessionId}/option"
+      operationId: "addOption"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/option/{optionId}/suboption:
+    put:
+      tags:
+        - Session
+      summary: "PUT api/v1/session/{sessionId}/option/{optionId}/suboption"
+      operationId: "insertSubOptionInVotingSession"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "optionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/result/option:
+    get:
+      tags:
+        - Session
+      summary: "GET api/v1/session/{sessionId}/result/option"
+      operationId: "getOptionCount"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/result/winner:
+    get:
+      tags:
+        - Session
+      summary: "GET api/v1/session/{sessionId}/result/winner"
+      operationId: "getWinningOption"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/state/{newStateString}:
+    patch:
+      tags:
+        - Session
+      summary: "PATCH api/v1/session/{sessionId}/state/{newStateString}"
+      operationId: "setState"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "newStateString"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /api/v1/session/{sessionId}/vote:
+    post:
+      tags:
+        - Session
+      summary: "POST api/v1/session/{sessionId}/vote"
+      operationId: "newVote"
+      parameters:
+        - name: "sessionId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                type: "object"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"

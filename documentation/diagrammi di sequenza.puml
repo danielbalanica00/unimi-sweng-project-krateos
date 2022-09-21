@@ -1,0 +1,267 @@
+@startuml
+''' ESPRESSIONE VOTO
+actor Elector as EC
+participant SessionController as SC
+participant SessionsService as SS
+database SessionDAO as SDAO
+participant VoteValidator as VV
+
+
+' chiamata api
+EC -> SC : POST /session/vote
+SC -> SS : express votes (votes)
+
+' ottieni stato attuale del voto per elettore
+SS -> SDAO : get voting status
+activate SDAO
+SS <-- SDAO : voting status
+deactivate SDAO
+
+alt voting status == not voted
+    ' ottieni voting options per la data sessione
+    SS -> SDAO: get voting options
+    activate SDAO
+    SS <-- SDAO : voting options
+    deactivate SDAO
+
+    ' valida voto
+    SS -> VV : validate votes (votes, voting options)
+    activate VV
+    SS <-- VV : result
+    deactivate VV
+
+    ' voto valido
+    alt result == true
+        SS -> SDAO : add votes (votes)
+        activate SDAO
+        SS <-- SDAO
+        deactivate SDAO
+
+        SS -> SDAO : update voting status
+        activate SDAO
+        SS <-- SDAO
+        deactivate SDAO
+
+        SS --> SC : ok
+        SC --> EC : 200
+   ' voto non valido
+   else result == false
+        SS --> SC : error
+        SC --> EC !! : 403
+   end
+
+' elettore ha gia' votato
+else voting status == voted
+    SS --> SC : error
+    SC --> EC !! : 403
+end
+@enduml
+
+@startuml
+''' CREAZIONE SESSIONE
+actor Manager as EC
+participant SessionController as SC
+participant SessionService as SS
+database SessionDAO as SDAO
+
+
+' crea sessione
+EC -> SC : POST /session
+    SC -> SS : new session (session details)
+        ' check vincoli sulla sessione
+        SS -> SDAO: create (session details)
+        activate SDAO
+        SS <-- SDAO: sessionId
+        deactivate SDAO
+    SC <-- SS : sessionId
+EC <-- SC : [200] sessionId
+@enduml
+
+@startuml
+''' AGGIUNTA OPZIONI
+actor Manager as EC
+participant SessionController as SC
+participant SessionService as SS
+database SessionDAO as SDAO
+
+EC -> SC : PUT /session/{sessionId}/option
+    SC -> SS : new option (sessionId, option value)
+        SS -> SDAO: create option (sessionId, option value)
+        activate SDAO
+        SS <-- SDAO: result
+        deactivate SDAO
+        alt result == success
+            SC <-- SS
+            EC <-- SC : [200]
+        else result == duplicated option || non existent sessionId
+            SC <-- SS : error
+            EC <-- SC !! : [403]
+        end
+@enduml
+
+
+@startuml
+''' AGGIUNTA GRUPPI
+actor Manager as EC
+participant SessionController as SC
+participant SessionService as SS
+database SessionDAO as SDAO
+
+EC -> SC : PUT /session/{sessionId}/group/{groupId}
+    SC -> SS : add group to session (sessionId, groupId)
+        SS -> SDAO: add group to session (sessionId, groupId)
+        activate SDAO
+        SS <-- SDAO: result
+        deactivate SDAO
+        alt result == success
+            SC <-- SS
+            EC <-- SC : [200]
+        else result == non existent sessionId || non existent groupId
+            SC <-- SS : error
+            EC <-- SC !! : [403]
+        end
+@enduml
+
+
+@startuml
+''' ATTIVAZIONE SESSIONE
+actor Manager as EC
+participant SessionController as SC
+participant SessionService as SS
+database SessionDAO as SDAO
+
+EC -> SC : PATCH /session/{sessionId}/active
+    SC -> SS : set state (sessionId, active)
+
+    ' controllo esistenza sessione
+    SS -> SDAO : get session (sessionId)
+    activate SDAO
+    SS <-- SDAO : session
+    deactivate SDAO
+    SS -> SS : check session (session)
+    activate SS
+    SS --> SS : result
+    deactivate SS
+
+    alt session exists
+        ' controllo presenza opzioni
+        SS -> SDAO : get options for session (sessionId)
+        activate SDAO
+        SS <-- SDAO : options
+        deactivate SDAO
+
+        SS -> SS : check options (session, options)
+        activate SS
+        SS --> SS
+        deactivate SS
+        alt options are set
+            SS -> SS : check new state (oldState, active)
+            activate SS
+            SS --> SS
+            deactivate SS
+            alt sessione can go active
+                SS -> SDAO : set state (sessionId, active)
+                activate SDAO
+                SS <-- SDAO
+                deactivate SDAO
+
+                SC <-- SS: ok
+                EC <-- SC : [200]
+            else sessione cannot go active
+                SC <-- SS:  error: invalid new state
+                EC <-- SC !! : [403]
+            end
+        else no options are set
+            SC <-- SS:  error: no options found for session
+            EC <-- SC !! : [404]
+        end
+    else session does not exist
+        SC <-- SS: error: session not found
+        EC <-- SC !! : [404]
+    end
+@enduml
+
+@startuml
+''' ATTIVAZIONE SESSIONE
+actor Client as EC
+participant SessionController as SC
+participant SessionService as SS
+participant WinnerElection as WE
+database SessionDAO as SDAO
+
+EC -> SC : GET /session/{sessionId}/result/winner
+SC -> SS : get winning option (sessionId)
+SS -> WE: get winning option (sessionId)
+
+WE -> SDAO : get session (sessionId)
+activate SDAO
+WE <-- SDAO : session
+deactivate SDAO
+WE -> WE : check session status (session)
+activate WE
+WE --> WE : result
+deactivate WE
+alt session exists && session has ended
+    '' get session stats
+    WE -> SDAO : get session stats (sessionId)
+    activate SDAO
+    WE <-- SDAO : session stats
+    deactivate SDAO
+
+    alt session has quorum
+        '' check quorum
+        WE -> WE : check quorum(session, session stats)
+        activate WE
+        WE --> WE
+        deactivate WE
+        alt quorum not reached
+            SS <-- WE : error: quorum not reached
+            SC <-- SS : error: quorum not reached
+            EC <-- SC !!: [403] error: quorum not reached
+        end
+    end
+
+    '' get votes
+    WE -> SDAO : get votes (sessionId)
+    activate SDAO
+    WE <-- SDAO : votes
+    deactivate SDAO
+
+    '' determine winner
+    WE -> WE : compute winner (votes)
+    activate WE
+    WE --> WE : results
+    deactivate WE
+    alt results == winning option(s) id(s)
+         alt session needs absolute majority
+            '' check abs majority
+            WE -> WE : check absolute majority(results, votes, session stats)
+            activate WE
+            WE --> WE
+            deactivate WE
+            alt absolute majority not reached
+                SS <-- WE : error: absolute majority not reached
+                SC <-- SS : error: absolute majority not reached
+                EC <-- SC !!: [403] error: absolute majority not reached
+            end
+        end
+        SS <-- WE: results
+        SC <-- SS : results
+        EC <-- SC: [200] results
+    else result == ballot
+        '' get votes
+        WE -> SDAO : set session state to invalid(sessionId)
+        activate SDAO
+        WE <-- SDAO
+        deactivate SDAO
+
+        SS <-- WE : error: ballot
+        SC <-- SS : error: ballot
+        EC <-- SC !!: [403] error: ballot
+    end
+else session does not exist || session has not ended
+    SS <-- WE : error
+    SC <-- SS : error
+    EC <-- SC !!: [404] error
+end
+@enduml
