@@ -29,5 +29,4 @@ public class LoginController {
       case 2 -> SceneUtils.switchToHomepage();
     }
   }
-
 }

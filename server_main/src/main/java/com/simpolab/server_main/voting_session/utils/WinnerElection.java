@@ -113,6 +113,12 @@ public final class WinnerElection {
     }
     // **** 3
 
+    // Se non ci sono low level, return
+    if (lowLevelVotes.isEmpty()) {
+      log.debug("Winners:  TOP - {}, LOW - none", topMostVotedOptionId);
+      return List.of(topMostVotedOptionId);
+    }
+
     // ** 4 identifica low level con maggior numero di voti
     val lowMostVotedOptionId = getMostVotesOption(lowLevelVotes);
     val lowCountMostVotedOption = countVotesForOption(lowLevelVotes, lowMostVotedOptionId);
@@ -236,6 +242,7 @@ public final class WinnerElection {
     ) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
     val stats = sessionDAO.getParticipationStats(sessionId);
+    log.debug("Session stats: {}", stats);
 
     // ** Quorum Check
     if (session.isHasQuorum() && !hasReachedQuorum(stats)) {

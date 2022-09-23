@@ -1,11 +1,13 @@
 package com.simpolab.server_main.voting_session.domain;
 
 import java.util.Objects;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Vote implements Comparable<Vote> {
 
   private Long optionId;

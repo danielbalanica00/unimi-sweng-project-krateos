@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.domain.Session;
 import com.simpolab.client_manager.utils.*;
-
 import java.net.URL;
 import java.util.Date;
 import java.util.List;

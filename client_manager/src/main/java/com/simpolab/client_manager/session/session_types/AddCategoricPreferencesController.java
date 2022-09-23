@@ -57,7 +57,8 @@ public class AddCategoricPreferencesController implements Initializable {
       return;
     }
 
-    if (options != null &&
+    if (
+      options != null &&
       options.stream().anyMatch(opt -> opt.getValue().toLowerCase().equals(prompt.toLowerCase()))
     ) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Cannot insert duplicate option");
@@ -93,7 +94,8 @@ public class AddCategoricPreferencesController implements Initializable {
       return;
     }
 
-    if (suboptions != null &&
+    if (
+      suboptions != null &&
       suboptions.stream().anyMatch(opt -> opt.getValue().toLowerCase().equals(prompt.toLowerCase()))
     ) {
       AlertUtils.alert(Alert.AlertType.ERROR, "Cannot insert duplicate suboption");

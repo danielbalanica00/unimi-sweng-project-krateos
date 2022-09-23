@@ -16,10 +16,8 @@ import javafx.scene.control.SelectionMode;
 
 public class SessionsController implements Initializable {
 
-
   @FXML
   private ListView<Session> lvSessions;
-
 
   @FXML
   private void onBtnCreateSessionClicked(ActionEvent event) throws Exception {

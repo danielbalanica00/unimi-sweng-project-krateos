@@ -1,78 +1,18 @@
 @startuml
-hide empty members
-scale 5000 width
+hide empty description
 
-class AppUser
-class Elector
-class ElectorController
-interface ElectorDAO << interface >>
-class ElectorDAS
-interface ElectorService << interface >>
-class ElectorServiceImpl
-class Group
-class GroupController
-interface GroupDAO << interface >>
-class GroupDAS
-interface GroupService << interface >>
-class GroupServiceImpl
-annotation IsElector << annotation >>
-annotation IsManager << annotation >>
-class JWTDecodedToken
-class JWTTokens
-class JWTUtils
-class JwtAuthenticationFilter
-class JwtAuthorizationFilter
-class MethodSecurityConfig
-class NoWinnerException
-class ParticipationStats
-class PasswordEncodingConfig
-class SecurityConfig
-class Server
-class SessionController
-interface SessionDAO << interface >>
-class SessionDAS
-interface SessionService << interface >>
-class SessionServiceImpl
-interface UserDAO << interface >>
-class UserDAS
-interface UserService << interface >>
-class UserServiceImpl
-class Vote
-class VoteValidator
-class VotingOption
-entity VotingOptionId << record >>
-class VotingOptionRequest
-class VotingSession
-class WinnerElection
+state Inactive
+state Active
+state Ended
+state Cancelled
+state Invalid
 
-ElectorController       "1" *-[#bbbbbb,plain]-> "electorService\n1" ElectorService
-ElectorController        -[#999900,dotted]-  IsManager
-ElectorDAS               -[#609350,dashed]-^  ElectorDAO
-ElectorDAS              "1" *-[#bbbbbb,plain]-> "userRepo\n1" UserDAO
-ElectorServiceImpl      "1" *-[#bbbbbb,plain]-> "electorDAO\n1" ElectorDAO
-ElectorServiceImpl       -[#609350,dashed]-^  ElectorService
-GroupController         "1" *-[#bbbbbb,plain]-> "groupService\n1" GroupService
-GroupController          -[#999900,dotted]-  IsManager
-GroupDAS                 -[#bbbbbb,dashed]->  Group                   : "«create»"
-GroupDAS                 -[#609350,dashed]-^  GroupDAO
-GroupServiceImpl        "1" *-[#bbbbbb,plain]-> "electorDAO\n1" ElectorDAO
-GroupServiceImpl        "1" *-[#bbbbbb,plain]-> "groupDAO\n1" GroupDAO
-GroupServiceImpl         -[#609350,dashed]-^  GroupService
-JWTUtils                 -[#bbbbbb,dashed]->  JWTDecodedToken         : "«create»"
-JWTUtils                 -[#bbbbbb,dashed]->  JWTTokens               : "«create»"
-SecurityConfig           -[#bbbbbb,dashed]->  JwtAuthenticationFilter : "«create»"
-SecurityConfig           -[#bbbbbb,dashed]->  JwtAuthorizationFilter  : "«create»"
-SessionController       "1" *-[#bbbbbb,plain]-> "sessionService\n1" SessionService
-SessionDAS               -[#bbbbbb,dashed]->  ParticipationStats      : "«create»"
-SessionDAS               -[#609350,dashed]-^  SessionDAO
-SessionDAS               -[#bbbbbb,dashed]->  VotingOptionId          : "«create»"
-SessionServiceImpl      "1" *-[#bbbbbb,plain]-> "electorService\n1" ElectorService
-SessionServiceImpl      "1" *-[#bbbbbb,plain]-> "groupDAO\n1" GroupDAO
-SessionServiceImpl      "1" *-[#bbbbbb,plain]-> "sessionDAO\n1" SessionDAO
-SessionServiceImpl       -[#609350,dashed]-^  SessionService
-UserDAS                  -[#bbbbbb,dashed]->  AppUser                 : "«create»"
-UserDAS                  -[#609350,dashed]-^  UserDAO
-UserServiceImpl         "1" *-[#bbbbbb,plain]-> "userDAO\n1" UserDAO
-UserServiceImpl          -[#609350,dashed]-^  UserService
-WinnerElection           -[#bbbbbb,dashed]->  NoWinnerException       : "«create»"
+[*] --> Inactive
+Inactive --> Inactive : Activate [No Options Inserted]
+Inactive --> Active : Activate [Options Inserted]
+Inactive --l> Cancelled : Cancel
+Active --> Cancelled : Cancel
+Active --> Ended : Automatic or Manual Ending
+Ended --> Invalid : No Eligible Winner
+
 @enduml

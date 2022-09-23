@@ -9,10 +9,7 @@ import java.util.Date;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,7 +17,8 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Validated
-@Builder
+@EqualsAndHashCode(of = { "id" })
+@Builder(toBuilder = true)
 @Slf4j
 public class VotingSession {
 

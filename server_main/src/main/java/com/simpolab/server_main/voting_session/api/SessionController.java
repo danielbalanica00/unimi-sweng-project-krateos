@@ -91,7 +91,6 @@ public class SessionController {
     return ResponseEntity.ok(sessionService.votesPerOption(sessionId));
   }
 
-
   @GetMapping(path = "{sessionId}/result/winner")
   public ResponseEntity<?> getWinningOption(@PathVariable("sessionId") long sessionId) {
     log.debug("[Get Winning Option] - start");

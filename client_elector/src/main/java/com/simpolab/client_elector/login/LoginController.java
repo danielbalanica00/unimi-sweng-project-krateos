@@ -19,7 +19,6 @@ public class LoginController {
   @FXML
   private TextField txtUsername;
 
-
   @FXML
   private void onLoginClicked(ActionEvent event) throws Exception {
     int result = AuthHandler.login(txtUsername.getText(), txtPassword.getText());
@@ -30,5 +29,4 @@ public class LoginController {
       case 2 -> SceneUtils.switchToHomepage();
     }
   }
-
 }
