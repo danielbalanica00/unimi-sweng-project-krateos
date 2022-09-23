@@ -9,11 +9,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_elector.session.CategoricPreferencesVoteController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_elector.session.CategoricPreferencesVoteController">
    <children>
       <AnchorPane prefHeight="37.0" prefWidth="560.0">
          <children>
-            <Text fx:id="lblSessionName" layoutX="170.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Session A" textAlignment="CENTER" wrappingWidth="219.13671875">
+            <Text fx:id="lblSessionName" layoutX="270.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Session A" textAlignment="CENTER" wrappingWidth="219.13671875">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="20.0" />
                </font>
@@ -25,7 +25,7 @@
             </Button>
          </children>
       </AnchorPane>
-      <HBox prefHeight="242.0" prefWidth="560.0" spacing="15.0">
+      <HBox prefHeight="377.0" prefWidth="760.0" spacing="15.0">
          <children>
             <ListView fx:id="lvOptions" onMouseClicked="#onLvOptionsClicked" prefHeight="242.0" prefWidth="199.0" HBox.hgrow="ALWAYS" />
             <ListView fx:id="lvSuboptions" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />

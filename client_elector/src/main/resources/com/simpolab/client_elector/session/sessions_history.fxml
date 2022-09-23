@@ -34,6 +34,6 @@
          </opaqueInsets>
       </HBox>
       <ListView fx:id="lvSessions" prefHeight="417.0" prefWidth="740.0" />
-      <Button fx:id="btnOpenSession" mnemonicParsing="false" onAction="#onBtnOpenSessionClicked" text="Open" />
+      <Button fx:id="btnOpenSession" mnemonicParsing="false" onAction="#onBtnOpenSessionClicked" prefHeight="47.0" prefWidth="65.0" text="Open" />
    </children>
 </VBox>

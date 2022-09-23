@@ -78,6 +78,40 @@ EC <-- SC : [200] sessionId
 @enduml
 
 @startuml
+actor Manager as M
+participant UserInterface as GUI
+participant NewSessionController as NSC
+participant WebServer as WS
+
+' inputs
+M -> GUI : name
+M -> GUI : sessionType
+M -> GUI : endsOn
+opt
+M -> GUI : hasQuorum
+end
+opt
+M -> GUI : hasAbsoluteMajority
+end
+M -> GUI : create()
+GUI -> NSC : create session(session details)
+NSC -> NSC : check(session details)
+
+alt check(session details) = true
+NSC -> WS : POST/session
+activate WS
+NSC <-- WS : [200] sessionId
+deactivate WS
+GUI <-- NSC : successful
+M <-- GUI : show("session created")
+else check(session details) = false
+NSC --> GUI : input error
+M <-- GUI : show("input error")
+end
+
+@enduml
+
+@startuml
 ''' AGGIUNTA OPZIONI
 actor Manager as EC
 participant SessionController as SC
@@ -264,4 +298,66 @@ else session does not exist || session has not ended
     SC <-- SS : error
     EC <-- SC !!: [404] error
 end
+@enduml
+
+@startuml
+' voto elector
+actor Elector as C
+participant UserInterface as GUI
+participant LoginController as LC
+participant SessionsController as SC
+participant VoteController as VC
+participant WebServer as WS
+
+C -> GUI : username
+C -> GUI : password
+C -> GUI : login()
+GUI -> LC : login(username, password)
+LC -> WS : login(username, password)
+activate WS
+LC <-- WS : result
+deactivate WS
+alt result = accessToken
+    ' get all active sessions
+    SC -> WS : GET /session
+    activate WS
+    SC <-- WS : sessions
+    deactivate WS
+    SC -> SC : filterActiveSessions(sessions)
+    SC -> GUI : display(activeSessions)
+    GUI -> C : display(activeSessions)
+
+    ' select vote
+    C -> GUI : select(session)
+    GUI -> SC : select(session)
+    SC -> WS : GET /session/{sessionId}
+    activate WS
+    SC <-- WS : session info
+    deactivate WS
+    SC -> GUI : display(session info)
+    GUI -> C : display(session info)
+    C -> GUI : select(voting options)
+    GUI -> VC : vote(voting options)
+
+    'confirm vote
+    VC -> VC : check(voting options)
+    alt check(voting options) = true
+        VC -> GUI : askConfirmation()
+        GUI -> C : askConfirmation()
+        GUI <-- C : response
+        alt response = true
+            GUI -> VC : registerVote(vote)
+            VC -> WS : POST /session/{sessionId}/vote
+            activate WS
+            VC <-- WS : [200] successful
+            deactivate WS
+            VC --> GUI : success
+            GUI -> C : display("vote registered")
+        end
+    end
+    else result = null
+        LC -> GUI : login failed
+        GUI -> C : show("login failed")
+end
+
 @enduml

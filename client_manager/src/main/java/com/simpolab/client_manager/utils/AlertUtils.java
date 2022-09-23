@@ -1,6 +1,7 @@
 package com.simpolab.client_manager.utils;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public final class AlertUtils {
 
@@ -16,5 +17,15 @@ public final class AlertUtils {
     alert.setHeaderText(null);
     alert.setContentText(body);
     alert.showAndWait();
+  }
+
+  public static boolean confirmAlert(String prompt) {
+    // confirmation
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, prompt, ButtonType.YES, ButtonType.NO);
+    alert.showAndWait();
+    if (alert.getResult() == ButtonType.NO) {
+      return false;
+    }
+    return true;
   }
 }

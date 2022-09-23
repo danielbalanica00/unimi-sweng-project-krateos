@@ -2,10 +2,7 @@ package com.simpolab.client_manager.electors;
 
 import com.google.gson.JsonSyntaxException;
 import com.simpolab.client_manager.domain.Elector;
-import com.simpolab.client_manager.utils.AuthHandler;
-import com.simpolab.client_manager.utils.HttpUtils;
-import com.simpolab.client_manager.utils.JsonUtils;
-import com.simpolab.client_manager.utils.SceneUtils;
+import com.simpolab.client_manager.utils.*;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -14,6 +11,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
@@ -21,9 +20,6 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class ElectorsController implements Initializable {
-
-  private Stage stage;
-  private Scene scene;
 
   @FXML
   private ListView<Elector> lvElectors;
@@ -43,6 +39,10 @@ public class ElectorsController implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     lvElectors.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+    refreshList();
+  }
+
+  private void refreshList() {
     String electorsJson = HttpUtils.get(
       "/api/v1/elector",
       Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken())
@@ -61,6 +61,10 @@ public class ElectorsController implements Initializable {
    */
   @FXML
   private void onBtnRevokeSelectedClicked(ActionEvent event) throws Exception {
+    if (
+      !AlertUtils.confirmAlert("Do you want to revoke the selected elector's credentials?")
+    ) return;
+
     ObservableList<Elector> selectedElectors = lvElectors.getSelectionModel().getSelectedItems();
     for (Elector el : selectedElectors) {
       HttpUtils.delete(
@@ -68,6 +72,7 @@ public class ElectorsController implements Initializable {
         Map.of("Authorization", "Bearer " + AuthHandler.getAccessToken())
       );
     }
+    refreshList();
   }
 
   @FXML

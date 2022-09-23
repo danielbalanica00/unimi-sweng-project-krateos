@@ -70,7 +70,6 @@
                </VBox.margin>
             </PasswordField>
             <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#onLoginClicked" text="Login" />
-            <Text fx:id="lblSignUp" onMouseClicked="#onSignUpClicked" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account? Sign up" />
          </children>
          <BorderPane.margin>
             <Insets bottom="60.0" left="150.0" right="150.0" top="20.0" />

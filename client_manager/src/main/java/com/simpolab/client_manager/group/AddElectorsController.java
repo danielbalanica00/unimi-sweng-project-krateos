@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 
 public class AddElectorsController implements Initializable {
 
-  private Stage stage;
   private static Group selectedGroup;
 
   @FXML

@@ -16,18 +16,17 @@ import javafx.scene.control.SelectionMode;
 
 public class SessionsController implements Initializable {
 
-  @FXML
-  private Button btnCreateSession;
 
   @FXML
   private ListView<Session> lvSessions;
 
-  @FXML
-  private Button btnOpenSession;
 
   @FXML
   private void onBtnCreateSessionClicked(ActionEvent event) throws Exception {
     SceneUtils.switchTo("session/new_session.fxml");
+    //    List<Session> sessions = lvSessions.getSelectionModel().getSelectedItems();
+    //    for(Session session : sessions)
+    //      HttpUtils.delete("/api/v1/session/" + session.getId());
   }
 
   @FXML
@@ -53,7 +52,7 @@ public class SessionsController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    lvSessions.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    lvSessions.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     String sessionsJson = HttpUtils.get("/api/v1/session");
     List<Session> sessions = JsonUtils.parseJsonArray(sessionsJson, Session.class);
 

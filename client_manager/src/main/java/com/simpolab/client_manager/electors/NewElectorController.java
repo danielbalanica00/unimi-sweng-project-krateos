@@ -2,6 +2,7 @@ package com.simpolab.client_manager.electors;
 
 import com.google.gson.Gson;
 import com.simpolab.client_manager.domain.Elector;
+import com.simpolab.client_manager.utils.AlertUtils;
 import com.simpolab.client_manager.utils.AuthHandler;
 import com.simpolab.client_manager.utils.HttpUtils;
 import com.simpolab.client_manager.utils.SceneUtils;
@@ -62,14 +63,12 @@ public class NewElectorController {
       email.isBlank() ||
       password.isBlank()
     ) {
-      alert = new Alert(Alert.AlertType.ERROR);
-      alert.setContentText("Please fill every field");
+      AlertUtils.alert(Alert.AlertType.ERROR, "Please fill every field");
       txtPassword.clear();
       txtPasswordReEntered.clear();
       return;
     } else if (!password.equals(passwordReEntered)) {
-      alert = new Alert(Alert.AlertType.ERROR);
-      alert.setContentText("Passwords do not match");
+      AlertUtils.alert(Alert.AlertType.ERROR, "Passwords do not match");
       txtPassword.clear();
       txtPasswordReEntered.clear();
       return;

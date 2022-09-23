@@ -9,11 +9,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.group.AddElectorsController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="15.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.group.AddElectorsController">
    <children>
       <AnchorPane prefHeight="35.0" prefWidth="560.0">
          <children>
-            <Text layoutX="197.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add electors">
+            <Text layoutX="297.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add electors">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="23.0" />
                </font>
@@ -25,20 +25,20 @@
             </Button>
          </children>
       </AnchorPane>
-      <HBox prefHeight="285.0" prefWidth="560.0" spacing="15.0">
+      <HBox prefHeight="473.0" prefWidth="760.0" spacing="15.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Available electors" />
-                  <ListView fx:id="lvAvailableElectors" prefHeight="200.0" prefWidth="200.0" />
-                  <Button fx:id="btnAddElectors" mnemonicParsing="false" onAction="#onBtnAddElectorsClicked" text="Add" />
+                  <ListView fx:id="lvAvailableElectors" prefHeight="370.0" prefWidth="372.0" />
+                  <Button fx:id="btnAddElectors" mnemonicParsing="false" onAction="#onBtnAddElectorsClicked" prefHeight="45.0" prefWidth="66.0" text="Add" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Added electoors" />
-                  <ListView fx:id="lvAddedElectors" prefHeight="200.0" prefWidth="200.0" />
-                  <Button fx:id="btnRemoveElectors" mnemonicParsing="false" onAction="#onBtnRemoveElectorsClicked" text="Remove" />
+                  <ListView fx:id="lvAddedElectors" prefHeight="370.0" prefWidth="372.0" />
+                  <Button fx:id="btnRemoveElectors" mnemonicParsing="false" onAction="#onBtnRemoveElectorsClicked" prefHeight="45.0" prefWidth="92.0" text="Remove" />
                </children>
             </VBox>
          </children>

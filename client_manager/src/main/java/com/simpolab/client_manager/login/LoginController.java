@@ -30,6 +30,4 @@ public class LoginController {
     }
   }
 
-  @FXML
-  private void onSignUpClicked() {}
 }

@@ -12,7 +12,7 @@
    <children>
       <AnchorPane prefHeight="35.0" prefWidth="560.0">
          <children>
-            <Text fx:id="lblWelcome" layoutX="297.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome cowo" textAlignment="CENTER">
+            <Text fx:id="lblWelcome" layoutX="331.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome" textAlignment="CENTER">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="23.0" />
                </font>

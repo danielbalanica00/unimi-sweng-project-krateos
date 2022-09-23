@@ -27,9 +27,6 @@ public class GroupController implements Initializable {
   @FXML
   private ListView<Elector> lvElectors;
 
-  @FXML
-  private Button btnEditGroup;
-
   public static void initGroup(Group group) {
     selectedGroup = group;
   }

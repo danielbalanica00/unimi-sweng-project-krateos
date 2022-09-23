@@ -3,10 +3,8 @@ package com.simpolab.client_manager.session;
 import com.google.gson.Gson;
 import com.simpolab.client_manager.domain.Option;
 import com.simpolab.client_manager.domain.Session;
-import com.simpolab.client_manager.utils.ErrorBody;
-import com.simpolab.client_manager.utils.HttpUtils;
-import com.simpolab.client_manager.utils.JsonUtils;
-import com.simpolab.client_manager.utils.SceneUtils;
+import com.simpolab.client_manager.utils.*;
+
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +73,12 @@ public class SessionCategoricPreferenceController implements Initializable {
   @FXML
   private HBox hboxVotes;
 
+  @FXML
+  private VBox vboxContainer;
+
+  @FXML
+  private Button btnDelete;
+
   public static void init(Session initSession) {
     session = initSession;
   }
@@ -114,6 +118,7 @@ public class SessionCategoricPreferenceController implements Initializable {
 
   @FXML
   private void onBtnDeleteClicked(ActionEvent event) throws Exception {
+    if (!AlertUtils.confirmAlert("Do you want to delete this session?")) return;
     HttpUtils.delete("/api/v1/session/" + session.getId());
     SceneUtils.switchTo("session/sessions.fxml");
   }
@@ -130,6 +135,7 @@ public class SessionCategoricPreferenceController implements Initializable {
 
     // do not look for results until the session has ended
     if (
+      session.getState().equals(Session.State.CANCELLED) ||
       session.getState().equals(Session.State.ACTIVE) ||
       session.getState().equals(Session.State.INACTIVE)
     ) {
@@ -170,7 +176,7 @@ public class SessionCategoricPreferenceController implements Initializable {
         }
         case 2 -> lblWinner.setText("Quorum has not been reached");
         case 3 -> lblWinner.setText("Absolute majority has not been reached");
-        default -> lblWinner.setText("wtf");
+        default -> lblWinner.setText("Unknown message");
       }
       return;
     }
@@ -207,10 +213,14 @@ public class SessionCategoricPreferenceController implements Initializable {
 
     if (!session.getState().equals(Session.State.INACTIVE)) {
       btnStart.setDisable(true);
+      vboxContainer.getChildren().remove(btnDelete);
     }
 
     if (!session.getState().equals(Session.State.ACTIVE)) {
       btnStop.setDisable(true);
+    }
+
+    if (session.getState().equals(Session.State.INVALID)) {
       btnAbort.setDisable(true);
     }
   }

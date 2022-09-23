@@ -79,7 +79,7 @@ public class SessionInfoController implements Initializable {
         }
         case 2 -> lblWinner.setText("Quorum has not been reached");
         case 3 -> lblWinner.setText("Absolute majority has not been reached");
-        default -> lblWinner.setText("wtf");
+        default -> lblWinner.setText("Unknown message");
       }
       return;
     }

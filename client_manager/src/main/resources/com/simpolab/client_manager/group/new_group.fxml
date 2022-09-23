@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.group.NewGroupController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="10.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simpolab.client_manager.group.NewGroupController">
    <children>
       <AnchorPane prefHeight="40.0" prefWidth="560.0">
          <children>
@@ -20,32 +20,32 @@
                   <Font name="Lucida Sans Typewriter Regular" size="12.0" />
                </font>
             </Button>
-            <Text layoutX="186.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New group" textAlignment="CENTER" wrappingWidth="188.13671875">
+            <Text layoutX="286.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New group" textAlignment="CENTER" wrappingWidth="188.13671875">
                <font>
                   <Font name="Lucida Sans Typewriter Regular" size="24.0" />
                </font>
             </Text>
          </children>
       </AnchorPane>
-      <TextField fx:id="txtGroupName" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="293.0" promptText="name" VBox.vgrow="NEVER">
+      <TextField fx:id="txtGroupName" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="372.0" promptText="name" VBox.vgrow="NEVER">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>
       </TextField>
-      <HBox prefHeight="225.0" prefWidth="560.0" spacing="15.0">
+      <HBox prefHeight="380.0" prefWidth="760.0" spacing="15.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Available electors" />
-                  <ListView fx:id="lvAvailableElectors" prefHeight="200.0" prefWidth="200.0" />
-                  <Button fx:id="btnAddElectors" mnemonicParsing="false" onAction="#onBtnAddElectorsClicked" text="Add" />
+                  <ListView fx:id="lvAvailableElectors" prefHeight="320.0" prefWidth="372.0" />
+                  <Button fx:id="btnAddElectors" mnemonicParsing="false" onAction="#onBtnAddElectorsClicked" prefHeight="40.0" prefWidth="59.0" text="Add" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Added electoors" />
-                  <ListView fx:id="lvAddedElectors" prefHeight="200.0" prefWidth="200.0" />
-                  <Button fx:id="btnRemoveElectors" mnemonicParsing="false" onAction="#onBtnRemoveElectorsClicked" text="Remove" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Added electors" />
+                  <ListView fx:id="lvAddedElectors" prefHeight="320.0" prefWidth="200.0" />
+                  <Button fx:id="btnRemoveElectors" mnemonicParsing="false" onAction="#onBtnRemoveElectorsClicked" prefHeight="40.0" prefWidth="78.0" text="Remove" />
                </children>
             </VBox>
          </children>

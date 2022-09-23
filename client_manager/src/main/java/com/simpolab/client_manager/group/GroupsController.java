@@ -22,19 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GroupsController implements Initializable {
 
   @FXML
-  private TextField txtSearchGroup;
-
-  @FXML
-  private Button btnSearchGroup;
-
-  @FXML
-  private Button btnCreateGroup;
-
-  @FXML
   private ListView<Group> lvGroups;
-
-  @FXML
-  private Button btnOpenGroup;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -53,13 +41,10 @@ public class GroupsController implements Initializable {
     }
   }
 
-  @FXML
-  private void onBtnSearchGroupClicked(ActionEvent event) throws Exception {}
-
-  @FXML
-  private void onBtnCreateGroupClicked(ActionEvent event) throws Exception {
-    SceneUtils.switchTo("group/new_group.fxml");
-  }
+  //  @FXML
+  //  private void onBtnCreateGroupClicked(ActionEvent event) throws Exception {
+  //    SceneUtils.switchTo("group/new_group.fxml");
+  //  }
 
   @FXML
   private void onBtnOpenGroupClicked(ActionEvent event) throws Exception {
